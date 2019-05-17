@@ -551,7 +551,7 @@ under the License.
 								${uiLabelMap.paintCoatingThickness}
 							</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;&nbsp;</td>
+							<td>&nbsp;&nbsp;&nbsp;</td>
 			            </tr>
 			            <tr>
 			            	<td>
