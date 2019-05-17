@@ -19,7 +19,7 @@
         <value xml:lang="en">Vendor1</value>
     </property>
     <property key="vendor2">
-        <value xml:lang="en">Vendor3</value>
+        <value xml:lang="en">Vendor2</value>
     </property>
     <property key="stage">
         <value xml:lang="en">Stage</value>
