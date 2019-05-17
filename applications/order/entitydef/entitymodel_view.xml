@@ -1134,7 +1134,7 @@ under the License.
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
-    
+
     <view-entity entity-name="OrderHeaderAndShipGroupsByProduct"
             package-name="org.apache.ofbiz.order.order"
             never-cache="true"
@@ -1691,7 +1691,7 @@ under the License.
     </view-entity>
 
   <view-entity entity-name="OrderHeaderAndWorkEffort"
-          package-name="org.apache.ofbiz.order.order" 
+          package-name="org.apache.ofbiz.order.order"
           title="Order Header And Work Effort View Entity">
     <member-entity entity-alias="WE" entity-name="WorkEffort"/>
     <member-entity entity-alias="OH" entity-name="OrderHeader"/>
@@ -1710,7 +1710,7 @@ under the License.
   </view-entity>
 
     <view-entity entity-name="OrderItemBillingAndInvoiceAndItem"
-          package-name="org.apache.ofbiz.order.order" 
+          package-name="org.apache.ofbiz.order.order"
           title="OrderItemBilling and Invoice and InvoiceItem View Entity">
     <member-entity entity-alias="OIB" entity-name="OrderItemBilling"/>
     <member-entity entity-alias="INV" entity-name="Invoice"/>
@@ -1750,7 +1750,7 @@ under the License.
         <key-map field-name="productId"/>
       </relation>
   </view-entity>
-  
+
   <view-entity entity-name="WorkAndOrderItemFulfillment"
             package-name="org.apache.ofbiz.order.order"
             never-cache="true"

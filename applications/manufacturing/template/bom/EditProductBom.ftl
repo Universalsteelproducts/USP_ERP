@@ -33,7 +33,7 @@ function lookupBom() {
     </ul>
     <br class="clear"/>
   </div>
-  <div class="screenlet-body">
+  <div class="screenlet-body">${has_content}
     <#if product?has_content>
         <a href="<@ofbizUrl>BomSimulation</@ofbizUrl>?productId=${productId}&amp;bomType=${productAssocTypeId}" class="buttontext">${uiLabelMap.ManufacturingBomSimulation}</a>
     </#if>
@@ -158,7 +158,7 @@ function lookupBom() {
         <td width="26%" align="right">${uiLabelMap.CommonThruDate}</td>
         <td>&nbsp;</td>
         <td width="74%">
-            <#if useValues> 
+            <#if useValues>
               <#assign value= productAssoc.thruDate!>
             <#else>
               <#assign value= request.getParameter("thruDate")!>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Purchase Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+<!--     <service name="createTestDemo" default-entity-name="TestDemoJoinTest" engine="entity-auto" invoke="create" auth="true"> -->
+<!--         <description>Create an Test Demo record</description> -->
+<!--         <auto-attributes include="pk" mode="IN" optional="false"/> -->
+<!--         <auto-attributes include="nonpk" mode="IN" optional="false"/> -->
+<!--         <override name="comments" optional="true"/> -->
+<!--     </service> -->
+
+    <!-- 버튼 동작을 기본 제공하는 engine을 이용하는 것이 아니라 JAVA Service 파일을 만들어서 복잡한 로직을 처리한다. -->
+<!--     <service name="createPoNReference" default-entity-name="purchase" engine="java"  -->
+<!--     			location="com.usp.purchase.services.PurchaseServices" invoke="createPoNReference" auth="true"> -->
+<!-- 		<description>Create an create Po and Reference record using a service in Java</description> -->
+<!-- 		<auto-attributes include="pk" mode="IN" optional="false"/> -->
+<!-- 		<auto-attributes include="nonpk" mode="INOUT" optional="true"/> -->
+<!-- 	</service> -->
+
+</services>

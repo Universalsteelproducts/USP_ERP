@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+
+    <menu name="MainAppBar" title="${uiLabelMap.PurchaseApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main" /></menu-item>
+        <menu-item name="po" title="${uiLabelMap.po}"><link target="FindPoList" /></menu-item>
+        <menu-item name="document" title="${uiLabelMap.document}"><link target="FindDocument" /></menu-item>
+    </menu>
+
+    <menu name="PoManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditPo" title="${uiLabelMap.EditPo}">
+            <link target="EditPo">
+                <parameter param-name="poNo"/>
+            </link>
+        </menu-item>
+    </menu>
+
+</menus>

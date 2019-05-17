@@ -635,9 +635,9 @@ document.lookuporder.orderId.focus();
               <td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <#if orderHeader.orderName?has_content>
                 <td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderName}</a></td>
-              <#else>  
+              <#else>
                 <td></td>
-              </#if>  
+              </#if>
               <td>
                 <div>
                   <#if displayParty?has_content>

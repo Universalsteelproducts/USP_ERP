@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+	<TestDemo testDemoId="GI" testDemoGroupId="CM_COIL_DESCRIPTION" firstName="GI" lastName="COIL DESCRIPTION" comments="This is test GI COIL DESCRIPTION."/>
+    <TestDemo testDemoId="GL" testDemoGroupId="CM_COIL_DESCRIPTION" firstName="GL" lastName="COIL DESCRIPTION" comments="This is test GL COIL DESCRIPTION."/>
+    <TestDemo testDemoId="PPGI" testDemoGroupId="CM_COIL_DESCRIPTION" firstName="PPGI" lastName="COIL DESCRIPTION" comments="This is test PPGI COIL DESCRIPTION."/>
+    <TestDemo testDemoId="PPGL" testDemoGroupId="CM_COIL_DESCRIPTION" firstName="PPGL" lastName="COIL DESCRIPTION" comments="This is test PPGL COIL DESCRIPTION."/>
+    
+    <TestDemo testDemoId="PO_ENTERED" testDemoGroupId="REFERENCE_STATUS" firstName="PO ENTERED" lastName="STATUS" comments="This is test PO ENTERED STATUS."/>
+    <TestDemo testDemoId="SC_SUBMITTED" testDemoGroupId="REFERENCE_STATUS" firstName="SC SUBMITTED" lastName="STATUS" comments="This is test SC SUBMITTED STATUS."/>
+    <TestDemo testDemoId="LC_OPENED" testDemoGroupId="REFERENCE_STATUS" firstName="LC OPENED" lastName="STATUS" comments="This is test LC OPENED STATUS."/>
+    <TestDemo testDemoId="IN_TRANSIT" testDemoGroupId="REFERENCE_STATUS" firstName="IN TRANSIT" lastName="STATUS" comments="This is test IN TRANSIT STATUS."/>
+    <TestDemo testDemoId="PAYMENT_SETTLED" testDemoGroupId="REFERENCE_STATUS" firstName="PAYMENT SETTLED" lastName="STATUS" comments="This is test PAYMENT SETTLED STATUS."/>
+    
+</entity-engine-xml>

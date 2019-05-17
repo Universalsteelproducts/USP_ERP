@@ -20,7 +20,7 @@
 var webSocket;
 
 // Create a new instance of the websocket
-webSocket = new WebSocket('wss://' + window.location.host + '/example/ws/pushNotifications');
+webSocket = new WebSocket('wss://' + window.location.host + '/purchase/ws/pushNotifications');
 
 webSocket.onopen = function(event){
     // Do any operation on open

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="po">
+        <value xml:lang="en">PO Management</value>
+    </property>
+    <property key="document">
+        <value xml:lang="en">Document Management</value>
+    </property>
+    <property key="poNo">
+        <value xml:lang="en">PO#</value>
+    </property>
+    <property key="vendor">
+        <value xml:lang="en">Vendor</value>
+    </property>
+    <property key="stage">
+        <value xml:lang="en">Stage</value>
+    </property>
+    <property key="lotNo">
+        <value xml:lang="en">LOT#</value>
+   </property>
+    <property key="etd">
+        <value xml:lang="en">ETD</value>
+    </property>
+    <property key="eta">
+        <value xml:lang="en">ETA</value>
+    </property>
+    <property key="vessel">
+        <value xml:lang="en">Vessel</value>
+    </property>
+    <property key="port">
+        <value xml:lang="en">Port</value>
+    </property>
+    <property key="steelType">
+        <value xml:lang="en">SteelType</value>
+    </property>
+    <property key="grade">
+        <value xml:lang="en">Grade</value>
+    </property>
+    <property key="coatingWeight">
+        <value xml:lang="en">CoatingWeight</value>
+    </property>
+    <property key="type">
+        <value xml:lang="en">Type</value>
+    </property>
+    <property key="gauge">
+        <value xml:lang="en">Gauge</value>
+    </property>
+    <property key="width">
+        <value xml:lang="en">Width</value>
+    </property>
+    <property key="mt">
+        <value xml:lang="en">MT</value>
+    </property>
+    <property key="lbs">
+        <value xml:lang="en">LBS</value>
+    </property>
+    <property key="ft">
+        <value xml:lang="en">FT</value>
+    </property>
+    <property key="yield">
+        <value xml:lang="en">Yield</value>
+    </property>
+    <property key="customer">
+        <value xml:lang="en">Customer</value>
+    </property>
+    <property key="steelCost">
+        <value xml:lang="en">SteelCost($/MT)</value>
+    </property>
+    <property key="civAmount">
+        <value xml:lang="en">CIVAmount</value>
+    </property>
+    <property key="shippingDoc">
+        <value xml:lang="en">ShippingDOC,ReceivedStatus</value>
+    </property>
+    <property key="paymentMethod">
+        <value xml:lang="en">PaymentMethod</value>
+    </property>
+    <property key="priceTerm">
+        <value xml:lang="en">PriceTerm</value>
+    </property>
+    <property key="lcLsd">
+        <value xml:lang="en">LCLSD</value>
+    </property>
+    <property key="mtcVerificationStatus">
+        <value xml:lang="en">MTCVerificationStatus</value>
+    </property>
+    <property key="remark">
+        <value xml:lang="en">Remark</value>
+    </property>
+    <property key="lastUpdateDate">
+        <value xml:lang="en">LastUpdateDate</value>
+    </property>
+    <property key="newPo">
+        <value xml:lang="en">New PO Issue</value>
+    </property>
+</resource>

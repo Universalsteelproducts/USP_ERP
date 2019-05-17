@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the TestDemo Component." permissionId="TESTDEMO_VIEW"/>
+    <SecurityPermission description="Create operations in the TestDemo Component." permissionId="TESTDEMO_CREATE"/>
+    <SecurityPermission description="Update operations in the TestDemo Component." permissionId="TESTDEMO_UPDATE"/>
+    <SecurityPermission description="Delete operations in the TestDemo Component." permissionId="TESTDEMO_DELETE"/>
+    <SecurityPermission description="ALL operations in the TestDemo Component." permissionId="TESTDEMO_ADMIN"/>
+
+    <SecurityGroupPermission groupId="SUPER" permissionId="TESTDEMO_ADMIN"/>
+
+</entity-engine-xml>

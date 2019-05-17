@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the Purchase Component." permissionId="PURCHASE_VIEW"/>
+    <SecurityPermission description="Create operations in the Purchase Component." permissionId="PURCHASE_CREATE"/>
+    <SecurityPermission description="Update operations in the Purchase Component." permissionId="PURCHASE_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Purchase Component." permissionId="PURCHASE_DELETE"/>
+    <SecurityPermission description="ALL operations in the Purchase Component." permissionId="PURCHASE_ADMIN"/>
+
+    <SecurityGroupPermission groupId="SUPER" permissionId="PURCHASE_ADMIN"/>
+
+</entity-engine-xml>

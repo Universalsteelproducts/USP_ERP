@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+    <form name="FindPoList" type="single" target="FindPoList" default-entity-name="PoMasterNReference">
+	    <field name="noConditionFind">
+	    	<hidden value="Y"/> <!-- if this isn't there then with all fields empty no query will be done -->
+	    </field>
+	    <field name="poNo" title="${uiLabelMap.poNo}" position="1">
+	    	<text-find/>
+	    </field>
+	    <field name="vendor" title="${uiLabelMap.vendor}" position="1">
+	    	<lookup target-form-name="LookupVendor"/>
+	    </field>
+	    <field name="customer" title="${uiLabelMap.customer}" position="2">
+	    	<lookup target-form-name="LookupCustomer"/>
+	    </field>
+	    <field name="port" title="${uiLabelMap.port}" position="1">
+	    	<text-find/>
+	    </field>
+	    <field name="grade" title="${uiLabelMap.grade}" position="2">
+	    	<text-find/>
+	    </field>
+	    <field name="coatingWeight" title="${uiLabelMap.coatingWeight}" position="1">
+	    	<text-find/>
+	    </field>
+	    <field name="type" title="${uiLabelMap.type}" position="2">
+	    	<text-find/>
+	    </field>
+	    <field name="gauge" title="${uiLabelMap.gauge}" position="1">
+	    	<text-find/>
+	    </field>
+	    <field name="width" title="${uiLabelMap.width}" position="2">
+	    	<text-find/>
+	    </field>
+	    <field name="searchButton"><submit/></field>
+	</form>
+
+	<form name="ListPoResult" type="list" list-name="listIt" paginate-target="FindPoList" default-entity-name="PoMasterNReference" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+		<actions>
+			<!-- 아래의 태그는 리스트 불러와서 처음 데이터 뿌릴때 sorting시킬 컬럼 설정 -->
+<!-- 			<set field="parameters.sortField" from-field="parameters.sortField" default-value="poNo"/> -->
+
+			<!-- Preparing search results for user query by using OFBiz stock service to perform find operations on a single entity or view entity -->
+			<service service-name="performFind" result-map="result" result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="purchaseCtx"/>
+				<field-map field-name="entityName" value="PoMasterNReference"/>
+				<field-map field-name="orderBy" from-field="parameters.sortField"/>
+				<field-map field-name="viewIndex" from-field="viewIndex"/>
+				<field-map field-name="viewSize" from-field="viewSize"/>
+			</service>
+	    </actions>
+
+        <field name="poStatus" title="${uiLabelMap.poStatus}" sort-field="true"><display/></field>
+        <field name="poNo" title="${uiLabelMap.poNo}" widget-style="buttontext">
+            <hyperlink description="${poNo}" target="CreateNEditPo" also-hidden="false">
+                <parameter param-name="poNo"/>
+            </hyperlink>
+        </field>
+        <field name="lotNo" title="${uiLabelMap.lotNo}" sort-field="true"><display/></field>
+        <field name="etd" title="${uiLabelMap.etd}" sort-field="true"><display/></field>
+        <field name="eta" title="${uiLabelMap.eta}" sort-field="true"><display/></field>
+        <field name="vessel" title="${uiLabelMap.vessel}" sort-field="true"><display/></field>
+        <field name="port" title="${uiLabelMap.port}" sort-field="true"><display/></field>
+        <field name="steelType" title="${uiLabelMap.steelType}" sort-field="true"><display/></field>
+        <field name="grade" title="${uiLabelMap.grade}" sort-field="true"><display/></field>
+        <field name="coatingWeight" title="${uiLabelMap.coatingWeight}" sort-field="true"><display/></field>
+        <field name="surfaceCoilType" title="${uiLabelMap.surfaceCoilType}" sort-field="true"><display/></field>
+        <field name="gauge" title="${uiLabelMap.gauge}" sort-field="true"><display/></field>
+        <field name="width" title="${uiLabelMap.width}" sort-field="true"><display/></field>
+        <field name="coilMaxWeight" title="${uiLabelMap.coilMaxWeight}" sort-field="true"><display/></field>
+        <field name="innerDiameter" title="${uiLabelMap.innerDiameter}" sort-field="true"><display/></field>
+        <field name="packaging" title="${uiLabelMap.packaging}" sort-field="true"><display/></field>
+        <field name="businessClass" title="${uiLabelMap.businessClass}" sort-field="true"><display/></field>
+        <field name="customerId" title="${uiLabelMap.customerId}" sort-field="true"><display/></field>
+        <field name="unitPrice" title="${uiLabelMap.steelCost}" sort-field="true"><display/></field>
+        <field name="paintCode" title="${uiLabelMap.civAmount}" sort-field="true"><display/></field>
+        <field name="paintColor" title="${uiLabelMap.shippingDoc}" sort-field="true"><display/></field>
+        <field name="paintType" title="${uiLabelMap.paymentMethod}" sort-field="true"><display/></field>
+        <field name="priceTerm" title="${uiLabelMap.priceTerm}" sort-field="true"><display/></field>
+        <field name="paintBrand" title="${uiLabelMap.lcPaymentYn}" sort-field="true"><display/></field>
+        <field name="mtcVerificationStatus" title="${uiLabelMap.paintCoatingThickness}" sort-field="true"><display/></field>
+        <field name="paintCoatingThickness" title="${uiLabelMap.remark}" sort-field="true"><display/></field>
+        <field name="lastUpdateDate" title="${uiLabelMap.lastUpdatedStamp}" sort-field="true"><display/></field>
+    </form>
+
+</forms>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PURCHASE_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PURCHASE_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PURCHASE_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PURCHASE_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PURCHASE_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PURCHASE_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="PURCHASE_ADMIN"/>
+</entity-engine-xml>

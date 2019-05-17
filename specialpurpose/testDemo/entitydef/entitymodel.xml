@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of TestDemo Component</title>
+    <description>None</description>
+    <copyright>USP</copyright>
+    <version>1.0</version>
+
+	<entity entity-name="TestDemoGroup" package-name="org.apache.ofbiz.testdemo" title="testDemo Group Entity">
+        <field name="testDemoGroupId" type="id"></field>
+        <field name="testDemoGroupNm" type="name"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="testDemoGroupId"/>
+    </entity>
+  
+    <entity entity-name="TestDemo" package-name="org.apache.ofbiz.testdemo" title="testDemo Entity">
+        <field name="testDemoId" type="id"></field>
+        <field name="testDemoGroupId" type="id"></field>
+        <field name="firstName" type="name"></field>
+        <field name="lastName" type="name"></field>
+        <field name="comments" type="comment"></field>
+        <prim-key field="testDemoId"/>
+<!--         <relation type="one" fk-name="DEMO_TYPE_ID" rel-entity-name="TestDemoGroup"> -->
+<!-- 		<relation type="one" rel-entity-name="TestDemoGroup"> -->
+<!--             <key-map field-name="testDemoGroupId"/> -->
+<!--         </relation> -->
+    </entity>
+    
+	<view-entity entity-name="TestDemoJoinTest"
+	             package-name="org.apache.ofbiz.testdemo"
+	             title="testDemo and testDemo Group and testDemoChild">
+		<member-entity entity-alias="A" entity-name="TestDemoGroup"/>
+		<member-entity entity-alias="B" entity-name="TestDemo"/>
+		<member-entity entity-alias="C" entity-name="TestDemoChild"/>
+		
+		<alias-all entity-alias="A"/>
+		<alias-all entity-alias="B"/>
+		<alias-all entity-alias="C"/>
+		
+		<view-link entity-alias="B" rel-entity-alias="A" rel-optional="true">
+		    <key-map field-name="testDemoGroupId"/>
+		</view-link>	
+		<view-link entity-alias="B" rel-entity-alias="C" rel-optional="true">
+		    <key-map field-name="testDemoId"/>
+		</view-link>
+	</view-entity>		
+    
+    <entity entity-name="TestDemoChild" package-name="org.apache.ofbiz.testdemo" title="testDemoChild Entity">
+        <field name="testDemoChildId" type="id"></field>
+        <field name="testDemoId" type="id"></field>
+        <field name="testDemoChildNm" type="name"></field>
+        <field name="comments" type="comment"></field>
+        <prim-key field="testDemoChildId"/>
+    </entity>
+
+</entitymodel>
+
+<!-- SELECT -->
+<!-- 	E.*,  -->
+<!-- 	EA1.ATTR_VALUE AS APPRAISAL_RATE,  -->
+<!-- 	EA2.ATTR_VALUE AS SPOUSE_NAME  -->
+<!--   FROM -->
+<!--   	EMP E -->
+<!-- 	LEFT JOIN  -->
+<!-- 		EMP_ATTRIBUTES EA1 -->
+<!-- 			ON E.EMPNO=EA1.EMPNO  -->
+<!-- 			AND EA1.ATTR_NAME='appraised' -->
+<!-- 	LEFT JOIN  -->
+<!-- 		EMP_ATTRIBUTES EA2  -->
+<!-- 			ON E.EMPNO=EA2.EMPNO -->
+<!-- 			AND EA2.ATTR_NAME='spouseName'; -->
+			
+			
+<!-- <view-entity entity-name="EmpAndEmpAttributesAndEmpAttributes" -->
+<!--              package-name="com.proj.employee" -->
+<!--              title="Employee and Employee Attribute and Employee Attribute"> -->
+<!--      <member-entity entity-alias="E" entity-name="Emp"/> -->
+<!--      <member-entity entity-alias="EA1" entity-name="EmpAttributes"/> -->
+<!--      <member-entity entity-alias="EA2" entity-name="EmpAttributes"/> -->
+
+<!--      <alias-all entity-alias="E"/> -->
+<!--      <alias-all entity-alias="EA1"/> -->
+<!--      <alias-all entity-alias="EA2"/> -->
+
+<!--     <view-link entity-alias="E" rel-entity-alias="EA1" rel-optional="true"> -->
+<!--         <key-map field-name="empno"/> -->
+<!--     </view-link> -->
+<!--     <entity-condition> -->
+<!--         <condition-expr entity-alias="EA1" field-name="attrName" operator="equals" value="appraised" /> -->
+<!--     </entity-condition> -->
+
+<!--     <view-link entity-alias="E" rel-entity-alias="EA2" rel-optional="true"> -->
+<!--         <key-map field-name="empno"/> -->
+<!--     </view-link> -->
+<!--     <entity-condition> -->
+<!--         <condition-expr entity-alias="EA1" field-name="attrName" operator="equals" value="spouseName" /> -->
+<!--     </entity-condition> -->
+<!-- </view-entity>		 -->
+
+
+<!-- <view-link entity-alias="E" rel-entity-alias="EA1" rel-optional="true"> -->
+<!--     <key-map field-name="empno"/> -->
+<!--     <entity-condition> -->
+<!--         <condition-expr entity-alias="EA1" field-name="attrName" operator="equals" value="appraised" /> -->
+<!--     </entity-condition> -->
+<!-- </view-link>	 -->

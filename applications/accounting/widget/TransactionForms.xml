@@ -60,7 +60,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <!-- Brings up a list of gateway responses. TODO: should cut down data displayd -->
     <form name="ListGatewayResponses" type="list" use-row-submit="true" target="" title="" list-name="listIt" paginate-target="FindGatewayResponses"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -92,7 +92,7 @@ under the License.
             <display-entity entity-name="Enumeration" key-field-name="enumId"/>
         </field>
     </form>
-    
+
     <!-- presents the orderId and orderPaymentPreferenceId for a gateway response with links to the order -->
     <form name="ViewGatewayResponseRelations" type="single" target="" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -130,7 +130,7 @@ under the License.
         <field name="currencyUomId"><hidden/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
     </form>
-    
+
     <!-- displays the gateway response in detail -->
     <form name="ViewGatewayResponse" type="single" target="processCaptureTransaction" title="" default-map-name="paymentGatewayResponse"
         header-row-style="header-row" default-table-style="basic-table">
@@ -148,7 +148,7 @@ under the License.
             <display-entity entity-name="Enumeration" key-field-name="enumId"/>
         </field>
     </form>
-    
+
     <!-- form for authorizing a transaction -->
     <form name="AuthorizeTransaction" type="single" target="processAuthorizeTransaction" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -162,7 +162,7 @@ under the License.
         <field name="overrideAmount" title="${uiLabelMap.AccountingAmount}"><text/></field>
         <field name="submitButton" title="${uiLabelMap.AccountingAuthorize}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+
     <!-- form for capturing a transaction -->
     <form name="CaptureTransaction" type="single" target="processCaptureTransaction" title=""
         header-row-style="header-row" default-table-style="basic-table">

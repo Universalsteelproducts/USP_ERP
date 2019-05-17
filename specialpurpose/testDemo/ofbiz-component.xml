@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-component name="testDemo"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+    <!-- define resource loaders; most common is to use the component resource loader -->
+    <resource-loader name="main" type="component"/>
+
+    <!-- place the config directory on the classpath to access configuration files -->
+    <classpath type="dir" location="config"/>
+    <classpath type="dir" location="dtd"/>
+
+    <!-- entity resources: model(s), eca(s), group, and data definitions -->
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    <!-- <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/> -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/TestDemoSecurityPermissionSeedData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/TestDemoSecurityGroupDemoData.xml"/>
+
+    <!-- 추가 04/30/2019 -->
+    <!-- DB 테이블 생성하는 ENTTITY 추가 -->
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    
+    <!-- 추가 04/30/2019 -->
+    <!-- 생성한 DB 테이블에 DATA 추가하는  ENTTITY 추가 -->
+    <!-- SEED는 MASTER TABLE 추가시 사용?!, DEMO는 DETAIL 데이터 추가시 사용하는 듯 -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/TestDemoTypeData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/TestDemoDemoData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/TestDemoChildDemoData.xml"/>
+
+    <!-- service resources: model(s), eca(s) and group definitions -->
+    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <!--
+    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
+    -->
+
+    <!-- 추가 04/30/2019 -->
+    <!-- 서비스 추가 -->
+	<service-resource type="model" loader="main" location="servicedef/services.xml"/>
+	
+	
+    <test-suite loader="main" location="testdef/TestDemoTests.xml"/>
+
+    <!-- web applications; will be mounted when using the embedded container -->
+    <webapp name="testDemo"
+        title="TestDemo"
+        server="default-server"
+        location="webapp/testDemo"
+        base-permission="OFBTOOLS,TESTDEMO"
+        mount-point="/testDemo"/>
+</ofbiz-component>

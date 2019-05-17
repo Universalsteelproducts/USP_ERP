@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<form name="AddTestDemoGroup" type="single" target="createTestDemoGroup">
+        <auto-fields-service service-name="createTestDemoGroup"/>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form>
+
+	<form name="AddTestDemo" type="single" target="createTestDemo">
+        <!-- We have this utility in OFBiz to render form based on service definition.
+             Service attributes will automatically lookedup and will be shown on form
+        -->
+        <auto-fields-service service-name="createTestDemo"/>
+        <field name="testDemoTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="false" current-description="">
+                <!---We have made this drop down options dynamic(Values from db) using this -->
+                <entity-options description="${description}" key-field-name="testDemoGroupId" entity-name="TestDemoGroup">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="AddTestDemo2" type="single" target="createTestDemo2">
+        <!-- We have this utility in OFBiz to render form based on service definition.
+             Service attributes will automatically lookedup and will be shown on form
+        -->
+        <auto-fields-service service-name="createTestDemo2"/>
+        <field name="testDemoTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="false" current-description="">
+                <!---We have made this drop down options dynamic(Values from db) using this -->
+                <entity-options description="${description}" key-field-name="testDemoGroupId" entity-name="TestDemoGroup">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="FindTestDemo" type="single" target="FindTestDemo" default-entity-name="TestDemoJoinTest">
+	    <field name="noConditionFind">
+	    	<hidden value="Y"/> <!-- if this isn't there then with all fields empty no query will be done -->
+	    </field>
+	    <field name="testDemoId" title="${uiLabelMap.TestDemoId}"><text-find/></field>
+	    <field name="firstName" title="${uiLabelMap.TestDemoFirstName}"><text-find/></field>
+	    <field name="lastName" title="${uiLabelMap.TestDemoLastName}"><text-find/></field>
+	    <field name="testDemoTypeId" title="${uiLabelMap.TestDemoType}">
+	        <drop-down allow-empty="true" current-description="">
+	            <entity-options description="${description}" key-field-name="testDemoGroupId" entity-name="TestDemoGroup">
+	                <entity-order-by field-name="description"/>
+	            </entity-options>
+	        </drop-down>
+	    </field>
+	    <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>	</form>
+
+	<form name="ListTestDemo" type="list" list-name="listIt" paginate-target="FindTestDemo" default-entity-name="TestDemoJoinTest" separate-columns="true"
+	    odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+	    <actions>
+	       <!-- Preparing search results for user query by using OFBiz stock service to perform find operations on a single entity or view entity -->
+	       <service service-name="performFind" result-map="result" result-map-list="listIt">
+	           <field-map field-name="inputFields" from-field="testDemoCtx"/>
+	           <field-map field-name="entityName" value="TestDemoJoinTest"/>
+	           <field-map field-name="orderBy" from-field="parameters.sortField"/>
+	           <field-map field-name="viewIndex" from-field="viewIndex"/>
+	           <field-map field-name="viewSize" from-field="viewSize"/>
+	        </service>
+	    </actions>
+
+	    <field name="_rowSubmit" title="Checked"><check/></field>
+	    <field name="testDemoId" title="${uiLabelMap.TestDemoId}"><display/></field>
+	    <field name="testDemoGroupId" title="${uiLabelMap.testDemoGroupId}"><display-entity entity-name="TestDemoGroup"/></field>
+	    <field name="testDemoChildId" title="${uiLabelMap.testDemoChildId}"><display-entity entity-name="TestDemoChild"/></field>
+	    <field name="firstName" title="${uiLabelMap.TestDemoFirstName}" sort-field="true"><display/></field>
+	    <field name="lastName" title="${uiLabelMap.TestDemoLastName}" sort-field="true"><display/></field>
+	    <field name="comments" title="${uiLabelMap.TestDemoComment}"><display/></field>
+	    <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+	</form>
+
+</forms>

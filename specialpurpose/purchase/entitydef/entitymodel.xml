@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of Purchase Component</title>
+    <description></description>
+    <copyright>USP</copyright>
+    <version>1.0</version>
+
+	<!-- PO Master -->
+	<entity entity-name="PoMaster" package-name="org.apache.ofbiz.purchase" title="Purchase PoMaster Entity">
+		<field name="poNo" type="id-ne"></field>
+		<field name="venderId" type="id"></field>
+		<field name="poStatus" type="id"></field>
+		<field name="orderDate" type="date-time"></field>
+		<field name="priceTerm" type="id"></field>
+		<field name="freightTerm" type="id"></field>
+		<field name="paymentTerm" type="id"></field>
+		<field name="downPayment" type="currency-amount"></field>
+		<field name="remark" type="comment"></field>
+		<field name="shipmentMonth" type="short-varchar"></field>
+		<field name="fobPoint" type="short-varchar"></field>
+		<field name="poType" type="id"></field>
+		<field name="billingAccountId" type="id-ne"></field>
+		<field name="createUserId" type="id-ne"></field>
+		<field name="lastUpdateUserId" type="id-ne"></field>
+		<prim-key field="poNo"/>
+    </entity>
+
+    <!-- PO Reference -->
+	<entity entity-name="Reference" package-name="org.apache.ofbiz.purchase" title="Purchase Reference Entity">
+		<field name="referenceSeq" type="numeric"></field>
+		<field name="referenceNo" type="id-ne"></field>
+		<field name="lotNo" type="id-ne"></field>
+		<field name="poNo" type="id-ne"></field>
+		<field name="ppglNo" type="numeric"></field>
+		<field name="port" type="short-varchar"></field>
+		<field name="steelType" type="id"></field>
+		<field name="coilDescription" type="description"></field>
+		<field name="etd" type="date-time"></field>
+		<field name="eta" type="date-time"></field>
+		<field name="vessel" type="id-long"></field>
+		<field name="grade" type="id"></field>
+		<field name="gradeDesc" type="description"></field>
+		<field name="coatingWeight" type="id"></field>
+		<field name="coatingWeightDesc" type="description"></field>
+		<field name="surfaceCoilType" type="id"></field>
+		<field name="surfaceCoilTypeDesc" type="description"></field>
+		<field name="gauge" type="id"></field>
+		<field name="gaugeDesc" type="description"></field>
+		<field name="width" type="id"></field>
+		<field name="widthDesc" type="description"></field>
+		<field name="coilMaxWeight" type="id"></field>
+		<field name="innerDiameter" type="id"></field>
+		<field name="gaugeControlCombo" type="id-long"></field>
+		<field name="packaging" type="id-long"></field>
+		<field name="packagingDesc" type="description"></field>
+		<field name="customerId" type="id"></field>
+		<field name="remark" type="description"></field>
+		<field name="businessClass" type="id"></field>
+		<field name="unitQuantity" type="fixed-point"></field>
+		<field name="unitPrice" type="currency-amount"></field>
+		<field name="paintCode" type="id"></field>
+		<field name="paintColor" type="id"></field>
+		<field name="paintType" type="id"></field>
+		<field name="paintBrand" type="id"></field>
+		<field name="paintCoatingThickness" type="id"></field>
+		<field name="paintCoatingThicknessDesc" type="description"></field>
+		<field name="lcPaymentYn" type="indicator"></field>
+		<field name="createUserId" type="id-ne"></field>
+		<field name="lastUpdateUserId" type="id-ne"></field>
+
+        <prim-key field="referenceSeq"/>
+        <prim-key field="referenceNo"/>
+        <prim-key field="poNo"/>
+        <prim-key field="lotNo"/>
+        <prim-key field="ppglNo"/>
+
+        <relation type="one" rel-entity-name="PoMaster">
+		    <key-map field-name="poNo"/>
+		</relation>
+    </entity>
+
+    <view-entity entity-name="PoMasterNReference"
+	             package-name="org.apache.ofbiz.purchase"
+	             title="PoMaster and Reference">
+		<member-entity entity-alias="P" entity-name="PoMaster"/>
+		<member-entity entity-alias="R" entity-name="Reference"/>
+
+		<alias-all entity-alias="P"/>
+		<alias-all entity-alias="R"/>
+
+		<view-link entity-alias="P" rel-entity-alias="R" rel-optional="true">
+		    <key-map field-name="poNo"/>
+		</view-link>
+	</view-entity>
+
+	<view-entity entity-name="ExampleNExampleItem"
+	             package-name="org.apache.ofbiz.purchase"
+	             title="PoMaster and Reference">
+		<member-entity entity-alias="P" entity-name="Example"/>
+		<member-entity entity-alias="R" entity-name="ExampleItem"/>
+
+		<alias-all entity-alias="P"/>
+		<alias-all entity-alias="R"/>
+
+		<view-link entity-alias="R" rel-entity-alias="P" rel-optional="true">
+		    <key-map field-name="exampleId"/>
+		</view-link>
+	</view-entity>
+
+</entitymodel>

@@ -46,6 +46,8 @@ under the License.
                                         <include-form name="DateTimeFieldsExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
                                     </container>
                                 </container>
+                                
+                                <!-- 전체가 의존드롭다운 생서 섹션 -->
                                 <container style="screenlet-body">
                                     <container style="button-bar"><label style="h2">${uiLabelMap.ExampleDropDownFields}</label></container>
                                     <container style="screenlet-body">
@@ -84,6 +86,8 @@ under the License.
                                         </widgets>
                                     </section>
                                 </container>
+                                
+                                
                                 <container style="screenlet-body">
                                     <container style="button-bar"><label style="h2">${uiLabelMap.ExampleLookupFieldsTitle}</label></container>
                                         <container style="screenlet-body">
