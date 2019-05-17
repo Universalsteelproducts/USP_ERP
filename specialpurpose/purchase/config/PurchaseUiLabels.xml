@@ -6,6 +6,9 @@
     <property key="document">
         <value xml:lang="en">Document Management</value>
     </property>
+    <property key="document1">
+        <value xml:lang="en">Document Management1</value>
+    </property>
     <property key="poNo">
         <value xml:lang="en">PO#</value>
     </property>
