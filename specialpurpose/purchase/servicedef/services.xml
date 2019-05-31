@@ -20,4 +20,49 @@
 <!-- 		<auto-attributes include="nonpk" mode="INOUT" optional="true"/> -->
 <!-- 	</service> -->
 
+	<service name="searchVendor" default-entity-name="Vendor" engine="java" auth="true"
+        location="com.usp.purchase.services.PurchaseServices" invoke="searchVendor">
+        <attribute name="vendorId" mode="IN" type="String" optional="true"/>
+        <attribute name="vendorNm" mode="IN" type="String" optional="true"/>
+        <attribute name="vendorInfo" mode="OUT" type="java.util.Map"/>
+    </service>
+
+	<service name="searchCustomer" default-entity-name="Customer" engine="java" auth="true"
+        location="com.usp.purchase.services.PurchaseServices" invoke="searchCustomer">
+        <attribute name="customerId" mode="IN" type="String" optional="false"/>
+        <attribute name="customerInfo" mode="OUT" type="java.util.Map"/>
+    </service>
+
+    <service name="createPOList" engine="java" auth="true"
+    	location="com.usp.purchase.services.PurchaseServices" invoke="createPOList" >
+        <description>Create an Test Demo Group record</description>
+        <attribute name="vendorInfo" mode="IN" type="java.util.Map"/>
+        <attribute name="poInfo" mode="IN" type="java.util.Map"/>
+        <attribute name="lotInfo" mode="IN" type="java.util.List"/>
+    </service>
+
+    <service name="createNUpdateVendorNPoInfo" default-entity-name="PoMaster" engine="java" auth="true"
+    	location="com.usp.purchase.services.PurchaseServices" invoke="createNUpdateVendorNPoInfo" >
+        <description>Create an Test Demo Group record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+<!-- 		<attribute name="result" mode="OUT" type="java.util.Map"/> -->
+    </service>
+
+	<service name="cancelPo" default-entity-name="PoMaster" engine="java" auth="true"
+    	location="com.usp.purchase.services.PurchaseServices" invoke="cancelPo" >
+        <description>Create an Test Demo Group record</description>
+		<attribute name="poNo" mode="IN" type="String"/>
+    </service>
+
+    <service name="createNUpdateReferenceInfo" default-entity-name="Reference" engine="java" auth="true"
+    	location="com.usp.purchase.services.PurchaseServices" invoke="createNUpdateReferenceInfo" >
+        <description>Create an Test Demo Group record</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+		<attribute name="updateMode" mode="IN" type="String"/>
+		<attribute name="referenceSeq" mode="IN" type="Long"/>
+<!-- 		<attribute name="result" mode="OUT" type="java.util.Map"/> -->
+    </service>
+
 </services>

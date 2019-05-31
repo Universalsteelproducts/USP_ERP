@@ -1,4 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+	<Vendor vendorId="TON_DONG_A_CORPORATION" vendorNm="TON DONG A CORPORATION" vendorInitials="DA" vendorAddr="No. 5, Street No. 5, Song Than Industrial Park, Binh Duong Province, S.R.Vietnam."
+		vendorEmail="thanhbao@tondonga.com.vn" vendorTel="84838891548,846503737907" vendorFax="846503790420,84838477143"
+		priceTerm="CFR FILO USA PORT" freightTerm="PREPAID" paymentTerm="L/C AT SIGHT"
+		remark="1. As per the Quality Agreement,2. All items should conform to gauge control agreement,3. Delaying on shipment is not allowed"/>
+	<Vendor vendorId="TERNIUM_USA_INC" vendorNm="TERNIUM USA INC." vendorInitials="TM" vendorAddr="2500 Ron Bean Blvd. Shreveport, LA 71115, USA"
+		vendorEmail="jmenard@ternium.com, sgathmann@ternium.com" vendorTel="3186987500" vendorFax="3186987591"
+		priceTerm="FOB ADS(SHREVEPORT, LA)" freightTerm="PREPAID" paymentTerm="NET 30"
+		remark="1. As per the Quality Agreement,2. All items should conform to gauge control agreement,3. Delaying on shipment is not allowed"/>
 
+	<Customer customerId="RENEGADE_COMPONENTS_LLC" customerName="RENEGADE COMPONENTS, LLC" />
+	<Customer customerId="GENERAL_SHELTERS_OF_TEXAS_LTD" customerName="GENERAL SHELTERS OF TEXAS LTD." />
+	<Customer customerId="GALVAMET_STEEL_LLC " customerName="GALVAMET STEEL LLC " />
+
+	<Code codeGroup="COIL_DESCRIPTION" code="GI" codeName="GI" attribute1="Hot-Dip Zinc-Coated Steel Sheet in Coil" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COIL_DESCRIPTION" code="GL" codeName="GL" attribute1="Hot-Dip 55% Al-Zn Coated Steel Sheet In Coil" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COIL_DESCRIPTION" code="PPGI" codeName="PPGI" attribute1="Prepainted Hot-Dip Zinc-Coated Steel Sheet in Coil" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COIL_DESCRIPTION" code="PPGL" codeName="PPGL" attribute1="Prepainted Hot-Dip 55% Al-Zn Coated Steel Sheet In Coil" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COIL_DESCRIPTION" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PO_STATUS" code="PE" codeName="PO Entered" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PO_STATUS" code="SC" codeName="S/C Submitted" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PO_STATUS" code="CC" codeName="Canceled" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PO_STATUS" code="HD" codeName="Hold" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PO_STATUS" code="CP" codeName="Completed" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="GRADE" code="GR80" codeName="GR80" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="GRADE" code="GR50" codeName="GR50" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="GRADE" code="CSB" codeName="CSB" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="GRADE" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="COATING_WEIGHT" code="G90" codeName="G90" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COATING_WEIGHT" code="G60" codeName="G60" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COATING_WEIGHT" code="AZ55" codeName="AZ55" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COATING_WEIGHT" code="AZ50" codeName="AZ50" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="COATING_WEIGHT" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PAINT_COATING_THICKNESS " code="G90" codeName="G90" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_COATING_THICKNESS" code="G60" codeName="G60" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_COATING_THICKNESS" code="AZ55" codeName="AZ55" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_COATING_THICKNESS" code="AZ50" codeName="AZ50" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_COATING_THICKNESS" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="SURFACE_COIL_TYPE" code="ACRYLIC" codeName="ACRYLIC" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="SURFACE_COIL_TYPE" code="BARE_TO_PAINT" codeName="BARE TO PAINT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="SURFACE_COIL_TYPE" code="SMP" codeName="SMP" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="SURFACE_COIL_TYPE" code="RMP" codeName="RMP" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="SURFACE_COIL_TYPE" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="GAUGE" code="18" codeName="0.018" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="GAUGE" code="14" codeName="0.014" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="GAUGE" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="WIDHT" code="43" codeName="43" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="WIDHT" code="40" codeName="40.875" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="WIDHT" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PRICE_UNIT" code="MT" codeName="$/MT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PRICE_UNIT" code="ST" codeName="$/ST" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PRICE_UNIT" code="FT" codeName="$/FT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PRICE_UNIT" code="LBS" codeName="$/LBS" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="QUANTITY_UNIT" code="MT" codeName="MT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="QUANTITY_UNIT" code="ST" codeName="ST" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="QUANTITY_UNIT" code="FT" codeName="FT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="QUANTITY_UNIT" code="LBS" codeName="LBS" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PAINT_BRAND" code="RAINBOW" codeName="RAINBOW" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_BRAND" code="VALSPAR" codeName="VALSPAR" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_BRAND" code="CONTINENTAL" codeName="CONTINENTAL" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_BRAND" code="BECKER" codeName="BECKER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_BRAND" code="DURACOAT" codeName="DURACOAT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PAINT_CODE" code="WXL0027L" codeName="WXL0027L" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_CODE" code="WXD0053L" codeName="WXD0053L" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_CODE" code="WXD0046L" codeName="WXD0046L" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PAINT_COLOR" code="WXL_Hawaiian_Blue" codeName="WXL Hawaiian Blue" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_COLOR" code="WXL_Ivory" codeName="WXL Ivory" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_COLOR" code="WXL_Tan" codeName="WXL Tan" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PAINT_TYPE" code="ACRYLIC" codeName="ACRYLIC" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_TYPE" code="BARE_TO_PAINT" codeName="BARE TO PAINT" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_TYPE" code="SMP" codeName="SMP" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="PAINT_TYPE" code="RMP" codeName="RMP" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="PACKAGING" code="ETSWCOS" codeName="Eye to sky with core on skid" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
+	<Code codeGroup="BUSINESS_CLASS" code="B" codeName="B" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="BUSINESS_CLASS" code="S" codeName="S" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="BUSINESS_CLASS" code="T" codeName="T" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="BUSINESS_CLASS" code="P" codeName="P" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="BUSINESS_CLASS" code="H" codeName="H" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
 </entity-engine-xml>

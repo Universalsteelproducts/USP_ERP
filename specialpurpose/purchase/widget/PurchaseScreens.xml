@@ -70,6 +70,45 @@
 	    </section>
 	</screen>
 
+	<screen name="shippingDocManage">
+	    <section>
+	        <actions>
+	        	<!-- headerItem ==> xxx.Menu.xml의 서브메뉴 name과 동일해야함 -->
+	            <set field="headerItem" value="document"/>
+	            <!-- 페이지 상단의 화면 title -->
+	            <set field="titleProperty" value="Shipping Document Management"/>
+                <set field="purchaseCtx" from-field="parameters"/>
+	        </actions>
+	        <widgets>
+	            <decorator-screen name="CommonPoDecorator">
+	                <decorator-section name="body">
+	                    <screenlet title="${uiLabelMap.poInfo}">
+                            <include-form name="PoInfo" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.blDoc}">
+                            <include-form name="BLDoc" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.commercialInvoiceDoc}">
+                            <include-form name="CommercialInvoiceDoc" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.packingListDoc}">
+                            <include-form name="PackingListDoc" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.weightListDoc}">
+                            <include-form name="WeightListDoc" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.mtcDoc}">
+                            <include-form name="MTCDoc" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.shipmentAdviceDoc}">
+                            <include-form name="ShipmentAdviceDoc" location="component://purchase/widget/PurchasePoForms.xml"/>
+                        </screenlet>
+	                </decorator-section>
+	            </decorator-screen>
+	        </widgets>
+	    </section>
+	</screen>
+
 	<screen name="CommonPoDecorator">
         <section>
             <widgets>
@@ -102,6 +141,7 @@
                 <set field="headerItem" value="po"/>
                 <set field="poNo" from-field="parameters.poNo"/>
                 <entity-one entity-name="PoMaster" value-field="poMaster"/>
+                <script location="component://purchase/groovyScript/EditPoList.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPoDecorator">

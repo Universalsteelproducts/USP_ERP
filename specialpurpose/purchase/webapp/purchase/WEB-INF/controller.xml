@@ -24,9 +24,75 @@
         <response name="success" type="view" value="EditPo"/>
     </request-map>
 
+    <request-map uri="shippingDocManage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="shippingDocManage"/>
+    </request-map>
+
+    <request-map uri="EditPoList">
+        <security https="false" auth="true"/>
+        <event type="groovy" path="component://purchase/groovyScripts/EditPoList.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="LookupVendor">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="LookupVendor"/>
+    </request-map>
+
+    <request-map uri="LookupCustomer">
+    	<security auth="true" https="true"/>
+    	<response name="success" type="view" value="LookupCustomer"/>
+    </request-map>
+
+	<request-map uri="searchVendor">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="searchVendor"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="searchCustomer">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="searchCustomer"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="createPOList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPOList"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="createNUpdateVendorNPoInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createNUpdateVendorNPoInfo"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="cancelPo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPo"/>
+        <response name="success" type="view" value="FindPoList"/>
+    </request-map>
+
+    <request-map uri="createNUpdateReferenceInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createNUpdateReferenceInfo"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
     <!-- View Mappings -->
 	<view-map name="FindPoList" type="screen" page="component://purchase/widget/PurchaseScreens.xml#FindPoList"/>
 	<view-map name="EditPo" page="component://purchase/widget/PurchaseScreens.xml#EditPo" type="screen"/>
 	<view-map name="main" page="component://purchase/widget/PurchaseScreens.xml#main" type="screen"/>
+	<view-map name="shippingDocManage" page="component://purchase/widget/PurchaseScreens.xml#shippingDocManage" type="screen"/>
 
+	<view-map name="LookupVendor" type="screen" page="component://purchase/widget/LookupScreens.xml#LookupVendor"/>
+	<view-map name="LookupCustomer" type="screen" page="component://purchase/widget/LookupScreens.xml#LookupCustomer"/>
 </site-conf>

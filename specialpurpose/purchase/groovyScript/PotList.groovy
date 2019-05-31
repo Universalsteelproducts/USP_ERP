@@ -69,7 +69,7 @@ for (int entry = 0; entry < componentList.size(); entry++) {
         componentList[entry].compName = ""
         componentList[entry].rootLocation = ""
         componentList[entry].enabled = ""
-    }    
+    }
     lastComp = compSave
 }
 context.componentList = componentList

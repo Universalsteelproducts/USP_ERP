@@ -12,6 +12,8 @@
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PurchaseCompanySubtitle" global="true"/>
 <!--                 <set field="layoutSettings.javaScripts[]" value="/purchase/js/PurchasePushNotifications.js" global="true"/> -->
 
+<!-- 				<set field="layoutSettings.javaScripts[]" value="/purchase/static/purchaseCommon.js" global="true"/> -->
+
                 <set field="activeApp" value="purchase" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://purchase/widget/PurchaseMenus.xml" global="true"/>

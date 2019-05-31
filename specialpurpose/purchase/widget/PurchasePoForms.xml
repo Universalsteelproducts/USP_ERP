@@ -11,10 +11,10 @@
 	    	<text-find/>
 	    </field>
 	    <field name="vendor" title="${uiLabelMap.vendor}" position="1">
-	    	<lookup target-form-name="LookupVendor"/>
+	    	<lookup target-form-name="LookupVendor" name="vendorId" position="center" />
 	    </field>
 	    <field name="customer" title="${uiLabelMap.customer}" position="2">
-	    	<lookup target-form-name="LookupCustomer"/>
+	    	<lookup target-form-name="LookupCustomer" position="center" />
 	    </field>
 	    <field name="port" title="${uiLabelMap.port}" position="1">
 	    	<text-find/>
@@ -56,7 +56,7 @@
 
         <field name="poStatus" title="${uiLabelMap.poStatus}" sort-field="true"><display/></field>
         <field name="poNo" title="${uiLabelMap.poNo}" widget-style="buttontext">
-            <hyperlink description="${poNo}" target="CreateNEditPo" also-hidden="false">
+            <hyperlink description="${poNo}" target="EditPo" also-hidden="false">
                 <parameter param-name="poNo"/>
             </hyperlink>
         </field>
@@ -86,5 +86,99 @@
         <field name="paintCoatingThickness" title="${uiLabelMap.remark}" sort-field="true"><display/></field>
         <field name="lastUpdateDate" title="${uiLabelMap.lastUpdatedStamp}" sort-field="true"><display/></field>
     </form>
+
+    <form name="PoInfo" type="single" target="shippingDocManage" default-entity-name="Reference">
+	    <field name="poNo" title="${uiLabelMap.poNo}" position="1">
+	    	<lookup target-form-name="LookupPo"/>
+	    </field>
+	    <field name="lotNo" title="${uiLabelMap.lotNo}" position="2">
+	    	<text size="32" maxlength="60"/>
+	    </field>
+	    <field name="submitButton"><submit/></field>
+	</form>
+
+	<form name="BLDoc" type="single" target="shippingDocManage" default-entity-name="Reference">
+    	<field name="blFile"><file/></field>
+    	<field name="" tooltip="${uiLabelMap.na}" tooltip-style="button-text"><check /></field>
+	    <field name="vesselName" title="${uiLabelMap.vesselName}" position="1">
+	    	<text size="32" maxlength="150"/>
+	    </field>
+	    <field name="blNo" title="${uiLabelMap.blNo}" position="2">
+	    	<text size="32" maxlength="60"/>
+	    </field>
+	    <field name="blDate" title="${uiLabelMap.blDate}" tooltip="${uiLabelMap.blDate}" tooltip-style="button-text" position="3">
+            <date-time mask="Y"/>
+	    </field>
+	    <field name="portOfLoading" title="${uiLabelMap.portOfLoading}" position="1">
+	    	<text size="32" maxlength="255"/>
+	    </field>
+	    <field name="shippingCarrier" title="${uiLabelMap.shippingCarrier}" position="2">
+	    	<text size="32" maxlength="255"/>
+	    </field>
+	    <field name="submitButton"><submit/></field>
+	</form>
+
+	<form name="CommercialInvoiceDoc" type="single" target="shippingDocManage" default-entity-name="Reference">
+	    <field name="commercialInvoiceFile" position="1"><file/></field>
+    	<field name="" tooltip="${uiLabelMap.na}" tooltip-style="button-text"><check /></field>
+	    <field name="contractNo" title="${uiLabelMap.contractNo}" position="1">
+	    	<text size="32" maxlength="20"/>
+	    </field>
+	    <field name="unitCost" title="${uiLabelMap.unitCost}" position="2">
+	    	<text size="32" maxlength="15"/>
+	    </field>
+	    <field name="civAmount" title="${uiLabelMap.civAmount}" position="3">
+	    	<text size="32" maxlength="15"/>
+	    </field>
+	    <field name="submitButton"><submit/></field>
+	</form>
+
+	<form name="PackingListDoc" type="single" target="shippingDocManage" default-entity-name="Reference">
+	    <field name="packingListFile" position="1"><file/></field>
+    	<field name="" tooltip="${uiLabelMap.na}" tooltip-style="button-text"><check /></field>
+	    <field name="loadedQty" title="${uiLabelMap.loadedQty}" position="1">
+	    	<text size="32" maxlength="15"/>
+	    </field>
+	    <field name="weight" title="${uiLabelMap.weight}" position="2">
+	    	<text size="32" maxlength="150"/>
+	    </field>
+	    <field name="linealFeet" title="${uiLabelMap.linealFeet}" position="3">
+	    	<text size="32" maxlength="150"/>
+	    </field>
+	    <field name="coilQuantity" title="${uiLabelMap.coilQuantity}" position="1">
+	    	<text size="32" maxlength="150"/>
+	    </field>
+	    <field name="yield" title="${uiLabelMap.yield}" position="2">
+	    	<text size="32" maxlength="255"/>
+	    </field>
+	    <field name="submitButton"><submit/></field>
+	</form>
+
+	<form name="WeightListDoc" type="single" target="shippingDocManage" default-entity-name="Reference">
+	    <field name="weightListFile" position="1"><file/></field>
+    	<field name="" tooltip="${uiLabelMap.na}" tooltip-style="button-text"><check /></field>
+    	<field name="submitButton" position="1"><submit/></field>
+	</form>
+
+	<form name="MTCDoc" type="single" target="FindPoList" default-entity-name="Reference">
+	    <field name="mtcFile" title="${uiLabelMap.mtcFile}" position="1"><file/></field>
+    	<field name="" tooltip="${uiLabelMap.na}" tooltip-style="button-text"><check /></field>
+	    <field name="mtcVerified" title="${uiLabelMap.mtcVerified}" position="1">
+	    	<text size="32" maxlength="255"/>
+	    </field>
+	    <field name="submitButton"><submit/></field>
+	</form>
+
+	<form name="ShipmentAdviceDoc" type="single" target="shippingDocManage" default-entity-name="Reference">
+	    <field name="shipmentAdviceFile" title="${uiLabelMap.shipmentAdviceFile}" position="1"><file/></field>
+    	<field name="" tooltip="${uiLabelMap.na}" tooltip-style="button-text"><check /></field>
+	    <field name="shppingAgent" title="${uiLabelMap.shppingAgent}" position="1">
+	    	<text size="32" maxlength="255"/>
+	    </field>
+	    <field name="email" title="${uiLabelMap.email}" position="1">
+	    	<text size="32" maxlength="255"/>
+	    </field>
+	    <field name="submitButton"><submit/></field>
+	</form>
 
 </forms>

@@ -11,19 +11,19 @@
 
 	<!-- PO Master -->
 	<entity entity-name="PoMaster" package-name="org.apache.ofbiz.purchase" title="Purchase PoMaster Entity">
-		<field name="poNo" type="id-ne"></field>
-		<field name="venderId" type="id"></field>
-		<field name="poStatus" type="id"></field>
+		<field name="poNo" type="id-long-ne"></field>
+		<field name="vendorId" type="id-long"></field>
+		<field name="poStatus" type="id-long"></field>
 		<field name="orderDate" type="date-time"></field>
-		<field name="priceTerm" type="id"></field>
-		<field name="freightTerm" type="id"></field>
-		<field name="paymentTerm" type="id"></field>
+		<field name="priceTerm" type="id-long"></field>
+		<field name="freightTerm" type="id-long"></field>
+		<field name="paymentTerm" type="id-long"></field>
 		<field name="downPayment" type="currency-amount"></field>
 		<field name="remark" type="comment"></field>
 		<field name="shipmentMonth" type="short-varchar"></field>
 		<field name="fobPoint" type="short-varchar"></field>
-		<field name="poType" type="id"></field>
-		<field name="billingAccountId" type="id-ne"></field>
+		<field name="poType" type="id-long"></field>
+		<field name="billingAccountId" type="id-long"></field>
 		<field name="createUserId" type="id-ne"></field>
 		<field name="lastUpdateUserId" type="id-ne"></field>
 		<prim-key field="poNo"/>
@@ -37,6 +37,7 @@
 		<field name="poNo" type="id-ne"></field>
 		<field name="ppglNo" type="numeric"></field>
 		<field name="port" type="short-varchar"></field>
+		<field name="destination" type="id"></field>
 		<field name="steelType" type="id"></field>
 		<field name="coilDescription" type="description"></field>
 		<field name="etd" type="date-time"></field>
@@ -59,9 +60,15 @@
 		<field name="packagingDesc" type="description"></field>
 		<field name="customerId" type="id"></field>
 		<field name="remark" type="description"></field>
+		<field name="barge" type="indicator"></field>
+		<field name="partialYN" type="indicator"></field>
+		<field name="partialNo" type="id"></field>
 		<field name="businessClass" type="id"></field>
+		<field name="orderQuantity" type="fixed-point"></field>
 		<field name="unitQuantity" type="fixed-point"></field>
+		<field name="quantityUnit" type="id"></field>
 		<field name="unitPrice" type="currency-amount"></field>
+		<field name="priceUnit" type="id"></field>
 		<field name="paintCode" type="id"></field>
 		<field name="paintColor" type="id"></field>
 		<field name="paintType" type="id"></field>
@@ -73,14 +80,52 @@
 		<field name="lastUpdateUserId" type="id-ne"></field>
 
         <prim-key field="referenceSeq"/>
-        <prim-key field="referenceNo"/>
-        <prim-key field="poNo"/>
-        <prim-key field="lotNo"/>
-        <prim-key field="ppglNo"/>
+<!--         <prim-key field="referenceNo"/> -->
+<!--         <prim-key field="poNo"/> -->
+<!--         <prim-key field="lotNo"/> -->
+<!--         <prim-key field="ppglNo"/> -->
 
         <relation type="one" rel-entity-name="PoMaster">
 		    <key-map field-name="poNo"/>
 		</relation>
+    </entity>
+
+    <!-- Vendor Master -->
+	<entity entity-name="Vendor" package-name="org.apache.ofbiz.purchase" title="Purchase Vendor Entity">
+		<field name="vendorId" type="id-long-ne"></field>
+		<field name="vendorNm" type="long-varchar"></field>
+		<field name="vendorInitials" type="id"></field>
+		<field name="vendorAddr" type="long-varchar"></field>
+		<field name="vendorEmail" type="long-varchar"></field>
+		<field name="vendorTel" type="long-varchar"></field>
+		<field name="vendorFax" type="long-varchar"></field>
+		<field name="priceTerm" type="long-varchar"></field>
+		<field name="freightTerm" type="long-varchar"></field>
+		<field name="paymentTerm" type="long-varchar"></field>
+		<field name="remark" type="comment"></field>
+		<prim-key field="vendorId"/>
+    </entity>
+
+    <!-- Customer Master -->
+	<entity entity-name="Customer" package-name="org.apache.ofbiz.purchase" title="Purchase Customer Entity">
+		<field name="customerId" type="id-long-ne"></field>
+		<field name="customerName" type="id-long"></field>
+		<prim-key field="customerId"/>
+    </entity>
+
+    <!-- code Master -->
+	<entity entity-name="Code" package-name="org.apache.ofbiz.purchase" title="Purchase Code Entity">
+		<field name="code" type="id-long-ne"></field>
+		<field name="codeName" type="long-varchar"></field>
+		<field name="codeGroup" type="id-long-ne"></field>
+		<field name="attribute1" type="long-varchar"></field>
+		<field name="attribute2" type="long-varchar"></field>
+		<field name="attribute3" type="long-varchar"></field>
+		<field name="attribute4" type="long-varchar"></field>
+		<field name="remark" type="comment"></field>
+
+		<prim-key field="code"/>
+		<prim-key field="codeGroup"/>
     </entity>
 
     <view-entity entity-name="PoMasterNReference"
