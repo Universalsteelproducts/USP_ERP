@@ -52,6 +52,9 @@
 	<Code codeGroup="GAUGE" code="14" codeName="0.014" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
 	<Code codeGroup="GAUGE" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
 
+	<Code codeGroup="GAUGE_UNIT" code="MIN" codeName="MIN" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+	<Code codeGroup="GAUGE_UNIT" code="NOM" codeName="NOM" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
+
 	<Code codeGroup="WIDHT" code="43" codeName="43" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
 	<Code codeGroup="WIDHT" code="40" codeName="40.875" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />
 	<Code codeGroup="WIDHT" code="OTHER" codeName="OTHER" attribute1="" attribute2="" attribute3="" attribute4="" remark="" />

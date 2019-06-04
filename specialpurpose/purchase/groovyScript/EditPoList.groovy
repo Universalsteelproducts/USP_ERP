@@ -18,15 +18,37 @@
  */
 
 poCommonInfo = [:]
+poInfo = [:]
+vendorInfo = [:]
 lotInfoList = []
+totalQuantity = BigDecimal.ZERO
+totalPrice = BigDecimal.ZERO
+totalQuantityUnit = ""
+totalPriceUnit = ""
 codeList = []
 codeList = from("Code").queryList()
 
 poNo = parameters.poNo
 updateMode = "C"
 if(poNo) {
-	poCommonInfo = from("PoMaster").where("poNo", poNo).queryOne()
+	poInfo = from("PoMaster").where("poNo", poNo).queryOne()
+	vendorId = poInfo.get("vendorId").trim();
+	vendorInfo = from("Vendor").where("vendorId", vendorId).queryOne()
 	lotInfoList = from("Reference").where("poNo", poNo).queryList()
+	poCommonInfo.putAll(poInfo)
+	poCommonInfo.putAll(vendorInfo)
+
+	lotInfoList.each { lotInfo ->
+    	if(lotInfo.coilDescription == "PPGI" || lotInfo.coilDescription == "PPGL") {
+    		totalQuantity += lotInfo.unitQuantity
+    	} else {
+    		totalQuantity += lotInfo.orderQuantity
+    	}
+    	totalPrice += lotInfo.unitPrice
+	}
+
+	totalQuantityUnit = lotInfoList[0].quantityUnit
+	totalPriceUnit = lotInfoList[0].priceUnit
 
 	updateMode = "U"
 }
@@ -35,3 +57,7 @@ context.poCommonInfo = poCommonInfo
 context.lotInfoList = lotInfoList
 context.codeList = codeList
 context.updateMode =  updateMode
+context.totalQuantity = totalQuantity
+context.totalPrice = totalPrice
+context.totalQuantityUnit = totalQuantityUnit
+context.totalPriceUnit = totalPriceUnit

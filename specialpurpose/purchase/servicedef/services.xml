@@ -46,7 +46,7 @@
         <description>Create an Test Demo Group record</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
 		<auto-attributes include="nonpk" mode="IN" optional="true"/>
-<!-- 		<attribute name="result" mode="OUT" type="java.util.Map"/> -->
+		<attribute name="result" mode="OUT" type="java.util.Map"/>
     </service>
 
 	<service name="cancelPo" default-entity-name="PoMaster" engine="java" auth="true"
@@ -62,7 +62,7 @@
 		<auto-attributes include="nonpk" mode="IN" optional="true"/>
 		<attribute name="updateMode" mode="IN" type="String"/>
 		<attribute name="referenceSeq" mode="IN" type="Long"/>
-<!-- 		<attribute name="result" mode="OUT" type="java.util.Map"/> -->
+		<attribute name="result" mode="OUT" type="java.util.Map"/>
     </service>
 
 </services>

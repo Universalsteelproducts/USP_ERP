@@ -10,11 +10,11 @@
 	    <field name="poNo" title="${uiLabelMap.poNo}" position="1">
 	    	<text-find/>
 	    </field>
-	    <field name="vendor" title="${uiLabelMap.vendor}" position="1">
+	    <field name="vendorId" title="${uiLabelMap.vendorId}" position="1">
 	    	<lookup target-form-name="LookupVendor" name="vendorId" position="center" />
 	    </field>
-	    <field name="customer" title="${uiLabelMap.customer}" position="2">
-	    	<lookup target-form-name="LookupCustomer" position="center" />
+	    <field name="customerId" title="${uiLabelMap.customerId}" position="2">
+	    	<lookup target-form-name="LookupCustomer" name="customerId" position="center" />
 	    </field>
 	    <field name="port" title="${uiLabelMap.port}" position="1">
 	    	<text-find/>
@@ -25,7 +25,7 @@
 	    <field name="coatingWeight" title="${uiLabelMap.coatingWeight}" position="1">
 	    	<text-find/>
 	    </field>
-	    <field name="type" title="${uiLabelMap.type}" position="2">
+	    <field name="surfaceCoilType" title="${uiLabelMap.type}" position="2">
 	    	<text-find/>
 	    </field>
 	    <field name="gauge" title="${uiLabelMap.gauge}" position="1">
@@ -54,7 +54,7 @@
 			</service>
 	    </actions>
 
-        <field name="poStatus" title="${uiLabelMap.poStatus}" sort-field="true"><display/></field>
+        <field name="codeName" title="${uiLabelMap.poStatus}" sort-field="true"><display/></field>
         <field name="poNo" title="${uiLabelMap.poNo}" widget-style="buttontext">
             <hyperlink description="${poNo}" target="EditPo" also-hidden="false">
                 <parameter param-name="poNo"/>

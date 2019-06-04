@@ -123,7 +123,7 @@ public class PurchaseServices {
             createVendorNPoInfo.setPKFields(context);
             createVendorNPoInfo.setNonPKFields(context);
             createVendorNPoInfo = delegator.createOrStore(createVendorNPoInfo);
-//            result.put("result", createVendorNPoInfo);
+            result.put("result", createVendorNPoInfo);
 		    Debug.logInfo("in createVendorNPoInfo, " + createVendorNPoInfo.toString(), null);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
@@ -175,18 +175,8 @@ public class PurchaseServices {
             	createReferenceInfo.setFields(ppglNumVal);
             }
 
-            Debug.log("in createVendorNPoInfo, " + createReferenceInfo.toString());
-            Debug.logInfo("in createVendorNPoInfo, " + createReferenceInfo.toString(), null);
-            System.out.println("******************************************* , " + createReferenceInfo.toString());
             createReferenceInfo = delegator.createOrStore(createReferenceInfo);
-//            result.put("referenceSeq", createReferenceInfo.getString("referenceSeq"));
-//            result.put("referenceNo", createReferenceInfo.getString("referenceNo"));
-//		    result.put("lotNo", createReferenceInfo.getString("lotNo"));
-//		    result.put("ppglNo", createReferenceInfo.getString("ppglNo"));
-		    Debug.logInfo("in createReferenceInfo, " + createReferenceInfo.getString("referenceSeq"), null);
-		    Debug.logInfo("in createReferenceInfo, " + createReferenceInfo.getString("referenceNo"), null);
-		    Debug.logInfo("in createReferenceInfo, " + createReferenceInfo.getString("lotNo"), null);
-		    Debug.logInfo("in createReferenceInfo, " + createReferenceInfo.getString("ppglNo"), null);
+            result.put("result", createReferenceInfo);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Error in creating record in OfbizDemo entity ........" +module);

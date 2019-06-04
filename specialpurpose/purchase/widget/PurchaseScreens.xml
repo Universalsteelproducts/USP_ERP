@@ -8,9 +8,9 @@
             <actions>
                 <set field="headerItem" value="main"/>
                 <entity-condition entity-name="PoMasterNReference" list="poList" use-cache="true">
-                    <condition-list combine="and">
-                        <condition-expr field-name="poStatus" operator="equals" value="pending"/>
-                    </condition-list>
+<!--                     <condition-list combine="and"> -->
+<!--                         <condition-expr field-name="poStatus" operator="equals" value="pending"/> -->
+<!--                     </condition-list> -->
                     <order-by field-name="poNo"/>
                     <order-by field-name="lotNo"/>
                     <order-by field-name="referenceNo"/>

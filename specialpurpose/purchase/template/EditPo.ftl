@@ -1,4 +1,8 @@
 <#--
+	total / orderquantity control 다시
+	function 들 공통화 작업
+-->
+<#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -44,11 +48,21 @@ under the License.
 		var inputInit = function(id) {
 			$("#" + id + " :input").each(function() {
 				if($(this).prop("type") == "select-one") {
-					$(this).find("option:eq(0)").attr("selected", "selected");
+					$(this).find("option:eq(0)").attr("selected", true);
+					if($(this).attr("name") == "coilDescription") {
+						$(this).trigger("change");
+					}
 				} else if($(this).prop("type") == "checkbox") {
 					$(this).prop("checked", false);
 				} else {
-					$(this).val("");
+					if($(this).prop("type") != "button") {
+						if($(this).attr("name") == "orderQuantity" || $(this).attr("name") == "unitPrice"
+								|| $(this).attr("name") == "commissionUnitPrice" || $(this).attr("name") == "unitQuantity") {
+							$(this).val("0");
+						} else {
+							$(this).val("");
+						}
+					}
 				}
 			});
 		};
@@ -59,28 +73,41 @@ under the License.
 				if($(this).prop("type") == "checkbox") {
 					if($(this).prop("checked")) {
 						$("input[name=" + $(this).attr("name") + "]").last().prop("checked", true);
+						$("input[name=" + $(this).attr("name") + "]").last().val("Y");
 					} else {
 						$("input[name=" + $(this).attr("name") + "]").last().prop("checked", false);
+						$("input[name=" + $(this).attr("name") + "]").last().val("N");
 					}
 				} else if($(this).prop("type") == "select-one") {
 					if($(this).attr("id") == "orderQuantityUnit") {
-						$("#lotInfo select[name=quantityUnit]").last().val( $(this).val() ).prop("selected", "selected");
+						$("#lotInfo select[name=quantityUnit]").last().val( $(this).val() ).prop("selected", true);
 						$("select[name=" + $(this).attr("name") + "]").last().val( $(this).val() ).prop("selected", "selected");
 					} else if($(this).attr("id") == "unitPriceUnit") {
-						$("#lotInfo select[name=priceUnit]").last().val( $(this).val() ).prop("selected", "selected");
+						$("#lotInfo select[name=priceUnit]").last().val( $(this).val() ).prop("selected", true);
 					} else if($(this).attr("id") == "lotNo") {
 						$("#lotInfo #lotNo").last().val( $(this).val() );
 						$("#lotInfo #lotNoDesc").last().val( $(this).find("option:selected").text() );
 					} else {
-						$("select[name=" + $(this).attr("name") + "]").last().val( $(this).val() ).prop("selected", "selected");
+						$("select[name=" + $(this).attr("name") + "]").last().val( $(this).val() ).prop("selected", true);
 					}
 				} else {
-					$("input[name=" + $(this).attr("name") + "]").last().val( $(this).val() );
-				}
-
-				if($("#referenceForm input[name=" + $(this).attr("name") + "]").length == 0) {
-					tagTmp = "<input type='hidden' name='" + $(this).attr("name") + "' id='" + $(this).attr("name") + "' value='" + $(this).val() + "' />";
-					$("#referenceForm").append(tagTmp);
+					if($(this).attr("name") == "unitPrice" || $(this).attr("name") == "orderQuantity"
+							|| $(this).attr("name") == "unitQuantity" || $(this).attr("name") == "commissionUnitPrice" ) {
+						if($(this).val() > 0) {
+							var coilDescription = $("#lotCommonInfo #coilDescription").val();
+							if(coilDescription == "PPGL" || coilDescription == "PPGI") {
+								if($(this).attr("name") != "orderQuantity") {
+									$("input[name=" + $(this).attr("name") + "]").last().val( $(this).val() );
+								}
+							} else {
+								$("input[name=" + $(this).attr("name") + "]").last().val( $(this).val() );
+							}
+						} else {
+							$("input[name=" + $(this).attr("name") + "]").last().val( "0" );
+						}
+					} else {
+						$("input[name=" + $(this).attr("name") + "]").last().val( $(this).val() );
+					}
 				}
 			});
 		};
@@ -189,70 +216,103 @@ under the License.
 		});
 
 		/***************************************************************************
+		 ******************			InputBox Control			********************
+		 ***************************************************************************/
+
+		/***************************************************************************
 		 ******************			SelectBox Control			********************
 		 ***************************************************************************/
 		$("#lotCommonInfo #coilDescription").on("change", function() {
 			$("#coilDesc").val($(this).find(":selected").data("desc"));
 
 			if($(this).val() == "PPGL" || $(this).val() == "PPGI") {
-				$("#hideTag1,#hideTag2,#hideTag3").hide();
+				$("#hideTag1,#hideTag2,#hideTag3,#hideTag4,#hideTag5,#hideTag6").hide();
+// 				$("#giglTag").hide();
+				$("#lotCommonInfo #orderQuantity").attr("disabled", true);
+				$("#lotCommonInfo #orderQuantity").val("0");
+				$("#lotCommonInfo #orderQuantityUnit").attr("disabled", true);
+				$("#lotCommonInfo #orderQuantityUnit").val("").attr("selected", true).trigger("change");
 				$("#colspanTag").attr("colspan", "4");
-
 				$("#colorDetail").show();
+
+				$("#lotCommonInfo #coilDesc").attr("disabled", true);
 			} else {
-				$("#hideTag1,#hideTag2,#hideTag3").show();
+				$("#hideTag1,#hideTag2,#hideTag3,#hideTag4,#hideTag5,#hideTag6").show();
+// 				$("#giglTag").show();
+				$("#lotCommonInfo #orderQuantity").attr("disabled", false);
+				$("#lotCommonInfo #orderQuantity").val("0");
+				$("#lotCommonInfo #orderQuantityUnit").attr("disabled", false);
+				$("#lotCommonInfo #orderQuantityUnit").val("").attr("selected", true).trigger("change");
 				$("#colspanTag").attr("colspan", "");
-
 				$("#colorDetail").hide();
+
+				if($(this).val() == "OTHER") {
+					$("#lotCommonInfo #coilDesc").attr("disabled", false);
+				} else {
+					$("#lotCommonInfo #coilDesc").attr("disabled", true);
+				}
 			}
 		});
 
-		$("#lotCommonInfo #orderQuantityUnit,#unitPriceUnit").on("change", function() {
-			var id = $(this).attr("id");
+		$("#lotCommonInfo #orderQuantityUnit,#unitPriceUnit,#colorDetail #unitQuantityUnit").on("change", function() {
 
-			if(id == "orderQuantityUnit") {
-				$("#poInfo select[name$=uantityUnit]").val($(this).val()).attr("selected", "selected");
-				$("#lotCommonInfo select[name$=uantityUnit]").val($(this).val()).attr("selected", "selected");
-				$("#colorDetail select[name$=uantityUnit]").val($(this).val()).attr("selected", "selected");
-			} else if(id == "unitPriceUnit") {
-				$("#poInfo select[name$=riceUnit]").val($(this).val()).attr("selected", "selected");
-				$("#lotCommonInfo select[name$=riceUnit]").val($(this).val()).attr("selected", "selected");
-				$("#colorDetail select[name$=riceUnit]").val($(this).val()).attr("selected", "selected");
-			}
+			$("#vendorNPoInfo select[name$=uantityUnit]").val($(this).val()).attr("selected", true);
+			$("#lotCommonInfo select[name$=uantityUnit]").val($(this).val()).attr("selected", true);
+			$("#colorDetail select[name$=uantityUnit]").val($(this).val()).attr("selected", true);
+			$("#vendorNPoInfo select[name$=riceUnit]").val($(this).val()).attr("selected", true);
+			$("#lotCommonInfo select[name$=riceUnit]").val($(this).val()).attr("selected", true);
+			$("#colorDetail select[name$=riceUnit]").val($(this).val()).attr("selected", true);
 		});
 
-		$("#lotCommonInfo #grade,#coatingWeight,#surfaceCoilType,#gauge,#width").on("change", function() {
+		$("#lotCommonInfo #grade,#coatingWeight,#surfaceCoilType,#gauge,#width,#packaging").on("change", function() {
 			var id = $(this).attr("id");
 
-			if($(this).val() == "other") {
+			if($(this).val() == "OTHER") {
 				if(id == "grade") {
-					$("#gradeDesc").attr("disabled", false);
-					$("#gradeDesc").focus();
+					$("#lotCommonInfo #gradeDesc").attr("disabled", false);
+					$("#lotCommonInfo #gradeDesc").focus();
 				} else if(id == "coatingWeight") {
-					$("#coatingWeightDesc").attr("disabled", false);
-					$("#coatingWeightDesc").focus();
+					$("#lotCommonInfo #coatingWeightDesc").attr("disabled", false);
+					$("#lotCommonInfo #coatingWeightDesc").focus();
 				} else if(id == "surfaceCoilType") {
-					$("#surfaceCoilTypeDesc").attr("disabled", false);
-					$("#surfaceCoilTypeDesc").focus();
+					$("#lotCommonInfo #surfaceCoilTypeDesc").attr("disabled", false);
+					$("#lotCommonInfo #surfaceCoilTypeDesc").focus();
 				} else if(id == "gauge") {
-					$("#gaugeDesc").attr("disabled", false);
-					$("#gaugeDesc").focus();
+					$("#lotCommonInfo #gaugeDesc").attr("disabled", false);
+					$("#lotCommonInfo #gaugeDesc").focus();
 				} else if(id == "width") {
-					$("#widthDesc").attr("disabled", false);
-					$("#widthDesc").focus();
+					$("#lotCommonInfo #widthDesc").attr("disabled", false);
+					$("#lotCommonInfo #widthDesc").focus();
+				} else if(id == "packaging") {
+					$("#lotCommonInfo #packagingDesc").attr("disabled", false);
+					$("#lotCommonInfo #packagingDesc").focus();
 				}
 			} else {
 				if(id == "grade") {
-					$("#gradeDesc").attr("disabled", true);
+					$("#lotCommonInfo #gradeDesc").val("");
+					$("#lotCommonInfo #gradeDesc").attr("disabled", true);
 				} else if(id == "coatingWeight") {
-					$("#coatingWeightDesc").attr("disabled", true);
+					$("#lotCommonInfo #coatingWeightDesc").val("");
+					$("#lotCommonInfo #coatingWeightDesc").attr("disabled", true);
 				} else if(id == "surfaceCoilType") {
-					$("#surfaceCoilTypeDesc").attr("disabled", true);
+					$("#lotCommonInfo #surfaceCoilTypeDesc").val("");
+					$("#lotCommonInfo #surfaceCoilTypeDesc").attr("disabled", true);
 				} else if(id == "gauge") {
-					$("#gaugeDesc").attr("disabled", true);
+					$("#lotCommonInfo #gaugeDesc").val("");
+					$("#lotCommonInfo #gaugeDesc").attr("disabled", true);
 				} else if(id == "width") {
-					$("#widthDesc").attr("disabled", true);
+					$("#lotCommonInfo #widthDesc").val("");
+					$("#lotCommonInfo #widthDesc").attr("disabled", true);
+				} else if(id == "packaging") {
+					$("#lotCommonInfo #packagingDesc").val("");
+					$("#lotCommonInfo #packagingDesc").attr("disabled", true);
 				}
+			}
+
+			if($("#lotCommonInfo #coatingWeight").val()=="G90" && $("#lotCommonInfo #gauge").val()=="18" && $("#lotCommonInfo #width").val()=="43") {
+				$("#lotCommonInfo #guageControlYield").val("test");
+			} else {
+				$("#lotCommonInfo #guageControlYield").val("");
 			}
 		});
 
@@ -279,23 +339,77 @@ under the License.
 
 
 				    var nowDate = new Date();
-				    var year = nowDate.getFullYear();
+				    var year = nowDate.getFullYear().toString().substr(-2);;
 				    var month = (1 + nowDate.getMonth());
 				    month = month >= 10 ? month : '0' + month;
 				    var day = nowDate.getDate();
 				    day = day >= 10 ? day : '0' + day;
 
-				    var poNo = month + day + year + $("#vendorInitials").val();
+				    var poNo = year + month + day + $("#vendorInitials").val();
 				    $("#vendorNPoInfo #poNo").val(poNo);
 				}
 			});
 		});
 
-		$("#coilDescription").on("change", function() {
-			if($(this).val() == "OTHER") {
-				$("#coilDesc").prop("disabled", false);
+		$("#lotCommonInfo #lotNo").on("change", function() {
+			var lotNo = $(this).val();
+			if($(this).val() == "") {
+				inputInit("lotCommonInfo");
 			} else {
-				$("#coilDesc").prop("disabled", true);
+				var trCnt = $("#lotColoList tbody tr").size()/2;
+				var headTrCnt = 2;
+				var lotCommonInfo;
+				var trId = "";
+				if(trCnt > 0) {
+					inputInit("lotCommonInfo");
+					$(this).val( lotNo ).prop("selected", "selected");
+
+					for(var i=0 ; trCnt > i ; i++) {
+						if($("#lotColoList tbody tr").eq(i*2).find("#lotNo").val() == lotNo) {
+							trId = $("#lotColoList tbody tr").eq(i*2).attr("id");
+							trId = trId.substring(0, (trId.lastIndexOf("_")+1));
+							break;
+						}
+					}
+
+					for(var j=0 ; headTrCnt > j ; j++) {
+						$("#" + trId + (j+1) + " :input").each(function() {
+							if($("#lotCommonInfo input[name=" + $(this).attr("name") + "]")) {
+								if($(this).prop("type") == "checkbox") {
+									if($(this).prop("checked")) {
+										$("#lotCommonInfo input[name=" + $(this).attr("name") + "]").prop("checked", true).val("Y");
+									} else {
+										$("#lotCommonInfo input[name=" + $(this).attr("name") + "]").prop("checked", false).val("N");
+									}
+								} else if($(this).prop("type") == "select-one") {
+									$("#lotCommonInfo select[name=" + $(this).attr("name") + "]").val( $(this).val() ).prop("selected", "selected");
+									if($(this).attr("name") == "coilDescription") {
+										$("#lotCommonInfo select[name=" + $(this).attr("name") + "]").trigger("change");
+									}
+								} else {
+									if($(this).attr("name") == "unitPrice" || $(this).attr("name") == "orderQuantity"
+											|| $(this).attr("name") == "unitQuantity" || $(this).attr("name") == "commissionUnitPrice" ) {
+										if($(this).val() >= 0) {
+											$("#lotCommonInfo input[name=" + $(this).attr("name") + "]").val( $(this).val() );
+										} else {
+											$("#lotCommonInfo input[name=" + $(this).attr("name") + "]").val( "0" );
+										}
+									} else {
+										if($(this).attr("name") == "lotNo") {
+											$("#lotCommonInfo select[name=" + $(this).attr("name") + "]").val( $(this).val() ).prop("selected", "selected");
+										} else {
+											$("#lotCommonInfo input[name=" + $(this).attr("name") + "]").val( $(this).val() );
+										}
+									}
+								}
+							}
+						});
+					}
+					totalPriceNQuantity("lotColoList", 2, "unitQuantity", "unitPrice",  "totalQuantity", "totalPoAmount");
+				} else {
+					inputInit("lotCommonInfo");
+					$(this).val( lotNo ).prop("selected", "selected");
+				}
 			}
 		});
 
@@ -310,68 +424,166 @@ under the License.
 			inputInit("lotCommonInfo");
 			inputInit("colorDetail");
 
-			$("#lotCommonInfo #lotNo option:eq(" + lotIdx + ")").attr("selected", "selected");
+			$("#lotCommonInfo #lotNo option:eq(" + lotIdx + ")").attr("selected", true);
 		});
 
 		$("#addColor").on("click", function() {
+			var coilDescription = $("#lotCommonInfo #coilDescription").val();
 			addRow("lotColoList", "tableAddRow", 2);
 
 			inputValSet("lotCommonInfo");
-			inputValSet("colorDetail");
+			if(coilDescription == "PPGL" || coilDescription == "PPGI") {
+				inputValSet("colorDetail");
+			}
+
 			inputInit("colorDetail");
 
-			var referenceNo = $("#vendorNPoInfo #poNo").val() + $("#lotCommonInfo #lotNo").val() + "00";
-			var tagTmp = "<input type='hidden' id='referenceNo' name='referenceNo' value='" + referenceNo + "' />";
-			tagTmp += "<input type='hidden' id='referenceSeq' name='referenceSeq' value='0' />";
-			tagTmp += "<input type='hidden' id='ppglNo' name='ppglNo' value='00' />";
-			tagTmp += "<input type='hidden' id='partialYN' name='partialYN' value='N' />";
-			tagTmp += "<input type='hidden' id='poNo' name='poNo' value='" +  $("#vendorNPoInfo #poNo").val() + "' />";
-			tagTmp += "<input type='hidden' id='updateMode' name='updateMode' value='${updateMode}' />";
-
-			$("#referenceForm").append(tagTmp);
-
-			jQuery.ajax({
-				url: '<@ofbizUrl>/createNUpdateReferenceInfo</@ofbizUrl>',
-				type: 'POST',
-				data: $("#referenceForm").serialize(),
-				error: function(msg) {
-		            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
-		        },
-				success: function(data) {
-// 					alert(JSON.stringify(data));
-					$("#referenceForm").children().remove();
-				}
-			});
+			totalPriceNQuantity("lotColoList", 2, "unitQuantity", "unitPrice",  "totalQuantity", "totalPoAmount");
 		});
 
 		$("#submitBtn").on("click", function() {
 			jQuery.ajax({
 				url: '<@ofbizUrl>/createNUpdateVendorNPoInfo</@ofbizUrl>',
 				type: 'POST',
+				async: false,
 				data: $("#vendorNPoInfo").serialize(),
 				error: function(msg) {
 		            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
 		        },
-				success: function(data) {
-// 					alert(JSON.stringify(data));
+				success: function(data, status) {
+					if(status == "success") {
+						var trCnt = $("#lotColoList tbody tr").size()/2;
+						var headTrCnt = 2;
+						var errorCnt = 0;
+
+						for(var i=0 ; trCnt > i ; i++) {
+							var trId = $("#lotColoList tbody tr").eq(i*2).attr("id");
+							trId = trId.substring(0, (trId.lastIndexOf("_")+1));
+
+							var tagTmp = "<input type='hidden' id='updateMode' name='updateMode' value='${updateMode}' />";
+							tagTmp += "<input type='hidden' id='poNo' name='poNo' value='" + $("#vendorNPoInfo #poNo").val() + "' />";
+							$("#referenceForm").append(tagTmp);
+							tagTmp = "";
+
+							for(var j=0 ; headTrCnt > j ; j++) {
+								$("#" + trId + (j+1) + " :input").each(function() {
+									if($(this).prop("type") == "checkbox") {
+										if($(this).prop("checked") == true) {
+											tagTmp += "<input type='hidden' name='" + $(this).attr("name") + "' id='" + $(this).attr("name") + "' value='Y' />";
+										} else {
+											tagTmp += "<input type='hidden' name='" + $(this).attr("name") + "' id='" + $(this).attr("name") + "' value='N' />";
+										}
+									} else {
+										tagTmp += "<input type='hidden' name='" + $(this).attr("name") + "' id='" + $(this).attr("name") + "' value='" + $(this).val() + "' />";
+									}
+								});
+
+								$("#referenceForm").append(tagTmp);
+								tagTmp = "";
+							}
+
+							jQuery.ajax({
+								url: '<@ofbizUrl>/createNUpdateReferenceInfo</@ofbizUrl>',
+								type: 'POST',
+								async: false,
+								data: $("#referenceForm").serialize(),
+								error: function(msg) {
+						            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+						            errorCnt++;
+						        },
+								success: function(data, status) {
+									$("#referenceForm").children().remove();
+
+									if(status == "error") {
+										errorCnt++;
+									}
+								}
+							});
+						}
+
+						if(errorCnt == 0) {
+							alert("PO Issue Completed");
+						}
+					}
 				}
 			});
-
 // 			$("#vendorNPoInfo").attr("action", "<@ofbizUrl></@ofbizUrl>").submit();
 		});
 
 		$("#cancelBtn").on("click", function() {
 			jQuery.ajax({
-				url: '<@ofbizUrl>/cancelPo</@ofbizUrl>',
+				url: '<@ofbizUrl>/createNUpdateVendorNPoInfo</@ofbizUrl>',
 				type: 'POST',
-				data: {"poNo" : "${poNo!}"},
+				data: {"poNo" : "${poNo!}", "poStatus" : "CC"},
 				async: false,
-				success: function(data) {
-					alert(JSON.stringify(data));
+				error: function(msg) {
+		            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+		        },
+				success: function(data, status) {
+					alert("PO Cancel Completed");
 				}
 			});
 		});
+
+		$("#allClear").on("click", function() {
+			inputInit("vendorNPoInfo");
+			inputInit("lotCommonInfo");
+
+			$("#referenceForm").children().remove();
+			$("#lotColoList tbody").children().remove();
+		});
 	});
+
+	var totalPriceNQuantity = function(tableId, headTrCnt, quantityId, priceId,  totalQuantityId, totalPriceId) {
+
+		var trCnt = $("#" + tableId + " tbody tr").size()/headTrCnt;
+		var totalQuantity = 0;
+		var totalPrice = 0;
+		var groupUnitQuantity = 0;
+
+		var lotNo = $("#lotCommonInfo #lotNo").val();
+		var coilDescription = $("#lotCommonInfo #coilDescription").val();
+
+		for(var i=0 ; trCnt > i ; i++) {
+			var trId = $("#lotColoList tbody tr").eq(i*2).attr("id");
+			trId = trId.substring(0, (trId.lastIndexOf("_")+1));
+
+			var gridLotNo = $("#" + trId + "1 #lotNo").val();
+
+			for(var j=0 ; headTrCnt > j ; j++) {
+				$("#" + trId + + (j+1) + " :input").each(function() {
+					if($("#" + trId + "1" + " #coilDescription").val() == "PPGL" || $("#" + trId + "1" + " #coilDescription").val() == "PPGI") {
+						if($(this).attr("name") == quantityId) {
+							totalQuantity += parseInt($(this).val());
+							if(lotNo == gridLotNo) {
+								groupUnitQuantity += parseInt($(this).val());
+								gridLotNo = "";
+							}
+						}
+					} else {
+						if($(this).attr("name") == "orderQuantity") {
+							totalQuantity += parseInt($(this).val());
+						}
+					}
+
+					if($(this).attr("name") == priceId) {
+						totalPrice += parseInt($(this).val());
+					}
+				});
+			}
+		}
+
+		$("#" + totalQuantityId).val(totalQuantity);
+		$("#" + totalPriceId).val(totalPrice);
+
+		if(coilDescription == "PPGL" || coilDescription == "PPGI") {
+			$("#colspanTag #orderQuantity").val(groupUnitQuantity);
+		}
+	};
+
+	var orderQuantityCalc = function() {
+
+	}
 
 	function deleteRow(e, updateMode) {
 		var trTag = e.parent().parent();
@@ -387,27 +599,43 @@ under the License.
 			} else {
 				$("#" + trId).remove();
 			}
+
 		}
+
+		totalPriceNQuantity("lotColoList", 2, "unitQuantity", "unitPrice",  "totalQuantity", "totalPoAmount");
 	}
 
-	function updateRow(e, updateMode) {
-		var trTag = e.parent().parent();
-		var trId = trTag.attr("id");
-		alert($('#lotInfo').serialize());
-	}
+	function updateRow(trId, updateMode) {
+		var trCnt = 2;
 
-	function cancelPO(updateMode) {
-		if(updateMode == "C") {
-			jQuery.ajax({
-				url: 'getInvoiceRunningTotal',
-				type: 'POST',
-				data: $('#trId').serialize(),
-				async: false,
-				success: function(data) {
-				    jQuery('#showInvoiceRunningTotal').html(data.invoiceRunningTotal);
-				}
+		var tagTmp = "<input type='hidden' id='updateMode' name='updateMode' value='${updateMode}' />";
+		tagTmp += "<input type='hidden' id='poNo' name='poNo' value='" + $("#vendorNPoInfo #poNo").val() + "' />";
+		$("#referenceForm").append(tagTmp);
+		tagTmp = "";
+
+		for(var j=0 ; trCnt > j ; j++) {
+
+			$("#" + trId + (j+1) + " :input").each(function() {
+				tagTmp += "<input type='hidden' name='" + $(this).attr("name") + "' id='" + $(this).attr("name") + "' value='" + $(this).val() + "' />";
 			});
+
+			$("#referenceForm").append(tagTmp);
+			tagTmp = "";
 		}
+
+		jQuery.ajax({
+			url: '<@ofbizUrl>/createNUpdateReferenceInfo</@ofbizUrl>',
+			type: 'POST',
+			async: false,
+			data: $("#referenceForm").serialize(),
+			error: function(msg) {
+	            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
+	        },
+			success: function(data, status) {
+				$("#referenceForm").children().remove();
+				alert("PO Update Complete");
+			}
+		});
 	}
 
 	function selectedRowClass(e, rowCount, headerRowCnt) {
@@ -437,6 +665,18 @@ under the License.
 
 <form name="vendorNPoInfo" id="vendorNPoInfo">
 <!-- Vendor Info -->
+<div>
+	<ul align="right">
+	<#if updateMode == "U">
+		<label class="label">
+			Issue Date : ${poCommonInfo.createdStamp!},
+			Last Updated Date : ${poCommonInfo.lastUpdatedStamp!}
+		</label>
+	</#if>
+		<input id="allClear" type="button" value="${uiLabelMap.allClear}" class="buttontext"/>
+	</ul>
+</div>
+<br />
 <div class="screenlet">
 	<!-- Vendor Info -->
 	<div class="screenlet-title-bar">
@@ -449,7 +689,7 @@ under the License.
 		<table class="basic-table" cellspacing="0">
 			<tr>
 				<td class="label" width="13%" align="right" >
-					${uiLabelMap.vendor} ${poCommonInfo.vendorId!}
+					${uiLabelMap.vendor}
 				</td>
 				<td width="2%">&nbsp;</td>
 				<td width="35%">
@@ -471,7 +711,7 @@ under the License.
 				</td>
 				<td width="2%">&nbsp;</td>
 				<td width="35%">
-					<input type="text" name="vendorAddr" id="vendorAddr" value="" size="60" maxlength="255"/>
+					<input type="text" name="vendorAddr" id="vendorAddr" value="${poCommonInfo.vendorAddr!}" size="60" maxlength="255"/>
 				</td>
 				<td class="label" width="13%" align="right">
 					${uiLabelMap.priceTerm}
@@ -487,7 +727,7 @@ under the License.
 				</td>
 				<td width="2%">&nbsp;</td>
 				<td width="35%">
-					<input type="text" name="vendorEmail" id="vendorEmail" value="" size="25" maxlength="255"/>
+					<input type="text" name="vendorEmail" id="vendorEmail" value="${poCommonInfo.vendorEmail!}" size="25" maxlength="255"/>
 				</td>
 				<td class="label" width="13%" align="right">
 					${uiLabelMap.freightTerm}
@@ -503,7 +743,7 @@ under the License.
 				</td>
 				<td width="2%">&nbsp;</td>
 				<td width="35%">
-					<input type="text" name="vendorTel" id="vendorTel" value="" size="25" maxlength="255"/>
+					<input type="text" name="vendorTel" id="vendorTel" value="${poCommonInfo.vendorTel!}" size="25" maxlength="255"/>
 				</td>
 				<td class="label" width="13%" align="right">
 					${uiLabelMap.paymentTerm}
@@ -519,7 +759,7 @@ under the License.
 				</td>
 				<td width="2%">&nbsp;</td>
 				<td width="35%">
-					<input type="text" name="vendorFax" id="vendorFax" value="" size="25" maxlength="255"/>
+					<input type="text" name="vendorFax" id="vendorFax" value="${poCommonInfo.vendorFax!}" size="25" maxlength="255"/>
 				</td>
 				<td class="label" width="13%" align="right">
 					${uiLabelMap.downPayment}
@@ -558,24 +798,13 @@ under the License.
 					${uiLabelMap.poNo}
 				</td>
 				<td width="1%">&nbsp;</td>
-				<td width="35%">
+				<td width="35%" colspan="4">
 					<input type="text" name="poNo" id="poNo" size="25" maxlength="255" value="${poNo!}" style="background-color:#EEEEEE;" readonly="readonly" />
-				</td>
-				<td class="label" width="12%" align="right">
-					${uiLabelMap.poStatus}
-				</td>
-				<td width="1%">&nbsp;</td>
-				<td width="35%">
-					<select name="poStatus">
-						<option value="">--Select</option>
-					<#if codeList??>
-						<#list codeList as codeInfo>
-							<#if codeInfo.codeGroup == "PO_STATUS">
-          				<option value="${codeInfo.code!}" <#if codeInfo.code == poCommonInfo.poStatus! >selected="selected"</#if>>${codeInfo.codeName!}</option>
-          					</#if>
-	        			</#list>
-	        		</#if>
-					</select>
+				<#if updateMode == "C">
+					<input type="hidden" name="poStatus" id="poStatus" value="PE" />
+				<#else>
+					<input type="hidden" name="poStatus" id="poStatus" value="${poCommonInfo.poStatus!}"/>
+				</#if>
 				</td>
 			</tr>
 			<tr>
@@ -593,13 +822,13 @@ under the License.
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td width="35%">
-					<input type="text" name="totalQuantity" value="0" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
+					<input type="text" name="totalQuantity" id="totalQuantity" value="${totalQuantity?default('0')}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
 					<select name="quantityUnit" disabled="disabled">
 						<option value=""></option>
 					<#if codeList??>
 						<#list codeList as codeInfo>
 							<#if codeInfo.codeGroup == "QUANTITY_UNIT">
-          				<option value="${codeInfo.code!}" >${codeInfo.codeName!}</option>
+          				<option value="${codeInfo.code!}" <#if codeInfo.code == totalQuantityUnit! >selected="selected"</#if>>${codeInfo.codeName!}</option>
           					</#if>
 	        			</#list>
 	        		</#if>
@@ -610,29 +839,32 @@ under the License.
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td width="35%">
-					<input type="text" name="totalPoAmount" value="0" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
+					<input type="text" name="totalPoAmount" id="totalPoAmount" value="${totalPrice?default('0')}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
 					<select name="priceUnit" disabled="disabled">
 						<option value=""></option>
 					<#if codeList??>
 						<#list codeList as codeInfo>
 							<#if codeInfo.codeGroup == "PRICE_UNIT">
-          				<option value="${codeInfo.code!}" >${codeInfo.codeName!}</option>
+          				<option value="${codeInfo.code!}" <#if codeInfo.code == totalPriceUnit! >selected="selected"</#if>>${codeInfo.codeName!}</option>
           					</#if>
 	        			</#list>
 	        		</#if>
 					</select>
 				</td>
 			</tr>
+			<tr>
+				<td class="label" width="13%" align="right">
+					${uiLabelMap.internalNote}
+				</td>
+				<td width="2%">&nbsp;</td>
+				<td colspan="4">
+					<textarea name="internalNote" id="internalNote" rows="3">${poCommonInfo.internalNote!}</textarea>
+				</td>
+			</tr>
 		</table>
 	</div>
 </div>
 </form>
-<div>
-	<ul>
-		<input id="submitBtn" type="button" value="${uiLabelMap.submit}" class="buttontext"/>
-		<input id="cancelBtn" type="button" value="${uiLabelMap.cancel}" class="buttontext"/>
-	</ul>
-</div>
 
 <!-- LOT Info -->
 <div class="screenlet">
@@ -656,6 +888,7 @@ under the License.
 						<option value="">--Select</option>
 						<option value="01">LOT01</option>
 					</select>
+					<input type="button" id="addLot" value="${uiLabelMap.addLot}" class="buttontext" />
 				</td>
 			</tr>
 			<tr>
@@ -664,7 +897,16 @@ under the License.
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td width="20%">
-					<input type="text" id="destination" name="destination" value="" size="25" maxlength="255"/>
+					<select name="destination" id="destination">
+						<option value="">--Select</option>
+					<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "DESTINATION">
+          				<option value="${codeInfo.code!}" data-desc="${codeInfo.attribute1!}">${codeInfo.destination!}</option>
+          					</#if>
+	        			</#list>
+	        		</#if>
+					</select>
 				</td>
 				<td class="label" width="12%" align="right">
 					${uiLabelMap.coilDescription}
@@ -722,11 +964,21 @@ under the License.
 			        			</#list>
 			        		</#if>
 							</select>
-							<select name="gauge" id="gauge" style="width:19%;">
+							<select name="gauge" id="gauge" style="width:14%;">
 								<option value="">--GAUGE</option>
 							<#if codeList??>
 								<#list codeList as codeInfo>
 									<#if codeInfo.codeGroup == "GAUGE">
+		          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+		          					</#if>
+			        			</#list>
+			        		</#if>
+							</select>
+							<select name="gaugeUnit" id="gaugeUnit" style="width:5%;">
+								<option value="">--GAUGE</option>
+							<#if codeList??>
+								<#list codeList as codeInfo>
+									<#if codeInfo.codeGroup == "GAUGE_UNIT">
 		          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
 		          					</#if>
 			        			</#list>
@@ -759,7 +1011,16 @@ under the License.
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td width="20%">
-					<input type="text" name="coilMaxWeight" id="coilMaxWeight" value="" size="25" maxlength="255"/>
+					<select name="coilMaxWeight" id="coilMaxWeight">
+						<option value="">--Selecet</option>
+					<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "COIL_MAXWEIGHT">
+          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+          					</#if>
+	        			</#list>
+	        		</#if>
+					</select>
 				</td>
 				<td class="label" width="12%" align="right">
 					${uiLabelMap.coilId}
@@ -773,7 +1034,7 @@ under the License.
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td width="20%">
-					<input type="text" name="guageControlYield" id="guageControlYield" value="" size="25" maxlength="255"/>
+					<input type="text" name="guageControlYield" id="guageControlYield" value="" size="25" maxlength="255" style="background-color:#EEEEEE;" readonly="readonly"/>
 				</td>
 			</tr>
 			<tr>
@@ -782,7 +1043,7 @@ under the License.
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td colspan="4">
-					<select name="packaging" style="width:19%;">
+					<select name="packaging" id="packaging" style="width:30%;">
 						<option value="">--Select</option>
 					<#if codeList??>
 						<#list codeList as codeInfo>
@@ -792,40 +1053,7 @@ under the License.
 	        			</#list>
 	        		</#if>
 					</select>
-					<input type="text" name="packagingDesc" id="packagingDesc" value="" style="width:80%;" size="25" maxlength="255"/>
-				</td>
-				<td class="label" width="12%" align="right">
-					${uiLabelMap.businessClass}
-				</td>
-				<td width="1%">&nbsp;</td>
-				<td width="20%">
-					<select name="businessClass" id="businessClass" style="width:70%;">
-						<option value="">--Select</option>
-					<#if codeList??>
-						<#list codeList as codeInfo>
-							<#if codeInfo.codeGroup == "BUSINESS_CLASS">
-          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
-          					</#if>
-	        			</#list>
-	        		</#if>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="label" width="12%" align="right">
-					${uiLabelMap.customer}
-				</td>
-				<td width="1%">&nbsp;</td>
-				<td width="20%">
-					<@htmlTemplate.lookupField value="" formName="lotCommonInfo" name="customerId" id="customerId" fieldFormName="LookupCustomer" position="center" />
-				</td>
-				<td class="label" width="12%" align="right">
-					${uiLabelMap.otherDetails}
-				</td>
-				<td width="1%">&nbsp;</td>
-				<td width="20%">
-<!-- 					<input type="text" name="otherDetails" id="otherDetails" value="" size="25" maxlength="255"/> -->
-					<input type="text" name="remark" id="remark" value="" size="25" maxlength="255"/>
+					<input type="text" name="packagingDesc" id="packagingDesc" value="" style="width:69%;" size="25" maxlength="255" disabled="disabled"/>
 				</td>
 				<td class="label" width="12%" align="right">
 					${uiLabelMap.barge}
@@ -837,11 +1065,52 @@ under the License.
 			</tr>
 			<tr>
 				<td class="label" width="12%" align="right">
+					${uiLabelMap.businessClass}
+				</td>
+				<td width="1%">&nbsp;</td>
+				<td width="20%">
+					<select name="businessClass" id="businessClass">
+						<option value="">--Select</option>
+					<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "BUSINESS_CLASS">
+          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+          					</#if>
+	        			</#list>
+	        		</#if>
+					</select>
+				</td>
+				<td class="label" width="12%" align="right">
+					${uiLabelMap.customer}
+				</td>
+				<td width="1%">&nbsp;</td>
+				<td width="20%">
+					<form name="customerForm" id="customerForm">
+						<@htmlTemplate.lookupField value="" formName="customerForm" name="customerId" id="customerId" fieldFormName="LookupCustomer" position="center" />
+					</form>
+				</td>
+				<td class="label" width="12%" align="right">
+				</td>
+				<td width="1%">&nbsp;</td>
+				<td width="20%">
+				</td>
+			</tr>
+			<tr>
+				<td class="label" width="12%" align="right">
+					${uiLabelMap.otherDetails}
+				</td>
+				<td width="1%">&nbsp;</td>
+				<td colspan="7">
+					<textarea name="remark" id="remark" rows="3"></textarea>
+				</td>
+			</tr>
+			<tr id="giglTag">
+				<td class="label" width="12%" align="right">
 					${uiLabelMap.orderQuantity}
 				</td>
 				<td width="1%">&nbsp;</td>
 				<td width="20%"  id="colspanTag">
-					<input type="text" name="orderQuantity" value="0" style="text-align:right;" size="25" maxlength="255"/>
+					<input type="text" name="orderQuantity" id="orderQuantity" value="0" style="text-align:right;" size="25" maxlength="255"/>
 					<select name="orderQuantityUnit" id="orderQuantityUnit" size="1">
 						<option value="">--Select</option>
 					<#if codeList??>
@@ -870,9 +1139,23 @@ under the License.
 	        		</#if>
 					</select>
 				</td>
-				<td class="label" width="12%" align="right">&nbsp;</td>
-				<td width="1%">&nbsp;</td>
-				<td width="20%">&nbsp;</td>
+				<td class="label" width="12%" align="right" id="hideTag4">
+					${uiLabelMap.commissionUnitPrice}
+				</td>
+				<td width="1%" id="hideTag5">&nbsp;</td>
+				<td id="hideTag6">
+					<input type="text" name="commissionUnitPrice" id="commissionUnitPrice" value="0" style="text-align:right;" "size="25" maxlength="255"/>
+					<select name="commissionUnitPriceUnit" id="commissionUnitPriceUnit" size="1" disabled="disabled">
+						<option value="">--Select</option>
+					<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "PRICE_UNIT">
+          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+          					</#if>
+	        			</#list>
+	        		</#if>
+					</select>
+				</td>
 			</tr>
 		</table>
 		<hr />
@@ -898,41 +1181,6 @@ under the License.
 			        		</#if>
 							</select>
 						</td>
-						<td class="label" width="12%" align="right">
-							${uiLabelMap.paintType}
-						</td>
-						<td width="1%">&nbsp;</td>
-						<td width="20%">
-							<select name="paintType">
-								<option value="">--Select</option>
-							<#if codeList??>
-								<#list codeList as codeInfo>
-									<#if codeInfo.codeGroup == "PAINT_TYPE">
-		          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
-		          					</#if>
-			        			</#list>
-			        		</#if>
-							</select>
-						</td>
-						<td class="label" width="12%" align="right">
-							${uiLabelMap.unitQuantity}
-						</td>
-						<td width="1%">&nbsp;</td>
-						<td width="20%">
-							<input type="text" name="unitQuantity" value="0" size="25" maxlength="255" style="text-align:right;" />
-							<select name="unitQuantityUnit" size="1" disabled="disabled">
-								<option value="">--Select</option>
-							<#if codeList??>
-								<#list codeList as codeInfo>
-									<#if codeInfo.codeGroup == "QUANTITY_UNIT">
-		          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
-		          					</#if>
-			        			</#list>
-			        		</#if>
-							</select>
-						</td>
-					</tr>
-					<tr>
 						<td class="label" width="12%" align="right">
 							${uiLabelMap.paintCode}
 						</td>
@@ -965,6 +1213,34 @@ under the License.
 			        		</#if>
 							</select>
 						</td>
+					</tr>
+					<tr>
+						<td class="label" width="12%" align="right">
+							${uiLabelMap.paintCoatingThickness}
+						</td>
+						<td width="1%">&nbsp;</td>
+						<td colspan="7">
+							<input type="text" name="paintCoatingThickness" value="" style="width:99%;" size="25" maxlength="255"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="label" width="12%" align="right">
+							${uiLabelMap.unitQuantity}
+						</td>
+						<td width="1%">&nbsp;</td>
+						<td width="20%">
+							<input type="text" name="unitQuantity" value="0" size="25" maxlength="255" style="text-align:right;" />
+							<select name="unitQuantityUnit" id="unitQuantityUnit" size="1">
+								<option value="">--Select</option>
+							<#if codeList??>
+								<#list codeList as codeInfo>
+									<#if codeInfo.codeGroup == "QUANTITY_UNIT">
+		          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+		          					</#if>
+			        			</#list>
+			        		</#if>
+							</select>
+						</td>
 						<td class="label" width="12%" align="right">
 							${uiLabelMap.unitPrice}
 						</td>
@@ -982,28 +1258,13 @@ under the License.
 			        		</#if>
 							</select>
 						</td>
-					</tr>
-					<tr>
 						<td class="label" width="12%" align="right">
-							${uiLabelMap.paintCoatingThickness}
+							${uiLabelMap.commissionUnitPrice}
 						</td>
 						<td width="1%">&nbsp;</td>
-						<td colspan="4">
-							<select name="paintCoatingThickness" style="width:19%;">
-								<option value="">--Select</option>
-							<#if codeList??>
-								<#list codeList as codeInfo>
-									<#if codeInfo.codeGroup == "PAINT_COATING_THICKNESS">
-		          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
-		          					</#if>
-			        			</#list>
-			        		</#if>
-							</select>
-							<input type="text" name="paintCoatingThicknessDesc" value="" style="width:80%;" size="25" maxlength="255"/>
+						<td>
+							<input type="text" name="commissionUnitPrice" id="commissionUnitPrice" value="0" style="text-align:right;" size="25" maxlength="255"/>
 						</td>
-						<td class="label" width="12%" align="right">&nbsp;</td>
-						<td width="1%">&nbsp;</td>
-						<td width="20%">&nbsp;</td>
 					</tr>
 				</table>
 			</ul>
@@ -1013,8 +1274,7 @@ under the License.
 						<td class="label" style="width:87px;" align="right">&nbsp;</td>
 						<td width="1%">&nbsp;</td>
 						<td colspan="7">
-							<input type="button" id="addLot" value="${uiLabelMap.addLot}" class="buttontext" />
-							<input type="button" id="addColor" value="${uiLabelMap.addColor}" class="buttontext" />
+							<input type="button" id="addColor" value="&dArr;&dArr;&dArr;&dArr;&dArr;&dArr;&dArr;&dArr;" class="buttontext" />
 						</td>
 					</tr>
 				</table>
@@ -1045,33 +1305,18 @@ under the License.
 								<td>
 									${uiLabelMap.coilGrade}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.coilGradeDesc} --!>
-		<!-- 							</td> -->
 								<td>
 									${uiLabelMap.coatingWeight}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.coatingWeightDesc} --!>
-		<!-- 							</td> -->
 								<td>
 									${uiLabelMap.type}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.typeDesc} --!>
-		<!-- 							</td> -->
 								<td>
 									${uiLabelMap.gauge}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.gaugeDesc} --!>
-		<!-- 							</td> -->
 								<td>
 									${uiLabelMap.width}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.widthDesc} --!>
-		<!-- 							</td> -->
 								<td>
 									${uiLabelMap.coilMaxWeight}
 								</td>
@@ -1084,9 +1329,6 @@ under the License.
 								<td colspan="2">
 									${uiLabelMap.packaging}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.packagingDesc} --!>
-		<!-- 							</td> -->
 							</tr>
 							<tr class="header-row">
 								<td>
@@ -1111,10 +1353,10 @@ under the License.
 									${uiLabelMap.price}
 								</td>
 								<td>
-									${uiLabelMap.paintBrand}
+									${uiLabelMap.commissionUnitPrice}
 								</td>
 								<td>
-									${uiLabelMap.paintType}
+									${uiLabelMap.paintBrand}
 								</td>
 								<td>
 									${uiLabelMap.paintCode}
@@ -1125,14 +1367,11 @@ under the License.
 								<td>
 									${uiLabelMap.paintCoatingThickness}
 								</td>
-		<!-- 							<td> -->
-		<!-- 								${uiLabelMap.paintCoatingThicknessDesc} --!>
-		<!-- 							</td> -->
 								<td>&nbsp;</td>
 				            </tr>
 				            <tr id="tableAddRow1" style="display:none;">
 				            	<td rowspan="2">
-				            		<input type="hidden" id="referenceSeq" name="referenceSeq" value="" />
+				            		<input type="hidden" id="referenceSeq" name="referenceSeq" value="0" />
 				            		<input type="hidden" id="referenceNo" name="referenceNo" value="" />
 				            		<input type="hidden" id="ppglNo" name="ppglNo" value="" />
 				            		<input type="hidden" id="partialYN" name="partialYN" value="N" />
@@ -1144,14 +1383,28 @@ under the License.
 									<input type="text" id="lotNoDesc" name="lotNoDesc" value="" style="width:99%;"/>
 								</td>
 								<td>
-									<input type="text" id="destination" name="destination" style="width:99%;"/>
+									<select name="destination" id="destination" style="width:99%;">
+										<option value="">--Select</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "DESTINATION">
+				          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
 								</td>
 								<td>
-									<select name="coilDescriptionCode" id="coilDescriptionCode" style="width:20%;">
+									<select name="coilDescription" id="coilDescription" style="width:19%;">
 										<option value="">--Select</option>
-										<option value="description">description</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "COIL_DESCRIPTION">
+				          				<option value="${codeInfo.code!}" data-desc="${codeInfo.attribute1!}">${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
 									</select>
-									<input type="text" id="coilDescription" name="coilDescription" style="width:77%;"/>
 								</td>
 								<td>
 									<select name="grade" id="grade" style="width:20%;">
@@ -1203,7 +1456,17 @@ under the License.
 					        			</#list>
 					        		</#if>
 									</select>
-									<input type="text" id="gaugeDesc" name="gaugeDesc" style="width:75%;"/>
+									<select name="gaugeUnit" id="gaugeUnit" style="width:19%;">
+										<option value="">--Select</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "GAUGE_UNIT">
+				          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
+									<input type="text" id="gaugeDesc" name="gaugeDesc" style="width:55%;"/>
 								</td>
 								<td>
 									<select name="width" id="width" style="width:20%;">
@@ -1219,10 +1482,19 @@ under the License.
 									<input type="text" id="widthDesc" name="widthDesc" style="width:75%;"/>
 								</td>
 								<td>
-									<input type="text" id="coilMaxWeight" name="coilMaxWeight" style="width:99%;"/>
+									<select name="coilMaxWeight" id="coilMaxWeight" style="width:99%;">
+										<option value="">--WIDTH</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "COIL_MAXWEIGHT">
+				          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
 								</td>
 								<td>
-									<input type="text" id="coilId" name="coilId" style="width:99%;"/>
+									<input type="text" id="innerDiameter" name="innerDiameter" style="width:99%;"/>
 								</td>
 								<td>
 									<input type="text" id="gaugeControlYield" name="gaugeControlYield" style="width:99%;"/>
@@ -1304,11 +1576,12 @@ under the License.
 									</select>
 								</td>
 								<td>
-									<select name="paintBrand" style="width:99%;"/>
+									<input type="text" id="commissionUnitPrice" name="commissionUnitPrice" style="width:75%;text-align:right;" value="0"/>
+									<select name="commissionUnitPriceUnit" size="1" style="width:20%;">
 										<option value="">--Select</option>
 									<#if codeList??>
 										<#list codeList as codeInfo>
-											<#if codeInfo.codeGroup == "PAINT_BRAND">
+											<#if codeInfo.codeGroup == "PRICE_UNIT">
 				          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
 				          					</#if>
 					        			</#list>
@@ -1316,11 +1589,11 @@ under the License.
 									</select>
 								</td>
 								<td>
-									<select name="paintType" style="width:99%;"/>
+									<select name="paintBrand" style="width:99%;"/>
 										<option value="">--Select</option>
 									<#if codeList??>
 										<#list codeList as codeInfo>
-											<#if codeInfo.codeGroup == "PAINT_TYPE">
+											<#if codeInfo.codeGroup == "PAINT_BRAND">
 				          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
 				          					</#if>
 					        			</#list>
@@ -1352,22 +1625,11 @@ under the License.
 									</select>
 								</td>
 								<td>
-									<select name="paintCoatingThickness" style="width:99%;">
-										<option value="">--Select</option>
-									<#if codeList??>
-										<#list codeList as codeInfo>
-											<#if codeInfo.codeGroup == "PAINT_COATING_THICKNESS">
-				          				<option value="${codeInfo.code!}">${codeInfo.codeName!}</option>
-				          					</#if>
-					        			</#list>
-					        		</#if>
-									</select>
+									<input type="text" id="paintCoatingThickness" name="paintCoatingThickness" style="width:99%;"/>
 								</td>
 								<td>
 									<#if updateMode == "C">
 										<input type="button" id="deleteBtn" value="${uiLabelMap.delete}" class="buttontext" onclick="javascript:deleteRow($(this), '${updateMode}')" />
-									<#else>
-										<input type="button" id="updateBtn" value="${uiLabelMap.update}" class="buttontext" onclick="javascript:updateRow($(this), '${updateMode}')" />
 									</#if>
 								</td>
 				            </tr>
@@ -1389,14 +1651,28 @@ under the License.
 									<input type="text" id="lotNoDesc" name="lotNoDesc" value="LOT${lotInfo.lotNo!}" style="width:99%;"/>
 								</td>
 								<td>
-									<input type="text" id="destination" name="destination" value="${lotInfo.destination!}" style="width:99%;"/>
+									<select name="destination" id="destination" style="width:99%;">
+										<option value="">--Select</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "DESTINATION">
+				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.destination! >selected="selected"</#if>>${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
 								</td>
 								<td>
-									<select name="coilDescriptionCode" id="coilDescriptionCode" style="width:20%;">
+									<select name="coilDescription" id="coilDescription" style="width:19%;">
 										<option value="">--Select</option>
-										<option value="description">description</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "COIL_DESCRIPTION">
+				          				<option value="${codeInfo.code!}" data-desc="${codeInfo.attribute1!}" <#if codeInfo.code == lotInfo.coilDescription! >selected="selected"</#if>>${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
 									</select>
-									<input type="text" id="coilDescription" name="coilDescription" value="${lotInfo.coilDescription!}" style="width:77%;"/>
 								</td>
 								<td>
 									<select name="grade" id="grade" style="width:20%;">
@@ -1448,7 +1724,17 @@ under the License.
 					        			</#list>
 					        		</#if>
 									</select>
-									<input type="text" id="gaugeDesc" name="gaugeDesc" value="${lotInfo.gauge!}" style="width:75%;"/>
+									<select name="gaugeUnit" id="gaugeUnit" style="width:19%;">
+										<option value="">--Select</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "GAUGE_UNIT">
+				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.gaugeUnit! >selected="selected"</#if>>${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
+									<input type="text" id="gaugeDesc" name="gaugeDesc" value="${lotInfo.gauge!}" style="width:55%;"/>
 								</td>
 								<td>
 									<select name="width" id="width" style="width:20%;">
@@ -1464,7 +1750,16 @@ under the License.
 									<input type="text" id="widthDesc" name="widthDesc" value="${lotInfo.width!}" style="width:75%;"/>
 								</td>
 								<td>
-									<input type="text" id="coilMaxWeight" name="coilMaxWeight" value="${lotInfo.coilMaxWeight!}" style="width:99%;"/>
+									<select name="coilMaxWeight" id="coilMaxWeight" style="width:99%;">
+										<option value="">--WIDTH</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "COIL_MAXWEIGHT">
+				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.coilMaxWeight! >selected="selected"</#if>>${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
 								</td>
 								<td>
 									<input type="text" id="innerDiameter" name="innerDiameter" value="${lotInfo.innerDiameter!}" style="width:99%;"/>
@@ -1505,7 +1800,7 @@ under the License.
 									<input type="text" id="customer" name="customer" value="${lotInfo.customerId!}" style="width:99%;"/>
 								</td>
 								<td>
-									<input type="text" id="remark" name="remark" value="${lotInfo.remark!}"style="width:99%;"/>
+									<input type="text" id="remark" name="remark" value="${lotInfo.remark!}" style="width:99%;"/>
 								</td>
 								<td align="center">
 									<input type="checkbox" name="barge" id="barge" value="Y" <#if lotInfo.barge == "Y">checked="checked"</#if> />
@@ -1550,30 +1845,29 @@ under the License.
 									</select>
 								</td>
 								<td>
+									<input type="text" id="commissionUnitPrice" name="commissionUnitPrice" value="${lotInfo.commissionUnitPrice?default('0')}" style="text-align:right;width:75%;"/>
+									<select name="commissionUnitPriceUnit" size="1" style="width:20%;"/>
+										<option value="">--Select</option>
+									<#if codeList??>
+										<#list codeList as codeInfo>
+											<#if codeInfo.codeGroup == "PRICE_UNIT">
+				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.priceUnit! >selected="selected"</#if>>${codeInfo.codeName!}</option>
+				          					</#if>
+					        			</#list>
+					        		</#if>
+									</select>
+								</td>
+								<td>
 									<select name="paintBrand" style="width:99%;"/>
 										<option value="">--Select</option>
 									<#if codeList??>
 										<#list codeList as codeInfo>
 											<#if codeInfo.codeGroup == "PAINT_BRAND">
-				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.priceUnit! >selected="selected"</#if>>${codeInfo.codeName!}</option>
+				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.paintBrand! >selected="selected"</#if>>${codeInfo.codeName!}</option>
 				          					</#if>
 					        			</#list>
 					        		</#if>
 									</select>
-									<input type="hidden" id="paintBrand" name="paintBrand" value="${lotInfo.paintBrand!}" style="width:99%;"/>
-								</td>
-								<td>
-									<select name="paintType" style="width:99%;"/>
-										<option value="">--Select</option>
-									<#if codeList??>
-										<#list codeList as codeInfo>
-											<#if codeInfo.codeGroup == "PAINT_TYPE">
-				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.priceUnit! >selected="selected"</#if>>${codeInfo.codeName!}</option>
-				          					</#if>
-					        			</#list>
-					        		</#if>
-									</select>
-									<input type="hidden" id="paintType" name="paintType" value="${lotInfo.paintType!}" style="width:99%;"/>
 								</td>
 								<td>
 									<select name="paintCode" style="width:99%;"/>
@@ -1586,7 +1880,6 @@ under the License.
 					        			</#list>
 					        		</#if>
 									</select>
-									<input type="hidden" id="paintCode" name="paintCode" value="${lotInfo.paintCode!}" style="width:99%;"/>
 								</td>
 								<td>
 									<select name="paintColor" style="width:99%;"/>
@@ -1599,26 +1892,12 @@ under the License.
 					        			</#list>
 					        		</#if>
 									</select>
-									<input type="hidden" id="paintColor" name="paintColor" value="${lotInfo.paintColor!}" style="width:99%;"/>
 								</td>
 								<td>
-									<select name="paintCoatingThickness" style="width:20%;"/>
-										<option value="">--Select</option>
-									<#if codeList??>
-										<#list codeList as codeInfo>
-											<#if codeInfo.codeGroup == "PAINT_COATING_THICKNESS">
-				          				<option value="${codeInfo.code!}" <#if codeInfo.code == lotInfo.paintCoatingThickness! >selected="selected"</#if>>${codeInfo.codeName!}</option>
-				          					</#if>
-					        			</#list>
-					        		</#if>
-									</select>
-									<input type="text" id="paintCoatingThickness" name="paintCoatingThickness" value="${lotInfo.paintCoatingThickness!}" style="width:75%;"/>
+									<input type="text" id="paintCoatingThickness" name="paintCoatingThickness" value="${lotInfo.paintCoatingThickness!}" style="width:99%;"/>
 								</td>
-		<!-- 							<td> -->
-		<!-- 								<input type="button" value="${uiLabelMap.delete}" class="buttontext" onclick="javascript:deleteRow($(this))" /> -->
-		<!-- 							</td> -->
 								<td>
-									<input type="button" value="${uiLabelMap.update}" class="buttontext"/>
+									<input type="button" value="${uiLabelMap.update}" class="buttontext" onclick="javascript:updateRow('trRow_${rowCount}_');"/>
 								</td>
 				            </tr>
 				            <#assign rowCount = rowCount + 1>
@@ -1636,6 +1915,15 @@ under the License.
 			</ul>
 		</div>
 	</div>
+</div>
+<div>
+	<ul>
+		<#if updateMode == "C">
+			<input id="submitBtn" type="button" value="${uiLabelMap.submit}" class="buttontext"/>
+		<#else>
+			<input id="cancelBtn" type="button" value="${uiLabelMap.cancel}" class="buttontext"/>
+		</#if>
+	</ul>
 </div>
 <form id="referenceForm" name="referenceForm"></form>
 <!-- <form id="testForm"> -->

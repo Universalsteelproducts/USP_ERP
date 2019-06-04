@@ -5,7 +5,7 @@
 	<form name="main" type="list" list-name="poList" default-entity-name="PoMasterNReference" separate-columns="true"
             odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
 
-        <field name="poStatus" title="${uiLabelMap.poStatus}" sort-field="true"><display/></field>
+        <field name="codeName" title="${uiLabelMap.poStatus}" sort-field="true"><display/></field>
         <field name="poNo" title="${uiLabelMap.poNo}" widget-style="buttontext">
             <hyperlink description="${poNo}" target="EditPo" also-hidden="false">
                 <parameter param-name="poNo"/>

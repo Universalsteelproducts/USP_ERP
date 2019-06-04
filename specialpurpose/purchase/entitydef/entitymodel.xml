@@ -20,6 +20,7 @@
 		<field name="paymentTerm" type="id-long"></field>
 		<field name="downPayment" type="currency-amount"></field>
 		<field name="remark" type="comment"></field>
+		<field name="internalNote" type="comment"></field>
 		<field name="shipmentMonth" type="short-varchar"></field>
 		<field name="fobPoint" type="short-varchar"></field>
 		<field name="poType" type="id-long"></field>
@@ -37,43 +38,45 @@
 		<field name="poNo" type="id-ne"></field>
 		<field name="ppglNo" type="numeric"></field>
 		<field name="port" type="short-varchar"></field>
-		<field name="destination" type="id"></field>
-		<field name="steelType" type="id"></field>
+		<field name="destination" type="id-long"></field>
+		<field name="steelType" type="id-long"></field>
 		<field name="coilDescription" type="description"></field>
 		<field name="etd" type="date-time"></field>
 		<field name="eta" type="date-time"></field>
 		<field name="vessel" type="id-long"></field>
-		<field name="grade" type="id"></field>
+		<field name="grade" type="id-long"></field>
 		<field name="gradeDesc" type="description"></field>
-		<field name="coatingWeight" type="id"></field>
+		<field name="coatingWeight" type="id-long"></field>
 		<field name="coatingWeightDesc" type="description"></field>
-		<field name="surfaceCoilType" type="id"></field>
+		<field name="surfaceCoilType" type="id-long"></field>
 		<field name="surfaceCoilTypeDesc" type="description"></field>
-		<field name="gauge" type="id"></field>
+		<field name="gauge" type="id-long"></field>
+		<field name="gaugeUnit" type="id-long"></field>
 		<field name="gaugeDesc" type="description"></field>
-		<field name="width" type="id"></field>
+		<field name="width" type="id-long"></field>
 		<field name="widthDesc" type="description"></field>
-		<field name="coilMaxWeight" type="id"></field>
-		<field name="innerDiameter" type="id"></field>
+		<field name="coilMaxWeight" type="id-long"></field>
+		<field name="innerDiameter" type="id-long"></field>
 		<field name="gaugeControlCombo" type="id-long"></field>
 		<field name="packaging" type="id-long"></field>
 		<field name="packagingDesc" type="description"></field>
-		<field name="customerId" type="id"></field>
+		<field name="customerId" type="id-long"></field>
 		<field name="remark" type="description"></field>
 		<field name="barge" type="indicator"></field>
 		<field name="partialYN" type="indicator"></field>
-		<field name="partialNo" type="id"></field>
-		<field name="businessClass" type="id"></field>
+		<field name="partialNo" type="id-long"></field>
+		<field name="businessClass" type="id-long"></field>
 		<field name="orderQuantity" type="fixed-point"></field>
 		<field name="unitQuantity" type="fixed-point"></field>
-		<field name="quantityUnit" type="id"></field>
+		<field name="quantityUnit" type="id-long"></field>
 		<field name="unitPrice" type="currency-amount"></field>
-		<field name="priceUnit" type="id"></field>
-		<field name="paintCode" type="id"></field>
-		<field name="paintColor" type="id"></field>
-		<field name="paintType" type="id"></field>
-		<field name="paintBrand" type="id"></field>
-		<field name="paintCoatingThickness" type="id"></field>
+		<field name="priceUnit" type="id-long"></field>
+		<field name="commissionUnitPrice" type="currency-amount"></field>
+		<field name="paintCode" type="id-long"></field>
+		<field name="paintColor" type="id-long"></field>
+		<field name="paintType" type="id-long"></field>
+		<field name="paintBrand" type="id-long"></field>
+		<field name="paintCoatingThickness" type="id-long"></field>
 		<field name="paintCoatingThicknessDesc" type="description"></field>
 		<field name="lcPaymentYn" type="indicator"></field>
 		<field name="createUserId" type="id-ne"></field>
@@ -133,12 +136,37 @@
 	             title="PoMaster and Reference">
 		<member-entity entity-alias="P" entity-name="PoMaster"/>
 		<member-entity entity-alias="R" entity-name="Reference"/>
+		<member-entity entity-alias="V" entity-name="Vendor"/>
+		<member-entity entity-alias="C" entity-name="Customer"/>
+		<member-entity entity-alias="CD" entity-name="Code"/>
+
+<!-- 		<alias entity-alias="R" name="totalOrderQuantity" field="orderQuantity" function="sum"/> -->
+<!-- 		<alias entity-alias="R" name="totalQuantity" field="unitQuantity" function="sum"/> -->
+<!--         <alias entity-alias="R" name="totalPrice" field="unitPrice" function="sum"/> -->
 
 		<alias-all entity-alias="P"/>
 		<alias-all entity-alias="R"/>
+		<alias-all entity-alias="V"/>
+		<alias-all entity-alias="C"/>
+		<alias-all entity-alias="CD"/>
 
 		<view-link entity-alias="P" rel-entity-alias="R" rel-optional="true">
 		    <key-map field-name="poNo"/>
+		</view-link>
+
+		<view-link entity-alias="P" rel-entity-alias="CD" rel-optional="true">
+		    <key-map field-name="poStatus" rel-field-name="code" />
+		    <entity-condition>
+				<condition-expr field-name="codeGroup" entity-alias="CD" value="PO_STATUS"/>
+            </entity-condition>
+		</view-link>
+
+		<view-link entity-alias="R" rel-entity-alias="C" rel-optional="true">
+		    <key-map field-name="customerId"/>
+		</view-link>
+
+		<view-link entity-alias="P" rel-entity-alias="V" rel-optional="true">
+		    <key-map field-name="vendorId"/>
 		</view-link>
 	</view-entity>
 
