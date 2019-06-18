@@ -12,15 +12,19 @@
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PurchaseCompanySubtitle" global="true"/>
 <!--                 <set field="layoutSettings.javaScripts[]" value="/purchase/js/PurchasePushNotifications.js" global="true"/> -->
 
-<!-- 				<set field="layoutSettings.javaScripts[]" value="/purchase/static/purchaseCommon.js" global="true"/> -->
-
                 <set field="activeApp" value="purchase" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/purchase/static/purchaseCommon.js" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://purchase/widget/PurchaseMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.PurchaseApplication}" global="true"/>
             </actions>
             <widgets>
-                <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
+            	<section>
+                    <condition>
+                        <if-has-permission permission="PURCHASE" action="_VIEW"/>
+                    </condition>
+                </section>
+                <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>

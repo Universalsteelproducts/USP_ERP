@@ -19,6 +19,19 @@
 		<response name="success" type="view" value="FindPoList"/>
 	</request-map>
 
+<!-- 	<request-map uri="CRUDPoList"> -->
+<!-- 		<security https="true" auth="true"/> -->
+<!-- 		<event type="java" path="com.usp.purchase.event.PurchaseEvent" invoke="CRUDPoList"/> -->
+<!-- 		<response name="success" type="none"/> -->
+<!--         <response name="error" type="none"/> -->
+<!-- 	</request-map> -->
+	<request-map uri="CRUDPoList">
+		<security https="true" auth="true"/>
+		<event type="service" invoke="CRUDPoList"/>
+		<response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+	</request-map>
+
 	<request-map uri="EditPo">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditPo"/>

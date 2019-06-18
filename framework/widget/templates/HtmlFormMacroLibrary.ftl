@@ -275,7 +275,7 @@ under the License.
     <span <@renderClass className alert />><#rt/>
       <input type="checkbox"<#if (item_index == 0)> id="${id}"</#if><#rt/><#if tabindex?has_content> tabindex="${tabindex}"</#if><#rt/>
         <#if allChecked?has_content && allChecked> checked="checked" <#elseif allChecked?has_content && !allChecked>
-          <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if> 
+          <#elseif currentValue?has_content && currentValue==item.value> checked="checked"</#if>
           name="${name?default("")?html}" value="${item.value?default("")?html}"<#if event?has_content> ${event}="${action}"</#if>/><#rt/>
         ${item.description?default("")}
     </span>
@@ -744,10 +744,10 @@ Parameter: delegatorName, String, optional - name of the delegator in context.
       </script>
     </#if>
     <#if readonly?has_content && readonly>
-      <a id="${id}_clear" 
-        style="background:none;margin-left:5px;margin-right:15px;" 
-        class="clearField" 
-        href="javascript:void(0);" 
+      <a id="${id}_clear"
+        style="background:none;margin-left:5px;margin-right:15px;"
+        class="clearField"
+        href="javascript:void(0);"
         onclick="javascript:document.${formName}.${name}.value='';
           jQuery('#' + jQuery('#${id}_clear').next().attr('id').replace('_button','') + '_${id}_lookupDescription').html('');
           <#if descriptionFieldName?has_content>document.${formName}.${descriptionFieldName}.value='';</#if>">
@@ -765,7 +765,7 @@ Parameter: delegatorName, String, optional - name of the delegator in context.
 
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel>
   <#if listSize gt viewSize>
-    <div class="${paginateStyle}">&nbsp; 
+    <div class="${paginateStyle}">&nbsp;
       <ul>
         <li class="${paginateFirstStyle}<#if viewIndex gt 0>"><a href="javascript:void(0)" onclick="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxFirstUrl}')<#else>submitPagination(this, '${firstUrl}')</#if>">${paginateFirstLabel}</a><#else>-disabled"><span>${paginateFirstLabel}</span></#if></li>
         <li class="${paginatePreviousStyle}<#if viewIndex gt 0>"><a href="javascript:void(0)" onclick="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxPreviousUrl}')<#else>submitPagination(this, '${previousUrl}')</#if>">${paginatePreviousLabel}</a><#else>-disabled"><span>${paginatePreviousLabel}</span></#if></li>
@@ -873,7 +873,7 @@ Parameter: delegatorName, String, optional - name of the delegator in context.
 <#macro makeHyperlinkString linkStyle hiddenFormName event action imgSrc title targetParameters alternate linkUrl targetWindow description confirmation uniqueItemName="" height="" width="" id="">
     <#if uniqueItemName?has_content>
         <div id="${uniqueItemName}"></div>
-        <a href="javascript:void(0);" id="${uniqueItemName}_link" 
+        <a href="javascript:void(0);" id="${uniqueItemName}_link"
         <#if linkStyle?has_content>class="${linkStyle}"</#if>>
         <#if description?has_content>${description}</#if></a>
         <script type="text/javascript">
@@ -911,7 +911,7 @@ Parameter: delegatorName, String, optional - name of the delegator in context.
             });
         </script>
     <#else>
-    <a <#if linkStyle?has_content && (description?has_content || imgSrc?has_content)>class="${linkStyle}"</#if>  
+    <a <#if linkStyle?has_content && (description?has_content || imgSrc?has_content)>class="${linkStyle}"</#if>
       href="${linkUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if>
       <#if action?has_content && event?has_content> ${event}="${action}"</#if>
       <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}')"</#if>

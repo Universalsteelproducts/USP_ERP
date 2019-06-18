@@ -25,8 +25,8 @@
 		<field name="fobPoint" type="short-varchar"></field>
 		<field name="poType" type="id-long"></field>
 		<field name="billingAccountId" type="id-long"></field>
-		<field name="createUserId" type="id-ne"></field>
-		<field name="lastUpdateUserId" type="id-ne"></field>
+		<field name="createUserId" type="id-long"></field>
+		<field name="lastUpdateUserId" type="id-long"></field>
 		<prim-key field="poNo"/>
     </entity>
 
@@ -79,8 +79,8 @@
 		<field name="paintCoatingThickness" type="id-long"></field>
 		<field name="paintCoatingThicknessDesc" type="description"></field>
 		<field name="lcPaymentYn" type="indicator"></field>
-		<field name="createUserId" type="id-ne"></field>
-		<field name="lastUpdateUserId" type="id-ne"></field>
+		<field name="createUserId" type="id-long"></field>
+		<field name="lastUpdateUserId" type="id-long"></field>
 
         <prim-key field="referenceSeq"/>
 <!--         <prim-key field="referenceNo"/> -->

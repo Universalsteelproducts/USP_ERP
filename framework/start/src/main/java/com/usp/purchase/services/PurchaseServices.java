@@ -19,6 +19,7 @@
 package com.usp.purchase.services;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +35,10 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ofbiz.base.conversion.JSONConverters;
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.StringUtil;
+import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -49,10 +53,163 @@ import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.party.contact.ContactMechWorker;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
 
 public class PurchaseServices {
 
     public static final String module = PurchaseServices.class.getName();
+
+    public static Map<String, Object> CRUDPoList(DispatchContext dctx, Map<String, ?> context) {
+    	Delegator delegator = dctx.getDelegator();
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String crudMode = context.get("crudMode") == null ? "" : (String) context.get("crudMode");
+    	String searchPoNo = context.get("searchPoNo") == null ? "" : (String) context.get("searchPoNo");
+    	Timestamp searchOrderFromDate = (Timestamp) context.get("searchOrderFromDate");
+    	Timestamp searchOrderToDate = UtilDateTime.getDayEnd((Timestamp) context.get("searchOrderToDate"));
+        String searchVendorId = context.get("searchVendorId") == null ? "" : (String) context.get("searchVendorId");
+        String searchCustomerId = context.get("searchCustomerId") == null ? "" : (String) context.get("searchCustomerId");
+        String searchPort = context.get("searchPort") == null ? "" : (String) context.get("searchPort");
+        String searchGrade = context.get("searchGrade") == null ? "" : (String) context.get("searchGrade");
+        String searchCoatingWeight = context.get("searchCoatingWeight") == null ? "" : (String) context.get("searchCoatingWeight");
+        String searchSurfaceCoilType = context.get("searchSurfaceCoilType") == null ? "" : (String) context.get("searchSurfaceCoilType");
+        String searchGauge = context.get("searchGauge") == null ? "" : (String) context.get("searchGauge");
+        String searchWidth = context.get("searchWidth") == null ? "" : (String) context.get("searchWidth");
+        String draw = "";
+
+        List<Map<String, Object>> resultList = new LinkedList<Map<String,Object>>();
+        if (userLogin != null) {
+        	String userLoginId = (String) userLogin.get("userLoginId");
+
+	        try {
+	        	if("R".equals(crudMode)) {
+		        	List<EntityCondition> poConditionList = UtilMisc.<EntityCondition>toList(
+		                    EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, searchOrderFromDate),
+		                    EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, searchOrderToDate));
+
+		        	if(!"".equals(searchPoNo)) {
+		        		poConditionList.add(EntityCondition.makeCondition("poNo", EntityOperator.IN, searchPoNo));
+		        	}
+		        	if(!"".equals(searchVendorId)) {
+		        		poConditionList.add(EntityCondition.makeCondition("vendorId", EntityOperator.EQUALS, searchVendorId));
+		        	}
+
+		            EntityCondition poListCondition = EntityCondition.makeCondition(poConditionList, EntityOperator.AND);
+
+		        	List<GenericValue> poMasterList = EntityQuery.use(delegator)
+				               .from("PoMaster")
+				               .where(poListCondition)
+				               .queryList();
+
+		        	Map<String, Object> conditionMap = new HashMap<String, Object>();
+					if(!"".equals(searchCustomerId)) {
+						conditionMap.put("customerId", searchCustomerId);
+					}
+					if(!"".equals(searchPort)) {
+						conditionMap.put("port", searchPort);
+					}
+					if(!"".equals(searchGrade)) {
+						conditionMap.put("grade", searchGrade);
+					}
+					if(!"".equals(searchCoatingWeight)) {
+						conditionMap.put("coatingWeight", searchCoatingWeight);
+					}
+					if(!"".equals(searchSurfaceCoilType)) {
+						conditionMap.put("surfaceCoilType", searchSurfaceCoilType);
+					}
+					if(!"".equals(searchGauge)) {
+						conditionMap.put("gauge", searchGauge);
+					}
+					if(!"".equals(searchWidth)) {
+						conditionMap.put("width", searchWidth);
+					}
+
+		        	for(GenericValue poMasterInfo : poMasterList) {
+		        		List<GenericValue> referenceList = poMasterInfo.getRelated("Reference", conditionMap, null, false);
+		        		if(referenceList.size() > 0) {
+			        		for(GenericValue referenceInfo : referenceList) {
+			        			Map<String, Object> resultMap = new HashMap<String, Object>();
+			            		resultMap.putAll(poMasterInfo);
+			            		resultMap.putAll(referenceInfo);
+			            		resultList.add(resultMap);
+			        		}
+		        		}
+		        	}
+//	        	} else if("U".equals(crudMode) || "C".equals(crudMode)) {
+	        	} else {
+	        		draw = context.get("draw") == null ? "" : (String) context.get("draw");
+	        		String reqData = (String) context.get("reqData");
+	        		JSONArray data = new JSONArray(reqData);//jsonarray 형태로
+	                Map<String, Object> resultMap = new HashMap<String, Object>();
+
+	                GenericValue createNUpdatePoInfo = delegator.makeValue("PoMaster");
+	                GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
+
+	                if(data.length() > 0) {
+	                	for(int i=0 ; data.length() > i ; i++) {
+	                		JSONObject jsonobj = data.getJSONObject(i);
+	                		Map<String, Object> map = new HashMap<String, Object>();
+
+	                	    Iterator<String> keysItr = jsonobj.keys();
+	                	    while(keysItr.hasNext()) {
+	                	        String key = keysItr.next();
+	                	        Object value = new Object();
+	                	        if("etd".equals(key) || "eta".equals(key)
+	                	        		|| "lastUpdatedStamp".equals(key)) {
+	                	        	Timestamp tempT = (Timestamp) jsonobj.get(key);
+	                	        	value = tempT;
+	                	        } else if("orderQuantity".equals(key) || "quantity".equals(key)
+	                	        		|| "price".equals(key) || "commissionUnitPrice".equals(key)) {
+	                	        	value = (jsonobj.get(key) == null || "".equals(jsonobj.get(key)) ? 0 : Integer.parseInt((String)jsonobj.get(key)));
+	                	        } else {
+	                	        	value = jsonobj.get(key);
+	                	        }
+	                	        map.put(key, value);
+	                	    }
+
+	                		createNUpdatePoInfo.setPKFields(map);
+	    	                createNUpdatePoInfo.setNonPKFields(map);
+	    	                createNUpdateReferenceInfo.setPKFields(map);
+	    	                createNUpdateReferenceInfo.setNonPKFields(map);
+
+	    	                if("C".equals(crudMode)) {
+	    	                	createNUpdatePoInfo.set("createUserId", userLoginId);
+	    	                	createNUpdateReferenceInfo.set("createUserId", userLoginId);
+	    	                } else if("U".equals(crudMode)) {
+	    	                	createNUpdatePoInfo.set("lastUpdateUserId", userLoginId);
+	    	                	createNUpdateReferenceInfo.set("lastUpdateUserId", userLoginId);
+	    	                }
+
+	    	                createNUpdatePoInfo = delegator.createOrStore(createNUpdatePoInfo);
+	    	                createNUpdateReferenceInfo = delegator.createOrStore(createNUpdateReferenceInfo);
+	    	                Debug.logInfo("3in createNUpdatePoInfo," + createNUpdatePoInfo.toString(), null);
+	    	                Debug.logInfo("4in createNUpdatePoInfo," + createNUpdateReferenceInfo.toString(), null);
+
+	    	                resultMap.putAll(createNUpdatePoInfo);
+	    	                resultMap.putAll(createNUpdateReferenceInfo);
+	    	                resultList.add(resultMap);
+
+	    	                createNUpdatePoInfo.clear();
+	    	                createNUpdateReferenceInfo.clear();
+	                	}
+	                }
+	        	}
+	        } catch (GenericEntityException e){
+	            Debug.logError(e, "Cannot Search PoList ", module);
+	        }
+        }
+        result.put("data", resultList);
+        result.put("draw", draw);
+        result.put("recordsTotal", resultList.size());
+        result.put("recordsFiltered", resultList.size());
+
+        return result;
+    }
 
     public static Map<String, Object> searchVendor(DispatchContext dctx, Map<String, ?> context) {
     	Delegator delegator = dctx.getDelegator();

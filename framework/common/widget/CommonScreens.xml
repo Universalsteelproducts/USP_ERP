@@ -143,7 +143,7 @@ under the License.
                     <field-map field-name="themeResources" from-field="layoutSettings" />
                 </service>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
-                
+
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}" />
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.apache.ofbiz.common.JsLanguageFilesMapping.datejs.getFilePath(initialLocaleComplete)}" global="true" />
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.apache.ofbiz.common.JsLanguageFilesMapping.jquery.getFilePath(initialLocaleComplete)}" global="true" />
@@ -153,6 +153,10 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/Readmore.js-master/readmore.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.js" global="true"/>
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.css" global="true" />
+
+                <!-- jquery grid -->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/DataTables/datatables.min.js" global="true"/>
+                <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/DataTables/datatables.min.css" global="true"/>
             </actions>
             <widgets />
         </section>
@@ -464,8 +468,13 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-migrate-1.2.1.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>
+
                     <!-- jQuery CSSs -->
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/asmselect/jquery.asmselect-1.0.4a-beta.css" global="true"/>
+
+                <!-- jquery grid -->
+                <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/DataTables/datatables.min.js" global="true"/>
+                <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/DataTables/datatables.min.css" global="true"/>
 
                 <set field="layoutSettings.javaScripts[]" value="/images/OpenLayers-2.13.1.js" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/images/OfbizUtil.js" global="true"/>
@@ -641,7 +650,7 @@ under the License.
                 <set field="questionEnumId" from-field="securityQuestions[0].questionEnumId" />
                 <entity-one entity-name="Enumeration" value-field="securityQuestion">
                     <field-map field-name="enumId" from-field="questionEnumId"/>
-                </entity-one> 
+                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

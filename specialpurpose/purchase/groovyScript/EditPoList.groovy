@@ -38,17 +38,19 @@ if(poNo) {
 	poCommonInfo.putAll(poInfo)
 	poCommonInfo.putAll(vendorInfo)
 
-	lotInfoList.each { lotInfo ->
-    	if(lotInfo.coilDescription == "PPGI" || lotInfo.coilDescription == "PPGL") {
-    		totalQuantity += lotInfo.unitQuantity
-    	} else {
-    		totalQuantity += lotInfo.orderQuantity
-    	}
-    	totalPrice += lotInfo.unitPrice
-	}
+	if(lotInfoList.size() > 0) {
+		lotInfoList.each { lotInfo ->
+	    	if(lotInfo.coilDescription == "PPGI" || lotInfo.coilDescription == "PPGL") {
+	    		totalQuantity += lotInfo.unitQuantity == null ? 0 : lotInfo.unitQuantity
+	    	} else {
+	    		totalQuantity += lotInfo.orderQuantity == null ? 0 : lotInfo.orderQuantity
+	    	}
+	    	totalPrice += lotInfo.unitPrice == null ? 0 : lotInfo.unitPrice
+		}
 
-	totalQuantityUnit = lotInfoList[0].quantityUnit
-	totalPriceUnit = lotInfoList[0].priceUnit
+		totalQuantityUnit = lotInfoList[0].quantityUnit
+		totalPriceUnit = lotInfoList[0].priceUnit
+	}
 
 	updateMode = "U"
 }
