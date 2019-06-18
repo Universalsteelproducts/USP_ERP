@@ -358,18 +358,6 @@ under the License.
 	        	{
 	        		"data" : "ppglNo",
 	        		"visible": false,
-	        	},
-	        	{
-	        		"data" : "ppglNo",
-	        		"visible": false,
-	        	},
-	        	{
-	        		"data" : "ppglNo",
-	        		"visible": false,
-	        	},
-	        	{
-	        		"data" : "ppglNo",
-	        		"visible": false,
 	        	}
 	        ],
 	        buttons: [
@@ -393,7 +381,11 @@ under the License.
 				var reqMap = new Object();
 				var map = reqData[i];
 				for(var key in map) {
-					reqMap[key] = $.trim(map[key]);
+					if(key == "poStatus") {
+						reqMap[key] = $(this).val();
+					} else {
+						reqMap[key] = $.trim(map[key]);
+					}
 				}
 				reqArray.push(reqMap);
 			};
@@ -401,17 +393,20 @@ under the License.
 			jQuery.ajax({
 				url: '<@ofbizUrl>CRUDPoList</@ofbizUrl>',
 				type: 'POST',
-				traditional: true,
 				data: {
-					"crudMode" : "U",
+					"crudMode" : "CU",
 					"reqData" : JSON.stringify(reqArray)
 				},
 				error: function(msg) {
 		            showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.ErrorLoadingContent} : " + msg);
 		        },
 				success: function(data) {
-					alert("PO Status Update Complete");
-					$("#searchBtn").click();
+					if(data.data.length > 0) {
+						alert("PO Status Update Complete.");
+						$("#searchBtn").click();
+					} else {
+						alert("PO Status Update Fail.");
+					}
 				}
 			});
 		});
