@@ -6,9 +6,6 @@
     <property key="document">
         <value xml:lang="en">Shipping Document Management</value>
     </property>
-    <property key="document1">
-        <value xml:lang="en">Document Management1</value>
-    </property>
     <property key="poNo">
         <value xml:lang="en">PO#</value>
     </property>
@@ -21,13 +18,6 @@
     <property key="vendorId">
         <value xml:lang="en">Vendor</value>
     </property>
-    <property key="vendor1">
-        <value xml:lang="en">Vendor1</value>
-    </property>
-    <property key="vendor2">
-        <value xml:lang="en">Vendor1231231232222</value>
-    </property>
-
     <property key="orderDate">
         <value xml:lang="en">Order Date</value>
     </property>
@@ -257,8 +247,9 @@
     <property key="coilGrade">
         <value xml:lang="en">Coil Grade</value>
     </property>
-
-
+	<property key="guageControlYield">
+        <value xml:lang="en">Guage Control Yield</value>
+    </property>
 
     <property key="stage">
         <value xml:lang="en">Stage</value>
