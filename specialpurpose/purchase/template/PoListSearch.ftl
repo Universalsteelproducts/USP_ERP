@@ -38,6 +38,9 @@ under the License.
 	        fixedColumns : {
 	            leftColumns: 5
 	        },
+	        rowCallback : function( row, data, displayNum, displayIndex, dataIndex ) {
+// 	        	$(row).attr("style", "background-color:red;");
+	        },
 // 			orderFixed: [[1, 'asc']],
 // 	        rowGroup: {
 // 	            dataSrc: "poNo"
@@ -45,7 +48,7 @@ under the License.
 // 	        },
 	        ajax : {
 	        	"type"		: "POST",
-	            "url"		: '<@ofbizUrl>CRUDPoList</@ofbizUrl>',
+	            "url"		: '<@ofbizUrl>RUPoList</@ofbizUrl>',
 	            "data"		: function(d) {
 	            	d.draw = "0";
 	            	d.crudMode = $("#crudMode").val();
@@ -90,11 +93,26 @@ under the License.
 	                    return "<b>LOT" + data + "</b>";
 	                }
 	        	},
-	        	{ "data" : "etd" },
-	        	{ "data" : "eta" },
-	        	{ "data" : "vessel" },
-	        	{ "data" : "port" },
-	        	{ "data" : "steelType" },
+	        	{
+	        		"data" : "etd",
+	  				"width" : "70px"
+	  			},
+	        	{
+	  				"data" : "eta",
+	  				"width" : "70px"
+	  			},
+	        	{
+	  				"data" : "vessel",
+	  				"width" : "150px"
+	  			},
+	        	{
+	  				"data" : "port",
+	  				"width" : "70px"
+	  			},
+	        	{
+	  				"data" : "steelType",
+	  				"width" : "70px"
+	  			},
 	        	{
 	        		"data" : "grade",
 	        		"render": function ( data, type, row ) {
@@ -125,7 +143,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "100px"
 	        	},
 	        	{
 	        		"data" : "surfaceCoilType",
@@ -141,7 +160,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "100px"
 	        	},
 	        	{
 	        		"data" : "gauge",
@@ -189,7 +209,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "110px"
 	        	},
 	        	{
 	        		"data" : "innerDiameter",
@@ -205,7 +226,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "100px"
 	        	},
 	        	{
 	        		"data" : "packaging",
@@ -238,11 +260,21 @@ under the License.
                			</#list>
                		</#if>
                			return returnStr;
-   	                }
+   	                },
+	  				"width" : "100px"
 	        	},
-	        	{ "data" : "customerId" },
-	        	{ "data" : "unitPrice" },
-	        	{ "data" : "paintCode" },
+	        	{
+	        		"data" : "customerId",
+	  				"width" : "100px"
+	        	},
+	        	{
+	        		"data" : "unitPrice",
+	  				"width" : "100px"
+	        	},
+	        	{
+	        		"data" : "paintCode",
+	  				"width" : "100px"
+	        	},
 	        	{
 	        		"data" : "paintColor",
 	        		"width": "200px",
@@ -274,7 +306,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "100px"
 	        	},
 	        	{
 	        		"data" : "priceTerm",
@@ -294,10 +327,11 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "100px"
 	        	},
 	        	{
-	        		"data" : "paintBrand",
+	        		"data" : "mtcDocFileYN",
 	        		"render": function ( data, type, row ) {
 	        			var returnStr = "";
        				<#if codeList??>
@@ -310,7 +344,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "140px"
 	        	},
 	        	{
 	        		"data" : "paintCoatingThickness",
@@ -326,7 +361,8 @@ under the License.
             			</#list>
             		</#if>
             			return returnStr;
-	                }
+	                },
+	  				"width" : "140px"
 	        	},
 	        	{ "data" : "lastUpdateUserId" },
 	        	{
@@ -391,10 +427,10 @@ under the License.
 			};
 
 			jQuery.ajax({
-				url: '<@ofbizUrl>CRUDPoList</@ofbizUrl>',
+				url: '<@ofbizUrl>RUPoList</@ofbizUrl>',
 				type: 'POST',
 				data: {
-					"crudMode" : "CU",
+					"crudMode" : "SU",
 					"reqData" : JSON.stringify(reqArray)
 				},
 				error: function(msg) {

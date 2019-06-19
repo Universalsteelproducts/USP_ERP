@@ -104,6 +104,9 @@
     <property key="customerId">
         <value xml:lang="en">Customer</value>
     </property>
+    <property key="customerNm">
+        <value xml:lang="en">Customer</value>
+    </property>
     <property key="otherDetail">
         <value xml:lang="en">Other Details</value>
     </property>
@@ -337,5 +340,11 @@
     </property>
     <property key="newPo">
         <value xml:lang="en">New PO Issue</value>
+    </property>
+    <property key="lastUpdateUserId">
+        <value xml:lang="en">Last Update User</value>
+    </property>
+    <property key="lastUpdateStamp">
+        <value xml:lang="en">Last Update Date</value>
     </property>
 </resource>

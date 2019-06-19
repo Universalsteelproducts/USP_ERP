@@ -51,6 +51,8 @@ under the License.
 	                },
 	                "targets": 1
 	            },
+	            { "width": "100px", "targets": [0,7,9,10,13,14,16,18,19,21,23] },
+	            { "width": "150px", "targets": [24,25,26] },
 	            { "width": "200px", "targets": 15 },
 	            { "width": "200px", "targets": 20 },
 	            { "width": "200px", "targets": 22 }
@@ -288,6 +290,5 @@ under the License.
 	</#if>
 	</tbody>
 	<tfoot>
-
 	</tfoot>
 </table>

@@ -157,6 +157,8 @@ under the License.
                 <!-- jquery grid -->
                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/DataTables/datatables.min.js" global="true"/>
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/DataTables/datatables.min.css" global="true"/>
+<!--                 <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/DataTables/DataTables-1.10.18/js/jquery.datatables.min.js" global="true"/> -->
+<!--                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/DataTables/DataTables-1.10.18/css/jquery.datatables.min.css" global="true"/> -->
             </actions>
             <widgets />
         </section>

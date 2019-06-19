@@ -29,18 +29,20 @@ codeList = []
 codeList = from("Code").queryList()
 
 poNo = parameters.poNo
-updateMode = "C"
+crudMode = "RC"
 if(poNo) {
+	crudMode = "UR"
 	poInfo = from("PoMaster").where("poNo", poNo).queryOne()
 	vendorId = poInfo.get("vendorId").trim();
 	vendorInfo = from("Vendor").where("vendorId", vendorId).queryOne()
-	lotInfoList = from("Reference").where("poNo", poNo).queryList()
 	poCommonInfo.putAll(poInfo)
 	poCommonInfo.putAll(vendorInfo)
 
+/*
+	lotInfoList = from("Reference").where("poNo", poNo).queryList()
 	if(lotInfoList.size() > 0) {
 		lotInfoList.each { lotInfo ->
-	    	if(lotInfo.coilDescription == "PPGI" || lotInfo.coilDescription == "PPGL") {
+	    	if(lotInfo.steelType == "PPGI" || lotInfo.steelType == "PPGL") {
 	    		totalQuantity += lotInfo.unitQuantity == null ? 0 : lotInfo.unitQuantity
 	    	} else {
 	    		totalQuantity += lotInfo.orderQuantity == null ? 0 : lotInfo.orderQuantity
@@ -51,15 +53,14 @@ if(poNo) {
 		totalQuantityUnit = lotInfoList[0].quantityUnit
 		totalPriceUnit = lotInfoList[0].priceUnit
 	}
-
-	updateMode = "U"
+*/
 }
 
 context.poCommonInfo = poCommonInfo
-context.lotInfoList = lotInfoList
 context.codeList = codeList
-context.updateMode =  updateMode
+context.crudMode =  crudMode
+/*context.lotInfoList = lotInfoList
 context.totalQuantity = totalQuantity
 context.totalPrice = totalPrice
 context.totalQuantityUnit = totalQuantityUnit
-context.totalPriceUnit = totalPriceUnit
+context.totalPriceUnit = totalPriceUnit*/

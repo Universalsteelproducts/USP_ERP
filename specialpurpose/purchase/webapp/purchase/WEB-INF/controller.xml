@@ -25,9 +25,16 @@
 <!-- 		<response name="success" type="none"/> -->
 <!--         <response name="error" type="none"/> -->
 <!-- 	</request-map> -->
-	<request-map uri="CRUDPoList">
+	<request-map uri="RUPoList">
 		<security https="true" auth="true"/>
-		<event type="service" invoke="CRUDPoList"/>
+		<event type="service" invoke="RUPoList"/>
+		<response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+	</request-map>
+
+	<request-map uri="CRUPoList">
+		<security https="true" auth="true"/>
+		<event type="service" invoke="CRUPoList"/>
 		<response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
 	</request-map>

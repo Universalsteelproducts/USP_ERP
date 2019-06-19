@@ -66,7 +66,7 @@ public class PurchaseServices {
 
     public static final String module = PurchaseServices.class.getName();
 
-    public static Map<String, Object> CRUDPoList(DispatchContext dctx, Map<String, ?> context) {
+    public static Map<String, Object> RUPoList(DispatchContext dctx, Map<String, ?> context) {
     	Delegator delegator = dctx.getDelegator();
     	Locale locale = (Locale) context.get("locale");
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -144,14 +144,14 @@ public class PurchaseServices {
 			        		}
 		        		}
 		        	}
-	        	} else if("CU".equals(crudMode)) {
+	        	} else if("SU".equals(crudMode)) {
 	        		String reqData = (String) context.get("reqData");
 	        		JSONArray data = new JSONArray(reqData);//jsonarray 형태로
 	                Map<String, Object> resultMap = new HashMap<String, Object>();
 
 	                GenericValue createNUpdatePoInfo = delegator.makeValue("PoMaster");
 	                GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
-
+	                Debug.logInfo("#######################################," + createNUpdatePoInfo.toString(), null);
 	                if(data.length() > 0) {
 	                	for(int i=0 ; data.length() > i ; i++) {
 	                		JSONObject jsonobj = data.getJSONObject(i);
@@ -184,66 +184,90 @@ public class PurchaseServices {
 	    	                createNUpdatePoInfo.clear();
 	                	}
 	                }
-	        	} else {
-	        		draw = context.get("draw") == null ? "" : (String) context.get("draw");
-	        		String reqData = (String) context.get("reqData");
-	        		JSONArray data = new JSONArray(reqData);//jsonarray 형태로
-	                Map<String, Object> resultMap = new HashMap<String, Object>();
+	        	}
+	        } catch (GenericEntityException e){
+	            Debug.logError(e, "Cannot CRUDPoList ", module);
+	        }
+        }
+        result.put("data", resultList);
+        result.put("draw", draw);
+        result.put("recordsTotal", resultList.size());
+        result.put("recordsFiltered", resultList.size());
 
-	                GenericValue createNUpdatePoInfo = delegator.makeValue("PoMaster");
-	                GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
+        return result;
+    }
 
-	                if(data.length() > 0) {
+    public static Map<String, Object> CRUPoList(DispatchContext dctx, Map<String, ?> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String userLoginId = (String) userLogin.get("userLoginId");
+
+        String crudMode = context.get("crudMode") == null ? "" : (String) context.get("crudMode");
+    	String poNo = context.get("poNo") == null ? "" : (String) context.get("poNo");
+    	String reqData = context.get("reqData") == null ? "" : (String) context.get("reqData");
+
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+        List<Map<String, Object>> resultList = new LinkedList<Map<String,Object>>();
+        if (userLogin != null) {
+	        try {
+	        	if("UR".equals(crudMode)) {
+		        	GenericValue poMasterInfo = EntityQuery.use(delegator)
+				               .from("PoMaster")
+				               .where("poNo", poNo)
+				               .queryOne();
+
+		        	Map<String, Object> conditionMap = new HashMap<String, Object>();
+					conditionMap.put("poNo", poNo);
+	        		List<GenericValue> referenceList = poMasterInfo.getRelated("Reference", conditionMap, null, false);
+	        		if(referenceList.size() > 0) {
+		        		for(GenericValue referenceInfo : referenceList) {
+		        			Map<String, Object> resultMap = new HashMap<String, Object>();
+		            		resultMap.putAll(poMasterInfo);
+		            		resultMap.putAll(referenceInfo);
+		            		resultList.add(resultMap);
+		        		}
+	        		}
+	        	} else if("C".equals(crudMode) || "U".equals(crudMode)) {
+	        		GenericValue createNUpdatePoInfo = delegator.makeValue("PoMaster");
+	        		createNUpdatePoInfo.setPKFields(context);
+	        		createNUpdatePoInfo.setNonPKFields(context);
+	        		createNUpdatePoInfo = delegator.createOrStore(createNUpdatePoInfo);
+
+	    		    JSONArray data = new JSONArray(reqData);//jsonarray 형태로
+	    		    GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
+	    		    Map<String, Object> resultMap = new HashMap<String, Object>();
+
+	    		    if(data.length() > 0) {
 	                	for(int i=0 ; data.length() > i ; i++) {
 	                		JSONObject jsonobj = data.getJSONObject(i);
-	                		Map<String, Object> map = new HashMap<String, Object>();
 
-	                	    Iterator<String> keysItr = jsonobj.keys();
-	                	    while(keysItr.hasNext()) {
-	                	        String key = keysItr.next();
-	                	        Object value = new Object();
-	                	        if(jsonobj.getString(key) != null && !"".equals(jsonobj.getString(key))) {
-		                	        if("orderQuantity".equals(key) || "unitQuantity".equals(key)
-		                	        		|| "unitPrice".equals(key) || "commissionUnitPrice".equals(key)
-		                	        		|| "downPayment".equals(key) || "referenceSeq".equals(key)
-		                	        		|| "ppglNo".equals(key)) {
-		                	        	long str = jsonobj.getLong(key);
-		                	        	value = BigDecimal.valueOf(str);
-		                	        } else {
-		                	        	value = jsonobj.getString(key);
-		                	        }
-		                	        map.put(key, value);
-	                	        } else if("".equals(jsonobj.getString(key))){
-	                	        	map.put(key, null);
-	                	        }
-	                	    }
-	                	    Debug.logInfo("********123213213123*********************************** , " + map.toString(), null);
-	                		createNUpdatePoInfo.setPKFields(map);
-	    	                createNUpdatePoInfo.setNonPKFields(map);
-	    	                Debug.logInfo("******************************************* , " + createNUpdatePoInfo.toString(), null);
-	    	                createNUpdateReferenceInfo.setPKFields(map);
-	    	                createNUpdateReferenceInfo.setNonPKFields(map);
-	                	    Debug.logInfo("******************************************* , " + createNUpdateReferenceInfo.toString(), null);
-
-	    	                if("C".equals(crudMode)) {
-	    	                	createNUpdatePoInfo.set("createUserId", userLoginId);
-	    	                	createNUpdateReferenceInfo.set("createUserId", userLoginId);
-	    	                } else if("U".equals(crudMode)) {
-	    	                	createNUpdatePoInfo.set("lastUpdateUserId", userLoginId);
-	    	                	createNUpdateReferenceInfo.set("lastUpdateUserId", userLoginId);
-	    	                }
-
+	                		createNUpdatePoInfo.set("poNo", jsonobj.getString("poNo"));
+	                		createNUpdatePoInfo.set("poStatus", jsonobj.getString("poStatus"));
+    	                	createNUpdatePoInfo.set("lastUpdateUserId", userLoginId);
+    	                	createNUpdatePoInfo.set("lastUpdatedStamp", UtilDateTime.nowTimestamp());
+    	                	createNUpdatePoInfo.set("lastUpdatedTxStamp", UtilDateTime.nowTimestamp());
 	    	                createNUpdatePoInfo = delegator.createOrStore(createNUpdatePoInfo);
-	    	                createNUpdateReferenceInfo = delegator.createOrStore(createNUpdateReferenceInfo);
 	    	                Debug.logInfo("3in createNUpdatePoInfo," + createNUpdatePoInfo.toString(), null);
-	    	                Debug.logInfo("4in createNUpdatePoInfo," + createNUpdateReferenceInfo.toString(), null);
 
-	    	                resultMap.putAll(createNUpdatePoInfo);
+	    	                Map<String, Object> conditionMap = new HashMap<String, Object>();
+	    	                conditionMap.put("poNo", jsonobj.getString("poNo"));
+	    	                List<GenericValue> referenceList = createNUpdatePoInfo.getRelated("Reference", conditionMap, null, false);
+			        		if(referenceList.size() > 0) {
+				        		for(GenericValue referenceInfo : referenceList) {
+				        			createNUpdateReferenceInfo.set("referenceSeq", referenceInfo.getLong("referenceSeq"));
+			    	                createNUpdateReferenceInfo.set("lastUpdateUserId", userLoginId);
+			    	                createNUpdateReferenceInfo.set("lastUpdatedStamp", UtilDateTime.nowTimestamp());
+			    	                createNUpdateReferenceInfo.set("lastUpdatedTxStamp", UtilDateTime.nowTimestamp());
+			    	                createNUpdateReferenceInfo = delegator.createOrStore(createNUpdateReferenceInfo);
+			    	                createNUpdateReferenceInfo.clear();
+				        		}
+			        		}
+
 	    	                resultMap.putAll(createNUpdateReferenceInfo);
+	    	                resultMap.putAll(createNUpdatePoInfo);
 	    	                resultList.add(resultMap);
-
 	    	                createNUpdatePoInfo.clear();
-	    	                createNUpdateReferenceInfo.clear();
 	                	}
 	                }
 	        	}
@@ -252,7 +276,6 @@ public class PurchaseServices {
 	        }
         }
         result.put("data", resultList);
-        result.put("draw", draw);
         result.put("recordsTotal", resultList.size());
         result.put("recordsFiltered", resultList.size());
 
