@@ -55,13 +55,13 @@
 		<field name="widthDesc" type="description"></field>
 		<field name="coilMaxWeight" type="id-long"></field>
 		<field name="innerDiameter" type="id-long"></field>
-		<field name="gaugeControlCombo" type="id-long"></field>
+		<field name="gaugeControlYield" type="id-long"></field>
 		<field name="packaging" type="id-long"></field>
 		<field name="packagingDesc" type="description"></field>
 		<field name="barge" type="indicator"></field>
 		<field name="businessClass" type="id-long"></field>
 		<field name="customerId" type="id-long"></field>
-		<field name="customerNm" type="id-long"></field>
+		<field name="customerName" type="id-long"></field>
 		<field name="otherDetail" type="description"></field>
 		<field name="orderQuantity" type="fixed-point"></field>
 		<field name="unitQuantity" type="fixed-point"></field>

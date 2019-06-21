@@ -50,6 +50,7 @@
         <attribute name="reqData" mode="IN" type="String" optional="true"/>
         <attribute name="recordsTotal" mode="OUT" type="Integer" optional="true"/>
         <attribute name="recordsFiltered" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="successStr" mode="OUT" type="String" optional="true"/>
     </service>
 
 	<service name="searchVendor" default-entity-name="Vendor" engine="java" auth="true"

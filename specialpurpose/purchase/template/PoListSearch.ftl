@@ -28,8 +28,6 @@ under the License.
 		 ******************			Common Control				********************
 		 ***************************************************************************/
 		var poListTable = $("#poList").DataTable({
-			//dom: "Bfrtip",
-			//dom : "frtip",
 			dom : "lBfrtip",
 			processing : true,
 			scrollY : true,
@@ -38,14 +36,7 @@ under the License.
 	        fixedColumns : {
 	            leftColumns: 5
 	        },
-	        rowCallback : function( row, data, displayNum, displayIndex, dataIndex ) {
-// 	        	$(row).attr("style", "background-color:red;");
-	        },
-// 			orderFixed: [[1, 'asc']],
-// 	        rowGroup: {
-// 	            dataSrc: "poNo"
-
-// 	        },
+			order: [[1, 'desc']],
 	        ajax : {
 	        	"type"		: "POST",
 	            "url"		: '<@ofbizUrl>RUPoList</@ofbizUrl>',
@@ -68,7 +59,6 @@ under the License.
 	        columns : [
 	        	{
 	        		"data" : "poStatus",
-	        		"orderable" : false,
         			"render": function ( data, type, row ) {
         				var $select = $("<select></select>", {
         	                "id" : "poStatus",
@@ -468,7 +458,7 @@ under the License.
 
 <div class="page-title">
 	<span>
-		${uiLabelMap.poManagement}
+		${uiLabelMap.po}
 	</span>
 </div>
 <div class="button-bar">
@@ -637,71 +627,71 @@ under the License.
 <form>
 	<!-- Search Result -->
 	<div class="screenlet">
-		<table id="poList" class="hover row-border">
+		<table id="poList" class="hover cell-border stripe">
 			<thead>
 				<tr>
-					<th>${uiLabelMap.poStatus}</th>
-					<th>${uiLabelMap.poNo}</th>
-					<th>${uiLabelMap.lotNo}</th>
-					<th>${uiLabelMap.etd}</th>
-					<th>${uiLabelMap.eta}</th>
-					<th>${uiLabelMap.vessel}</th>
-					<th>${uiLabelMap.port}</th>
-					<th>${uiLabelMap.steelType}</th>
-					<th>${uiLabelMap.grade}</th>
-					<th>${uiLabelMap.coatingWeight}</th>
-					<th>${uiLabelMap.surfaceCoilType}</th>
-					<th>${uiLabelMap.gauge}</th>
-					<th>${uiLabelMap.width}</th>
-					<th>${uiLabelMap.coilMaxWeight}</th>
-					<th>${uiLabelMap.innerDiameter}</th>
-					<th>${uiLabelMap.packaging}</th>
-					<th>${uiLabelMap.businessClass}</th>
-					<th>${uiLabelMap.customerId}</th>
-					<th>${uiLabelMap.unitPrice}</th>
-					<th>${uiLabelMap.paintCode}</th>
-					<th>${uiLabelMap.paintColor}</th>
-					<th>${uiLabelMap.paintType}</th>
-					<th>${uiLabelMap.priceTerm}</th>
-					<th>${uiLabelMap.paintBrand}</th>
-					<th>${uiLabelMap.mtcVerificationStatus}</th>
-					<th>${uiLabelMap.paintCoatingThickness}</th>
-					<th>${uiLabelMap.lastUpdateUserId}</th>
-					<th>${uiLabelMap.lastUpdatedStamp}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.etd}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.eta}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.port}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.grade}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.coatingWeight}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.width}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
 				</tr>
 			</thead>
 			<tbody>
 			</tbody>
 			<tfoot>
 				<tr>
-					<th>${uiLabelMap.poStatus}</th>
-					<th>${uiLabelMap.poNo}</th>
-					<th>${uiLabelMap.lotNo}</th>
-					<th>${uiLabelMap.etd}</th>
-					<th>${uiLabelMap.eta}</th>
-					<th>${uiLabelMap.vessel}</th>
-					<th>${uiLabelMap.port}</th>
-					<th>${uiLabelMap.steelType}</th>
-					<th>${uiLabelMap.grade}</th>
-					<th>${uiLabelMap.coatingWeight}</th>
-					<th>${uiLabelMap.surfaceCoilType}</th>
-					<th>${uiLabelMap.gauge}</th>
-					<th>${uiLabelMap.width}</th>
-					<th>${uiLabelMap.coilMaxWeight}</th>
-					<th>${uiLabelMap.innerDiameter}</th>
-					<th>${uiLabelMap.packaging}</th>
-					<th>${uiLabelMap.businessClass}</th>
-					<th>${uiLabelMap.customerId}</th>
-					<th>${uiLabelMap.unitPrice}</th>
-					<th>${uiLabelMap.paintCode}</th>
-					<th>${uiLabelMap.paintColor}</th>
-					<th>${uiLabelMap.paintType}</th>
-					<th>${uiLabelMap.priceTerm}</th>
-					<th>${uiLabelMap.paintBrand}</th>
-					<th>${uiLabelMap.mtcVerificationStatus}</th>
-					<th>${uiLabelMap.paintCoatingThickness}</th>
-					<th>${uiLabelMap.lastUpdateUserId}</th>
-					<th>${uiLabelMap.lastUpdatedStamp}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.etd}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.eta}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.port}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.grade}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.coatingWeight}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.width}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
 				</tr>
 			</tfoot>
 		</table>

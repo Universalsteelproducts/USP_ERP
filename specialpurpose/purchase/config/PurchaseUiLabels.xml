@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+	<property key="PurchaseCompanyName">
+        <value xml:lang="en">USP</value>
+    </property>
     <property key="po">
         <value xml:lang="en">PO Management</value>
     </property>
     <property key="document">
         <value xml:lang="en">Shipping Document Management</value>
+    </property>
+    <property key="searchPoForm">
+        <value xml:lang="en">Search PO </value>
     </property>
     <property key="poNo">
         <value xml:lang="en">PO#</value>
@@ -94,7 +100,7 @@
     <property key="customerId">
         <value xml:lang="en">Customer</value>
     </property>
-    <property key="customerNm">
+    <property key="customerName">
         <value xml:lang="en">Customer</value>
     </property>
     <property key="otherDetail">
@@ -247,7 +253,7 @@
     <property key="coilGrade">
         <value xml:lang="en">Coil Grade</value>
     </property>
-	<property key="guageControlYield">
+	<property key="gaugeControlYield">
         <value xml:lang="en">Guage Control Yield</value>
     </property>
 
@@ -337,5 +343,50 @@
     </property>
     <property key="lastUpdateStamp">
         <value xml:lang="en">Last Update Date</value>
+    </property>
+    <property key="na">
+        <value xml:lang="en">N/A</value>
+    </property>
+
+    <property key="lotInfo">
+        <value xml:lang="en">LOT Information</value>
+    </property>
+    <property key="poInfo">
+        <value xml:lang="en">PO Information</value>
+    </property>
+
+    <property key="allClear">
+        <value xml:lang="en">All Clear</value>
+    </property>
+    <property key="deleteRow">
+        <value xml:lang="en">Delete Row</value>
+    </property>
+    <property key="update">
+        <value xml:lang="en">Update</value>
+    </property>
+    <property key="cancel">
+        <value xml:lang="en">Cancel</value>
+    </property>
+    <property key="submit">
+        <value xml:lang="en">Submit</value>
+    </property>
+
+    <property key="blDoc">
+        <value xml:lang="en">B/L Document</value>
+    </property>
+    <property key="commercialInvoiceDoc">
+        <value xml:lang="en">Commercial Invoice Document</value>
+    </property>
+    <property key="packingListDoc">
+        <value xml:lang="en">Packing List</value>
+    </property>
+    <property key="weightListDoc">
+        <value xml:lang="en">Weight List Document</value>
+    </property>
+    <property key="mtcDoc">
+        <value xml:lang="en">MTC Document</value>
+    </property>
+    <property key="shipmentAdviceDoc">
+        <value xml:lang="en">Shipment Advice Document</value>
     </property>
 </resource>

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import org.apache.ofbiz.base.util.UtilDateTime
 
 poCommonInfo = [:]
 poInfo = [:]
@@ -29,9 +30,13 @@ codeList = []
 codeList = from("Code").queryList()
 
 poNo = parameters.poNo
-crudMode = "RC"
+crudMode = "CR"
+nowTs = UtilDateTime.nowTimestamp()
+poCommonInfo.put("orderDate", nowTs)
 if(poNo) {
 	crudMode = "UR"
+	nowTs = ""
+	poCommonInfo = [:]
 	poInfo = from("PoMaster").where("poNo", poNo).queryOne()
 	vendorId = poInfo.get("vendorId").trim();
 	vendorInfo = from("Vendor").where("vendorId", vendorId).queryOne()
@@ -53,6 +58,7 @@ if(poNo) {
 		totalQuantityUnit = lotInfoList[0].quantityUnit
 		totalPriceUnit = lotInfoList[0].priceUnit
 	}
+	lotInfo = delegator.getNextSeqId("referenceSeq")
 */
 }
 

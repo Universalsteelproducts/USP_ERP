@@ -28,24 +28,24 @@ import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
-  
+
 public class TestDemoServices {
-  
+
     public static final String module = TestDemoServices.class.getName();
-  
+
     public static Map<String, Object> createTestDemo2(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
         try {
             GenericValue testDemo = delegator.makeValue("TestDemoJoinTest");
-            
-            
+
+
 //            *** Map에 담겨있는 key, value 출력 시 사용할 수 있는 로직
-//            
+//
 //            Debug.log("===========================================================");
 //            Debug.log("!@!@!@!@! = " + testDemo.size());
 //            Debug.log("===========================================================");
-//            
+//
 //            // 1. using Iterator
 //    		Iterator<String> itr = testDemo.keySet().iterator();
 //    		while (itr.hasNext()) {
@@ -87,7 +87,7 @@ public class TestDemoServices {
 //    		// Java 8
 //    		Stream.of(testDemo.keySet().toString())
 //    				.forEach(System.out::println);
-//            
+//
 //            for (String keys : testDemo.keySet())
 //            {
 //            	Debug.log("===========================================================");
@@ -95,12 +95,14 @@ public class TestDemoServices {
 //            	System.out.println(testDemo.get(keys));
 //            	Debug.log("===========================================================");
 //            }
-            
+
             // Auto generating next sequence of ofbizDemoId primary key
             // ofbizDemo.setNextSeqId();
 		    testDemo.setPKFields(context);
 		    // Setting up all non primary key field values from context map
 		    testDemo.setNonPKFields(context);
+
+		    Debug.log("==========This is my first Java Service implementation in Apache OFBiz. OfbizDemo record created successfully with testDemoId:"+testDemo.getString("testDemoId"));
 		    // Creating record in database for OfbizDemo entity for prepared value
 		    testDemo = delegator.create(testDemo);
 //		    result.put("testDemoId", testDemo.getString("testDemoId"));
@@ -109,7 +111,7 @@ public class TestDemoServices {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Error in creating record in OfbizDemo entity ........" +module);
         }
-        
+
         return result;
     }
 }
