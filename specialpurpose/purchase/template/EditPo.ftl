@@ -676,7 +676,7 @@ under the License.
 	    });
 
 		// 그리드 Row 클릭 이벤트
-		$('#lotColoList tbody').on( 'click', 'tr', function () {
+		$('#lotColoList tbody').on( 'dblclick', 'tr', function () {
 	        $(this).toggleClass('selected');
 	    } );
 
