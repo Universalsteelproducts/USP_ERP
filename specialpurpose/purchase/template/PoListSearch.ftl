@@ -22,7 +22,6 @@ under the License.
 -->
 
 <script type="text/javascript">
-	Date.CultureInfo.formatPatterns.shortDate = "yyyy-MM-dd";
 	jQuery(document).ready(function(){
 		/***************************************************************************
 		 ******************			Common Control				********************
@@ -259,6 +258,15 @@ under the License.
 	        	},
 	        	{
 	        		"data" : "unitPrice",
+	        		"render" : function ( data, type, row ) {
+	        			if(data != null && data != "") {
+	                		data =  "$ " + Number(data).format(2);
+	                	} else {
+	                		data =  "";
+	                	}
+	        			return data;
+	                },
+	                "className" : "dt-right",
 	  				"width" : "100px"
 	        	},
 	        	{

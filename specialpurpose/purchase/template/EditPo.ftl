@@ -22,31 +22,11 @@ under the License.
 -->
 
 <script type="text/javascript">
-	$(function() {
-		/**
-		 * Number.prototype.format(n, x)
-		 *
-		 * @param integer n: length of decimal
-		 * @param integer x: length of sections
-		 */
-		Number.prototype.format = function(n, x) {
-		    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-		    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-		};
-	});
 
 	jQuery(document).ready(function() {
 		/***************************************************************************
 	     ******************			Common Control				********************
 	     ***************************************************************************/
-		var checkNull = function(str) {
-			if(str == null) {
-				return "";
-			} else {
-				return str;
-			}
-		};
-
 		var makeArrayData = function(reqData) {
 			var reqArray = new Array();
 			for(var i=0 ; reqData.length > i ; i++) {
@@ -110,30 +90,6 @@ under the License.
 	 			$("#colspanTag #orderQuantity").val(groupUnitQuantity);
 	 		}
 	 	};
-
-		var inputInit = function(id) {
-			$("#" + id + " :input").each(function() {
-				if($(this).attr("name") != "lotNo") {
-					if($(this).prop("type") == "select-one") {
-						$(this).find("option:eq(0)").attr("selected", true);
-						if($(this).attr("name") == "steelType") {
-							$(this).trigger("change");
-						}
-					} else if($(this).prop("type") == "checkbox") {
-						$(this).prop("checked", false);
-					} else {
-						if($(this).prop("type") != "button") {
-							if($(this).attr("name") == "orderQuantity" || $(this).attr("name") == "unitPrice"
-								|| $(this).attr("name") == "commissionUnitPrice" || $(this).attr("name") == "unitQuantity") {
-								$(this).val("0");
-							} else if($(this).attr("name") != "customerId") {
-								$(this).val("");
-							}
-						}
-					}
-				}
-			});
-		};
 
 		var addRow = function(id, rowMap) {
 			var tagTmp = "";
@@ -1012,6 +968,9 @@ under the License.
 				    	}
 			    	});
 
+			    	$('#vendorTel').change();
+			    	$('#vendorFax').change();
+
 			    	var nowDate = new Date();
 			    	var year = nowDate.getFullYear().toString().substr(-2);;
 			    	var month = (1 + nowDate.getMonth());
@@ -1318,6 +1277,18 @@ under the License.
 			$("#referenceForm").children().remove();
 			$("#lotColoList tbody").children().remove();
 	    });
+
+	    $('#vendorFax').usPhoneFormat({
+	        format: '(xxx) xxx-xxxx',
+	    });
+        $('#vendorTel').usPhoneFormat({
+        	format: '(xxx) xxx-xxxx',
+	    });
+        $("#downPayment").on("change", function() {
+//         	var val = $(this).val();
+//         	val = val.replace(/,/gi, "")
+        	$(this).val(Number($(this).val()).format(2));
+        });
 	});
 </script>
 
@@ -1454,7 +1425,9 @@ under the License.
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
 					<#if crudMode == "UR">
-						${poCommonInfo.vendorFax!}
+						<span id="testTel">
+							${poCommonInfo.vendorFax!}
+						</span>
 					<#else>
 						<input type="text" name="vendorFax" id="vendorFax" value="${poCommonInfo.vendorFax!}" size="25" maxlength="255"/>
 					</#if>
@@ -1465,9 +1438,9 @@ under the License.
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
 					<#if crudMode == "UR">
-						$ ${poCommonInfo.downPayment?string(',##0.00')}
+						${poCommonInfo.downPayment!?default('0')?string(',##0.00')}
 					<#else>
-						$ <input type="text" name="downPayment" value="${poCommonInfo.downPayment?string(',##0.00')}" size="23" maxlength="255" style="text-align:right;" />
+						$ <input type="text" name="downPayment" id="downPayment" value='' size="23" maxlength="255" style="text-align:right;" />
 					</#if>
 					</td>
 				</tr>

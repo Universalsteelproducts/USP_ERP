@@ -7,13 +7,14 @@
             <actions>
                 <property-map resource="PurchaseUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/purchase/static/purchaseCommon.js" global="true"/>
 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.PurchaseCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PurchaseCompanySubtitle" global="true"/>
 <!--                 <set field="layoutSettings.javaScripts[]" value="/purchase/js/PurchasePushNotifications.js" global="true"/> -->
 
                 <set field="activeApp" value="purchase" global="true"/>
-				<set field="layoutSettings.javaScripts[]" value="/purchase/static/purchaseCommon.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/purchase/static/jquery-input-mask-phone-number.min.js" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://purchase/widget/PurchaseMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.PurchaseApplication}" global="true"/>

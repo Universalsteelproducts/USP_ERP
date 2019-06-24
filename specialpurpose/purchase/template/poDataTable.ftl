@@ -22,7 +22,6 @@ under the License.
 -->
 
 <script type="text/javascript">
-
 	jQuery(document).ready(function(){
 		$("#poList").DataTable({
 			//dom: "Bfrtip",
@@ -51,7 +50,20 @@ under the License.
 	                },
 	                "targets": 1
 	            },
-	            { "width": "100px", "targets": [0,7,9,10,13,14,16,18,19,21,23] },
+	            { "width": "100px", "targets": [0,7,9,10,13,14,16,19,21,23] },
+	            {
+	            	"width": "100px",
+	            	"targets": 18,
+	            	"render" : function ( data, type, row ) {
+	        			if(data != null && data != "") {
+	                		data =  "$ " + Number(data).format(2);
+	                	} else {
+	                		data =  "";
+	                	}
+	        			return data;
+	                },
+	                "className" : "dt-right"
+	            },
 	            { "width": "150px", "targets": [24,25,26] },
 	            { "width": "200px", "targets": 15 },
 	            { "width": "200px", "targets": 20 },
@@ -61,6 +73,8 @@ under the License.
 	            'excel'
 	        ]
 		});
+
+// 		testfunc();
 	});
 
 </script>

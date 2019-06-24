@@ -16,28 +16,48 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */
-//
-//function lookupParty(url) {
-//    partyIdValue = document.lookupparty.partyId.value;
-//    userLoginIdValue = document.lookupparty.userLoginId.value;
-//    if (partyIdValue.length > 0 || userLoginIdValue.length > 0) {
-//        document.lookupparty.action = url;
-//    }
-//    return true;
-//}
-//
-//function refreshInfo() {
-//    document.lookupparty.lookupFlag.value = "N";
-//    document.lookupparty.hideFields.value = "N";
-//    document.lookupparty.submit();
-//}
-//
-//function collapseFindPartyOptions(currentOption) {
-//    jQuery('.fieldgroup').each(function() {
-//        var titleBar = jQuery(this).children('.fieldgroup-title-bar'), body = jQuery(this).children('.fieldgroup-body');
-//        if (titleBar.children().length > 0 && body.is(':visible') != false && body.attr('id') != currentOption) {
-//            toggleCollapsiblePanel(titleBar.find('a'), body.attr('id'), 'Expand', 'Collapse');
-//        }
-//    });
-//}
 
+/**
+ * Number.prototype.format(n, x)
+ *
+ * @param integer n: length of decimal
+ * @param integer x: length of sections
+ */
+Number.prototype.format = function(n, x) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
+Date.CultureInfo.formatPatterns.shortDate = "yyyy-MM-dd";
+
+var checkNull = function(str) {
+	if(str == null) {
+		return "";
+	} else {
+		return str;
+	}
+};
+
+var inputInit = function(id) {
+	$("#" + id + " :input").each(function() {
+		if($(this).attr("name") != "lotNo") {
+			if($(this).prop("type") == "select-one") {
+				$(this).find("option:eq(0)").attr("selected", true);
+				if($(this).attr("name") == "steelType") {
+					$(this).trigger("change");
+				}
+			} else if($(this).prop("type") == "checkbox") {
+				$(this).prop("checked", false);
+			} else {
+				if($(this).prop("type") != "button") {
+					if($(this).attr("name") == "orderQuantity" || $(this).attr("name") == "unitPrice"
+						|| $(this).attr("name") == "commissionUnitPrice" || $(this).attr("name") == "unitQuantity") {
+						$(this).val("0");
+					} else if($(this).attr("name") != "customerId") {
+						$(this).val("");
+					}
+				}
+			}
+		}
+	});
+};
