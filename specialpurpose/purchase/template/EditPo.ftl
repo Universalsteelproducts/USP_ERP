@@ -22,6 +22,19 @@ under the License.
 -->
 
 <script type="text/javascript">
+	$(function() {
+		/**
+		 * Number.prototype.format(n, x)
+		 *
+		 * @param integer n: length of decimal
+		 * @param integer x: length of sections
+		 */
+		Number.prototype.format = function(n, x) {
+		    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+		    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+		};
+	});
+
 	jQuery(document).ready(function() {
 		/***************************************************************************
 	     ******************			Common Control				********************
@@ -58,6 +71,9 @@ under the License.
 	 		var lotNo = $("#lotCommonInfo #lotNo").val();
 	 		var steelType = $("#lotCommonInfo #steelType").val();
 
+	 		var totalQuantityUnit = "";
+	 		var totalPriceUnit = "";
+
 	 		if(tableSize > 0) {
 	 			for(var i=0 ; tableSize > i ; i++) {
 	 				var gridSteelType = tableObj.rows(i).data().pluck("steelType")[0];
@@ -65,6 +81,11 @@ under the License.
 	 				var gridOrderQuantity = parseFloat(tableObj.rows(i).data().pluck("orderQuantity")[0]);
 	 				var gridUnitQuantity = parseFloat(tableObj.rows(i).data().pluck("unitQuantity")[0]);
 	 				var gridUnitPrice = parseFloat(tableObj.rows(i).data().pluck("unitPrice")[0]);
+
+	 				if(i == 0) {
+	 					totalQuantityUnit = tableObj.rows(i).data().pluck("quantityUnit")[0];
+	 					totalPriceUnit = tableObj.rows(i).data().pluck("priceUnit")[0];
+	 				}
 
 	 				if(gridSteelType == "PPGL" || gridSteelType == "PPGI") {
 	 					totalQuantity += gridUnitQuantity;
@@ -80,8 +101,10 @@ under the License.
 				}
 	 		}
 
-	 		$("#" + totalQuantityId).val(totalQuantity);
-	 		$("#" + totalPriceId).val(totalPrice);
+	 		$("#" + totalQuantityId).val(totalQuantity.format());
+	 		$("#" + totalPriceId).val(totalPrice.format(2));
+	 		$("#vendorNPoInfo #quantityUnit").val(totalQuantityUnit);
+	 		$("#vendorNPoInfo #priceUnit").val(totalPriceUnit);
 
 	 		if(steelType == "PPGL" || steelType == "PPGI") {
 	 			$("#colspanTag #orderQuantity").val(groupUnitQuantity);
@@ -557,7 +580,11 @@ under the License.
 	            {
 	            	"data" : "orderQuantity",
 	                "render": function ( data, type, row ) {
-	                	data = checkNull(data);
+	                	if(data != null && data != "") {
+	                		data =  Number(checkNull(data)).format();
+	                	} else {
+	                		data =  "";
+	                	}
 						return "<input type='text' id='orderQuantity' style='text-align:right;' name='orderQuantity' value='" + data + "'/>";
 					},
 	  				"width" : "100px"
@@ -596,7 +623,11 @@ under the License.
 	            {
 	            	"data" : "unitQuantity",
 	                "render": function ( data, type, row ) {
-	                	data = checkNull(data);
+	                	if(data != null && data != "") {
+	                		data =  Number(checkNull(data)).format();
+	                	} else {
+	                		data =  "";
+	                	}
 						return "<input type='text' id='unitQuantity' style='text-align:right;' name='unitQuantity' value='" + data + "'/>";
 					},
 	  				"width" : "100px"
@@ -628,7 +659,11 @@ under the License.
 	            {
 	            	"data" : "unitPrice",
 	                "render": function ( data, type, row ) {
-	                	data = checkNull(data);
+	                	if(data != null && data != "") {
+	                		data =  Number(checkNull(data)).format(2);
+	                	} else {
+	                		data =  "";
+	                	}
 						return "<input type='text' id='unitPrice' style='text-align:right;' name='unitPrice' value='" + data + "'/>";
 					},
 	  				"width" : "100px"
@@ -660,13 +695,17 @@ under the License.
 	            {
 	            	"data" : "commissionUnitPrice",
 	                "render": function ( data, type, row ) {
-	                	data = checkNull(data);
+	                	if(data != null && data != "") {
+	                		data =  Number(checkNull(data)).format(2);
+	                	} else {
+	                		data =  "";
+	                	}
 						return "<input type='text' id='commissionUnitPrice' style='text-align:right;' name='commissionUnitPrice' value='" + data + "'/>";
 					},
 	  				"width" : "130px"
 	            },
 	            {
-	            	"data" : "",
+	            	"data" : "commissionUnitPriceUnit",
 	            	"render": function ( data, type, row ) {
 	            		data = checkNull(data);
 		            	var $select = $("<select></select>", {
@@ -1447,7 +1486,7 @@ under the License.
 					<td width="1%">&nbsp;</td>
 					<td width="35%">
 						<input type="text" name="totalQuantity" id="totalQuantity" value="${totalQuantity?default('0')}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
-						<select name="quantityUnit" disabled="disabled">
+						<select name="quantityUnit" id="quantityUnit" disabled="disabled">
 							<option value=""></option>
 						<#if codeList??>
 							<#list codeList as codeInfo>
@@ -1464,7 +1503,7 @@ under the License.
 					<td width="1%">&nbsp;</td>
 					<td width="35%">
 						<input type="text" name="totalPoAmount" id="totalPoAmount" value="${totalPrice?default('0')}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
-						<select name="priceUnit" disabled="disabled">
+						<select name="priceUnit" id="priceUnit" disabled="disabled">
 							<option value=""></option>
 						<#if codeList??>
 							<#list codeList as codeInfo>
