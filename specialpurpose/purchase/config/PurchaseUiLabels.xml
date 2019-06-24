@@ -370,6 +370,9 @@
     <property key="submit">
         <value xml:lang="en">Submit</value>
     </property>
+    <property key="patial">
+        <value xml:lang="en">Partial</value>
+    </property>
 
     <property key="blDoc">
         <value xml:lang="en">B/L Document</value>

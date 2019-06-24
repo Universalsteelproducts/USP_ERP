@@ -24,16 +24,159 @@ under the License.
 <script type="text/javascript">
 	jQuery(document).ready(function() {
 		/***************************************************************************
-	     ******************				Init Table				********************
+	     ******************			Common Control				********************
 	     ***************************************************************************/
-	    function checkNull(str) {
+		var checkNull = function(str) {
 			if(str == null) {
 				return "";
 			} else {
 				return str;
 			}
-		}
+		};
 
+		var makeArrayData = function(reqData) {
+			var reqArray = new Array();
+			for(var i=0 ; reqData.length > i ; i++) {
+				var reqMap = new Object();
+				var map = reqData[i];
+				for(var key in map) {
+					if(key != "undefined") {
+						reqMap[key] = $.trim(map[key]);
+					}
+				}
+				reqArray.push(reqMap);
+			}
+
+			return reqArray;
+		};
+
+		var totalPriceNQuantity = function(tableObj, totalQuantityId, totalPriceId) {
+	 		var tableSize = tableObj.rows().data().length;
+	 		var totalQuantity = 0;
+	 		var totalPrice = 0;
+	 		var groupUnitQuantity = 0;
+	 		var lotNo = $("#lotCommonInfo #lotNo").val();
+	 		var steelType = $("#lotCommonInfo #steelType").val();
+
+	 		if(tableSize > 0) {
+	 			for(var i=0 ; tableSize > i ; i++) {
+	 				var gridSteelType = tableObj.rows(i).data().pluck("steelType")[0];
+	 				var gridLotNo = tableObj.rows(i).data().pluck("lotNo")[0];
+	 				var gridOrderQuantity = parseFloat(tableObj.rows(i).data().pluck("orderQuantity")[0]);
+	 				var gridUnitQuantity = parseFloat(tableObj.rows(i).data().pluck("unitQuantity")[0]);
+	 				var gridUnitPrice = parseFloat(tableObj.rows(i).data().pluck("unitPrice")[0]);
+
+	 				if(gridSteelType == "PPGL" || gridSteelType == "PPGI") {
+	 					totalQuantity += gridUnitQuantity;
+
+ 						if(lotNo == gridLotNo) {
+							groupUnitQuantity += gridUnitQuantity;
+						}
+	 				} else {
+	 					totalQuantity += gridOrderQuantity;
+	 				}
+
+	 				totalPrice += gridUnitPrice;
+				}
+	 		}
+
+	 		$("#" + totalQuantityId).val(totalQuantity);
+	 		$("#" + totalPriceId).val(totalPrice);
+
+	 		if(steelType == "PPGL" || steelType == "PPGI") {
+	 			$("#colspanTag #orderQuantity").val(groupUnitQuantity);
+	 		}
+	 	};
+
+		var inputInit = function(id) {
+			$("#" + id + " :input").each(function() {
+				if($(this).attr("name") != "lotNo") {
+					if($(this).prop("type") == "select-one") {
+						$(this).find("option:eq(0)").attr("selected", true);
+						if($(this).attr("name") == "steelType") {
+							$(this).trigger("change");
+						}
+					} else if($(this).prop("type") == "checkbox") {
+						$(this).prop("checked", false);
+					} else {
+						if($(this).prop("type") != "button") {
+							if($(this).attr("name") == "orderQuantity" || $(this).attr("name") == "unitPrice"
+								|| $(this).attr("name") == "commissionUnitPrice" || $(this).attr("name") == "unitQuantity") {
+								$(this).val("0");
+							} else if($(this).attr("name") != "customerId") {
+								$(this).val("");
+							}
+						}
+					}
+				}
+			});
+		};
+
+		var addRow = function(id, rowMap) {
+			var tagTmp = "";
+			$("#" + id + " :input").each(function() {
+				if($(this).attr("name") != "commissionUnitPriceUnit" && $(this).attr("name") != "orderQuantityUnit"
+						&& $(this).attr("name") != "coilDesc") {
+					if($(this).prop("type") == "checkbox") {
+						if($(this).is(":checked")) {
+							rowMap[$(this).attr("name")] = "Y";
+						} else {
+							rowMap[$(this).attr("name")] = "N";
+						}
+					} else {
+						rowMap[$(this).attr("name")] = $(this).val();
+					}
+				}
+			});
+
+			rowMap["referenceSeq"] = "";
+			var referenceNo = $("#vendorNPoInfo #poNo").val() + $("#lotCommonInfo #lotNo").val() + "00";
+			rowMap["referenceNo"] = referenceNo;
+			rowMap["ppglNo"] = "";
+			rowMap["partialYN"] = "N";
+			rowMap["partialNo"] = "00";
+			rowMap["poStatus"] = "PE";
+
+			var steelType = rowMap["steelType"];
+			if(steelType == "PPGL" || steelType == "PPGI") {
+				rowMap["orderQuantity"] = "0";
+			}
+
+			return rowMap;
+		};
+
+	    // 체크박스 전체 선택
+	    $("#allCheck").on("click", function(){
+	          if($("#allCheck").is(":checked")){
+	              $("input[name='selectedItem']").prop("checked", true);
+	          }else{
+	              $("input[name='selectedItem']").prop("checked", false);
+	          }
+		});
+
+	    // 개별 체크박스 선택 시 전체 선택 체크 OR 체크해제
+		$("input:checkbox[name='selectedItem']").on("click", function() {
+			var checkCnt = $("#lotColoList #selectedItem").size() - 1;
+			var nonChkCnt = 0;
+
+			if(checkCnt > 0) {
+				for(var i=0 ; checkCnt > i ; i++) {
+					if(!$("#lotColoList #selectedItem").eq(i).prop("checked")) {
+						nonChkCnt++;
+					}
+				}
+
+				if(nonChkCnt > 0) {
+					$("input[name='allCheck']").prop("checked", false);
+				} else {
+					$("input[name='allCheck']").prop("checked", true);
+				}
+			}
+		});
+
+		/***************************************************************************
+	     ******************				Init Table				********************
+	     ***************************************************************************/
 	    var poListTable = $("#lotColoList").DataTable({
 			//dom: "Bfrtip",
 			//dom : "frtip",
@@ -56,7 +199,7 @@ under the License.
 					"render" : function ( data, type, row ) {
 						return "LOT" + checkNull(data);
 	  				},
-	  				"width": "35px",
+	  				"width": "45px",
 	  				"className" : "align-middle"
 	            },
 	            {
@@ -420,7 +563,7 @@ under the License.
 	  				"width" : "100px"
 	            },
 	            {
-	            	"data" : "",
+	            	"data" : "orderQuantityUnit",
 	            	"render": function ( data, type, row ) {
 	            		data = checkNull(data);
 		            	var $select = $("<select></select>", {
@@ -436,8 +579,15 @@ under the License.
 		            	</#list>
 		            </#if>
 
+		            	var unit = "";
+		            	if(row.orderQuantityUnit == null || row.orderQuantityUnit == "") {
+		            		unit = row.quantityUnit;
+		            	} else {
+		            		unit = row.orderQuantityUnit;
+		            	}
+
 		            	$select.append($option);
-		            	$select.find("[value='" + row.quantityUnit + "']").attr("selected", "selected");
+		            	$select.find("[value='" + unit + "']").attr("selected", "selected");
 		            	$select.attr("class", "orderQuantityUnit");
 		            	return $select.prop("outerHTML");
 	            	},
@@ -452,7 +602,7 @@ under the License.
 	  				"width" : "100px"
 	            },
 	            {
-	            	"data" : "",
+	            	"data" : "quantityUnit",
 	            	"render": function ( data, type, row ) {
 	            		data = checkNull(data);
 		            	var $select = $("<select></select>", {
@@ -665,6 +815,9 @@ under the License.
 			rowCallback : function( row, data, displayNum, displayIndex, dataIndex ) {
 				 $('input#barge', row).prop( 'checked', data.barge == "Y" );
 			},
+			drawCallback : function(settings) {
+				totalPriceNQuantity(this.api(), "totalQuantity", "totalPoAmount");
+			}
 // 			buttons: [
 // 				{
 // 					text: 'Delete',
@@ -694,146 +847,11 @@ under the License.
 		    }
 		} );
 
-		/***************************************************************************
-	     ******************			Common Control				********************
-	     ***************************************************************************/
-		var makeArrayData = function(reqData) {
-			var reqArray = new Array();
-			for(var i=0 ; reqData.length > i ; i++) {
-				var reqMap = new Object();
-				var map = reqData[i];
-				for(var key in map) {
-					if(key != "undefined") {
-						reqMap[key] = $.trim(map[key]);
-					}
-				}
-				reqArray.push(reqMap);
-			}
-
-			return reqArray;
-		};
-
-		var totalPriceNQuantity = function(tableObj, totalQuantityId, totalPriceId) {
-	 		var tableSize = tableObj.rows().data().length;
-	 		var totalQuantity = 0;
-	 		var totalPrice = 0;
-	 		var groupUnitQuantity = 0;
-	 		var lotNo = $("#lotCommonInfo #lotNo").val();
-	 		var steelType = $("#lotCommonInfo #steelType").val();
-
-	 		if(tableSize > 0) {
-	 			for(var i=0 ; tableSize > i ; i++) {
-	 				var gridSteelType = tableObj.rows(i).data().pluck("steelType")[0];
-	 				var gridLotNo = tableObj.rows(i).data().pluck("lotNo")[0];
-	 				var gridOrderQuantity = parseFloat(tableObj.rows(i).data().pluck("orderQuantity")[0]);
-	 				var gridUnitQuantity = parseFloat(tableObj.rows(i).data().pluck("unitQuantity")[0]);
-	 				var gridUnitPrice = parseFloat(tableObj.rows(i).data().pluck("unitPrice")[0]);
-
-	 				if(gridSteelType == "PPGL" || gridSteelType == "PPGI") {
-	 					totalQuantity += gridUnitQuantity;
-
- 						if(lotNo == gridLotNo) {
-							groupUnitQuantity += gridUnitQuantity;
-						}
-	 				} else {
-	 					totalQuantity += gridOrderQuantity;
-	 				}
-
-	 				totalPrice += gridUnitPrice;
-				}
-	 		}
-
-	 		$("#" + totalQuantityId).val(totalQuantity);
-	 		$("#" + totalPriceId).val(totalPrice);
-
-	 		if(steelType == "PPGL" || steelType == "PPGI") {
-	 			$("#colspanTag #orderQuantity").val(groupUnitQuantity);
-	 		}
-	 	};
-
-		var inputInit = function(id) {
-			$("#" + id + " :input").each(function() {
-				if($(this).attr("name") != "lotNo") {
-					if($(this).prop("type") == "select-one") {
-						$(this).find("option:eq(0)").attr("selected", true);
-						if($(this).attr("name") == "steelType") {
-							$(this).trigger("change");
-						}
-					} else if($(this).prop("type") == "checkbox") {
-						$(this).prop("checked", false);
-					} else {
-						if($(this).prop("type") != "button") {
-							if($(this).attr("name") == "orderQuantity" || $(this).attr("name") == "unitPrice"
-								|| $(this).attr("name") == "commissionUnitPrice" || $(this).attr("name") == "unitQuantity") {
-								$(this).val("0");
-							} else if($(this).attr("name") != "customerId") {
-								$(this).val("");
-							}
-						}
-					}
-				}
-			});
-		};
-
-		var addRow = function(id, rowMap) {
-			var tagTmp = "";
-			$("#" + id + " :input").each(function() {
-				if($(this).attr("name") != "commissionUnitPriceUnit" && $(this).attr("name") != "orderQuantityUnit"
-						&& $(this).attr("name") != "coilDesc") {
-					if($(this).prop("type") == "checkbox") {
-						if($(this).is(":checked")) {
-							rowMap[$(this).attr("name")] = "Y";
-						} else {
-							rowMap[$(this).attr("name")] = "N";
-						}
-					} else {
-						rowMap[$(this).attr("name")] = $(this).val();
-						if($(this).attr("name") != "priceUnit" && $(this).attr("name") != "quantityUnit"){
-							console.log($(this).val());
-						}
-					}
-				}
-			});
-
-			console.log(rowMap);
-			rowMap["referenceSeq"] = "";
-			var referenceNo = $("#vendorNPoInfo #poNo").val() + $("#lotCommonInfo #lotNo").val() + "00";
-			rowMap["referenceNo"] = referenceNo;
-			rowMap["ppglNo"] = "";
-			rowMap["partialYN"] = "N";
-			rowMap["partialNo"] = "00";
-			rowMap["poStatus"] = "PE";
-
-			return rowMap;
-		};
-
-	    // 체크박스 전체 선택
-	    $("#allCheck").on("click", function(){
-	          if($("#allCheck").is(":checked")){
-	              $("input[name='selectedItem']").prop("checked", true);
-	          }else{
-	              $("input[name='selectedItem']").prop("checked", false);
-	          }
-		});
-
-	    // 개별 체크박스 선택 시 전체 선택 체크 OR 체크해제
-		$("input:checkbox[name='selectedItem']").on("click", function() {
-			var checkCnt = $("#lotColoList #selectedItem").size() - 1;
-			var nonChkCnt = 0;
-
-			if(checkCnt > 0) {
-				for(var i=0 ; checkCnt > i ; i++) {
-					if(!$("#lotColoList #selectedItem").eq(i).prop("checked")) {
-						nonChkCnt++;
-					}
-				}
-
-				if(nonChkCnt > 0) {
-					$("input[name='allCheck']").prop("checked", false);
-				} else {
-					$("input[name='allCheck']").prop("checked", true);
-				}
-			}
+		// column value update
+		$("#lotColoList").on("change", ":input,textarea,select,check", function() {
+// 			var colIdx = poListTable.cell( $(this).parent() ).index().column;
+// 			var rowIdx = poListTable.cell( $(this).parent() ).index().row;
+			poListTable.cell( $(this).parent() ).data($(this).val()).draw();
 		});
 
 	    /***************************************************************************
@@ -873,7 +891,7 @@ under the License.
 			}
 		});
 
-	    $("#lotCommonInfo #orderQuantityUnit,#priceUnit,#colorDetail #quantityUnit").on("change", function() {
+	    $("#lotCommonInfo #orderQuantityUnit,#lotCommonInfo #priceUnit,#colorDetail #quantityUnit").on("change", function() {
 			$("#vendorNPoInfo select[name$=uantityUnit]").val($(this).val()).attr("selected", true);
 			$("#lotCommonInfo select[name$=uantityUnit]").val($(this).val()).attr("selected", true);
 			$("#colorDetail select[name$=uantityUnit]").val($(this).val()).attr("selected", true);
@@ -1083,15 +1101,32 @@ under the License.
 
 			if(steelType == "PPGL" || steelType == "PPGI") {
 				rowMap = addRow("lotCommonInfo", rowMap);
+				rowMap["orderQuantity"] = "";
 				rowMap = addRow("colorDetail", rowMap);
 				inputInit("colorDetail");
 			} else {
 				rowMap = addRow("lotCommonInfo", rowMap);
 				inputInit("colorDetail");
+				var unit = rowMap["priceUnit"];
 				rowMap = addRow("colorDetail", rowMap);
+				rowMap["quantityUnit"] = unit;
+				rowMap["priceUnit"] = unit;
 			}
 
 			poListTable.row.add(rowMap).columns.adjust().draw();
+
+			var index = 0,
+	        rowCount = poListTable.data().length-1,
+	        insertedRow = poListTable.row(rowCount).data(),
+	        tempRow;
+
+		    for (var i=rowCount;i>index;i--) {
+		        tempRow = poListTable.row(i-1).data();
+		        poListTable.row(i).data(tempRow);
+		        poListTable.row(i-1).data(insertedRow);
+		    }
+		    //refresh the page
+		    poListTable.page(0).draw(false);
 
 			totalPriceNQuantity(poListTable, "totalQuantity", "totalPoAmount");
 	    });
@@ -1122,11 +1157,80 @@ under the License.
 	    	}
 	    });
 
+	    $("#partial").on("click", function() {
+
+// 	    	var index = poListTable.row(this).index(),
+// 	        rowCount = poListTable.data().length-1,
+// 	        insertedRow = poListTable.row(rowCount).data(),
+// 	        tempRow;
+
+// 		    for (var i=rowCount;i>index;i--) {
+// 		        tempRow = poListTable.row(i-1).data();
+// 		        poListTable.row(i).data(tempRow);
+// 		        poListTable.row(i-1).data(insertedRow);
+// 		    }
+// 		    //refresh the page
+// 		    poListTable.page(0).draw(false);
+
+// 			var colIdx = poListTable.cell( $(this).parent() ).index().column;
+// 			var rowIdx = poListTable.cell( $(this).parent() ).index().row;
+// 			["referenceNo"] = referenceNo;
+// 			rowMap["ppglNo"] = "";
+// 			rowMap["partialYN"] = "N";
+// 			rowMap["partialNo"] = "00";
+
+			var poNo = $("#poNo").val();
+			var lotNo = $("#lotList").val();
+			poListTable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+				var newDataMap = new Object();
+			    var data = this.data();
+			    var currLotNo = data["lotNo"];
+
+			    if(lotNo == currLotNo) {
+				    for(var key in data) {
+						if(key != "undefined") {
+							if(key == "lotNo") {
+								var orgLotNo = $.trim(currLotNo) + "-01";
+								var partialLotNo = $.trim(currLotNo) + "-02";
+								data[key] = $.trim(orgLotNo);
+								newDataMap[key] = $.trim(partialLotNo);
+							} else if(key == "partialYN") {
+								data[key] = $.trim("Y");
+								newDataMap[key] = $.trim("N");
+							} else if(key == "partialNo") {
+								data[key] = "01";
+								newDataMap[key] = "02";
+							} else if(key == "referenceNo") {
+								var orgReferenceNo = poNo + $.trim(currLotNo) + "01";
+								var partialReferenceNo = $.trim(currLotNo) + "02";
+								data[key] = $.trim(orgReferenceNo);
+								newDataMap[key] = $.trim(partialReferenceNo);
+							}  else if(key == "orderQuantity") {
+								var steeltype = data["steeltype"];
+								if(steeltype != "PPGL" && steeltype != "PPGI") {
+									var orderQuantity = parseFloat(data["orderQuantity"]);
+									if(orderQuantity > 0) {
+										data[key] = orderQuantity / 2;
+									}
+								}
+							} else {
+								data[key] = $.trim(data[key]);
+								newDataMap[key] = $.trim(data[key]);
+							}
+						}
+					}
+
+				    this.data(data);
+				    poListTable.row.add(newDataMap).columns.adjust().draw();
+			    }
+			});
+	    });
+
 	    $("#submitBtn").on("click", function() {
 	    	var reqData = poListTable.rows().data();
 	    	var reqArray = makeArrayData(reqData);
 
-			var crudMode = $("#crudMode").val();
+	    	var crudMode = $("#crudMode").val();
 			if(crudMode == "CR") {
 				mode = "C";
 			} else if(crudMode == "UR") {
@@ -1806,6 +1910,17 @@ under the License.
 	</div>
 	<div>
 		<ul style="text-align:right;">
+		<#if crudMode != "CR">
+			<select name="lotList" id="lotList">
+				<option value="">--Select</option>
+			<#if lotList??>
+				<#list lotList as codeInfo>
+   				<option value="${codeInfo.lotNo!}">LOT${codeInfo.lotNo!}</option>
+       			</#list>
+       		</#if>
+			</select>
+			<input id="partial" type="button" value="${uiLabelMap.partial}" class="buttontext"/>
+		</#if>
 			<input id="deleteRow" type="button" value="${uiLabelMap.deleteRow}" class="buttontext"/>
 		</ul>
 	</div>

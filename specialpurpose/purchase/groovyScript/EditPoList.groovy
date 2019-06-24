@@ -22,6 +22,7 @@ poCommonInfo = [:]
 poInfo = [:]
 vendorInfo = [:]
 lotInfoList = []
+lotList = []
 totalQuantity = BigDecimal.ZERO
 totalPrice = BigDecimal.ZERO
 totalQuantityUnit = ""
@@ -42,6 +43,8 @@ if(poNo) {
 	vendorInfo = from("Vendor").where("vendorId", vendorId).queryOne()
 	poCommonInfo.putAll(poInfo)
 	poCommonInfo.putAll(vendorInfo)
+
+	lotList = select("lotNo").from("Reference").where("poNo", poNo).distinct().queryList()
 
 /*
 	lotInfoList = from("Reference").where("poNo", poNo).queryList()
@@ -65,6 +68,7 @@ if(poNo) {
 context.poCommonInfo = poCommonInfo
 context.codeList = codeList
 context.crudMode =  crudMode
+context.lotList =  lotList
 /*context.lotInfoList = lotInfoList
 context.totalQuantity = totalQuantity
 context.totalPrice = totalPrice

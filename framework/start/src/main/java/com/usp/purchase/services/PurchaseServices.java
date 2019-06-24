@@ -241,6 +241,8 @@ public class PurchaseServices {
 	    		    JSONArray data = new JSONArray(reqData);//jsonarray 형태로
 
 	    		    if(data.length() > 0) {
+	    		    	long seqNum = EntityQuery.use(delegator).from("Reference").queryCount();
+	    		    	long ppglNo = 0L;
 	        			for(int i=0 ; data.length() > i ; i++) {
 	        				Map<String, Object> referenceMap = new HashMap<String, Object>();
 	        				referenceMap.put("poNo", createNUpdatePoInfo.getString("poNo"));
@@ -270,15 +272,15 @@ public class PurchaseServices {
 	                	    }
 
 	                	    if("C".equals(crudMode)) {
-		                		long seqNum = EntityQuery.use(delegator).from("Reference").queryCount();
-		                		long nextSeqNum = seqNum + 1;
-		                		Map<String, Long> sequenceNum = UtilMisc.toMap("referenceSeq", nextSeqNum);
+		                		seqNum = seqNum + 1;
+		                		Map<String, Long> sequenceNum = UtilMisc.toMap("referenceSeq", seqNum);
 		                		referenceMap.putAll(sequenceNum);
-
-		                		long ppglNum = EntityQuery.use(delegator).from("Reference")
-		                				.where("lotNo", referenceMap.get("lotNo"), "poNo", referenceMap.get("poNo"), "referenceNo", referenceMap.get("referenceNo")).queryCount();
-		                		long nextPpglNum = ppglNum + 1;
-		                		Map<String, Long> ppglNumVal = UtilMisc.toMap("ppglNo", nextPpglNum);
+		                		if(ppglNo == 0L) {
+		                			ppglNo = EntityQuery.use(delegator).from("Reference")
+		                					.where("lotNo", referenceMap.get("lotNo"), "poNo", referenceMap.get("poNo"), "referenceNo", referenceMap.get("referenceNo")).queryCount();
+		                		}
+		                		ppglNo = ppglNo + 1;
+		                		Map<String, Long> ppglNumVal = UtilMisc.toMap("ppglNo", ppglNo);
 		                		referenceMap.putAll(ppglNumVal);
 		                		referenceMap.put("createUserId", userLoginId);
 		                		referenceMap.put("createdStamp", UtilDateTime.nowTimestamp());
@@ -291,7 +293,7 @@ public class PurchaseServices {
 		            		               .from("Reference")
 		            		               .where("referenceSeq", jsonobj.getLong("referenceSeq"))
 		            		               .queryOne();
-	                			referenceMap.put("createUserId", referenceInfo.getTimestamp("createUserId"));
+	                			referenceMap.put("createUserId", referenceInfo.getString("createUserId"));
 		                		referenceMap.put("createdStamp", referenceInfo.getTimestamp("createdStamp"));
 		                		referenceMap.put("createdTxStamp", referenceInfo.getTimestamp("createdTxStamp"));
 	                		}
