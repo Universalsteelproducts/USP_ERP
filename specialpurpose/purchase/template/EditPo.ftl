@@ -1354,8 +1354,12 @@ under the License.
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.vendorId!}
+					<#else>
 						<!-- set_multivalues -->
 						<@htmlTemplate.lookupField value="${poCommonInfo.vendorId!}" formName="vendorNPoInfo" name="vendorId" id="vendorId" fieldFormName="LookupVendor" position="center" />
+					</#if>
 						<input type="hidden" name="vendorInitials" id="vendorInitials" value="${poCommonInfo.vendorInitials!}" size="25" maxlength="255"/>
 					</td>
 					<td class="label" width="13%" align="right">
@@ -1363,7 +1367,12 @@ under the License.
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.orderDate!}
+					<#else>
+						<!-- set_multivalues -->
 						<@htmlTemplate.renderDateTimeField name="orderDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${poCommonInfo.orderDate!}" size="25" maxlength="50" id="orderDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+					</#if>
 					</td>
 				</tr>
 				<tr>
@@ -1372,14 +1381,22 @@ under the License.
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.vendorAddr!}
+					<#else>
 						<input type="text" name="vendorAddr" id="vendorAddr" value="${poCommonInfo.vendorAddr!}" size="60" maxlength="255"/>
+					</#if>
 					</td>
 					<td class="label" width="13%" align="right">
 						${uiLabelMap.priceTerm}
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.priceTerm!}
+					<#else>
 						<input type="text" name="priceTerm" value="${poCommonInfo.priceTerm!}" size="25" maxlength="255"/>
+					</#if>
 					</td>
 				</tr>
 				<tr>
@@ -1388,14 +1405,22 @@ under the License.
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.vendorEmail!}
+					<#else>
 						<input type="text" name="vendorEmail" id="vendorEmail" value="${poCommonInfo.vendorEmail!}" size="25" maxlength="255"/>
+					</#if>
 					</td>
 					<td class="label" width="13%" align="right">
 						${uiLabelMap.freightTerm}
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.freightTerm!}
+					<#else>
 						<input type="text" name="freightTerm" value="${poCommonInfo.freightTerm!}" size="25" maxlength="255"/>
+					</#if>
 					</td>
 				</tr>
 				<tr>
@@ -1404,14 +1429,22 @@ under the License.
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.vendorTel!}
+					<#else>
 						<input type="text" name="vendorTel" id="vendorTel" value="${poCommonInfo.vendorTel!}" size="25" maxlength="255"/>
+					</#if>
 					</td>
 					<td class="label" width="13%" align="right">
 						${uiLabelMap.paymentTerm}
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.paymentTerm!}
+					<#else>
 						<input type="text" name="paymentTerm" value="${poCommonInfo.paymentTerm!}" size="25" maxlength="255"/>
+					</#if>
 					</td>
 				</tr>
 				<tr>
@@ -1420,14 +1453,22 @@ under the License.
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
+					<#if crudMode == "UR">
+						${poCommonInfo.vendorFax!}
+					<#else>
 						<input type="text" name="vendorFax" id="vendorFax" value="${poCommonInfo.vendorFax!}" size="25" maxlength="255"/>
+					</#if>
 					</td>
 					<td class="label" width="13%" align="right">
 						${uiLabelMap.downPayment}
 					</td>
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
-						$ <input type="text" name="downPayment" value="${poCommonInfo.downPayment?default('0')}" size="23" maxlength="255" style="text-align:right;" />
+					<#if crudMode == "UR">
+						$ ${poCommonInfo.downPayment?string(',##0.00')}
+					<#else>
+						$ <input type="text" name="downPayment" value="${poCommonInfo.downPayment?string(',##0.00')}" size="23" maxlength="255" style="text-align:right;" />
+					</#if>
 					</td>
 				</tr>
 				<tr>
