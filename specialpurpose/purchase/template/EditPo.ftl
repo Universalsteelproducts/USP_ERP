@@ -1004,14 +1004,14 @@ under the License.
 	    $("#lotCommonInfo #lotNo").on("change", function() {
 	    	var lotNo = $(this).val();
 	    	if($(this).val() == "") {
-	    		inputInit("lotCommonInfo");
+	    		editPoInputInit("lotCommonInfo");
 	    	} else {
 		    	var trCnt = $("#lotColoList tbody tr").size()/2;
 		    	var headTrCnt = 2;
 		    	var lotCommonInfo;
 		    	var trId = "";
 		    	if(trCnt > 0) {
-			    	inputInit("lotCommonInfo");
+			    	editPoInputInit("lotCommonInfo");
 			    	$(this).val( lotNo ).prop("selected", "selected");
 
 			    	for(var i=0 ; trCnt > i ; i++) {
@@ -1057,7 +1057,7 @@ under the License.
 			    	}
 			    	totalPriceNQuantity(poListTable, "totalQuantity", "totalPoAmount");
 		    	} else {
-			    	inputInit("lotCommonInfo");
+			    	editPoInputInit("lotCommonInfo");
 			    	$(this).val( lotNo ).prop("selected", "selected");
 		    	}
 	    	}
@@ -1071,8 +1071,8 @@ under the License.
 			lotIdx = lotIdx >= 10 ? lotIdx : '0' + lotIdx;
 			$("#lotCommonInfo #lotNo").append("<option value='" + lotIdx + "'>LOT" + lotIdx + "</option>");
 
-			inputInit("lotCommonInfo");
-			inputInit("colorDetail");
+			editPoInputInit("lotCommonInfo");
+			editPoInputInit("colorDetail");
 
 			$("#lotCommonInfo #lotNo option:eq(" + lotIdx + ")").attr("selected", true);
 	    });
@@ -1101,10 +1101,10 @@ under the License.
 				rowMap = addRow("lotCommonInfo", rowMap);
 				rowMap["orderQuantity"] = "";
 				rowMap = addRow("colorDetail", rowMap);
-				inputInit("colorDetail");
+				editPoInputInit("colorDetail");
 			} else {
 				rowMap = addRow("lotCommonInfo", rowMap);
-				inputInit("colorDetail");
+				editPoInputInit("colorDetail");
 				var unit = rowMap["priceUnit"];
 				rowMap = addRow("colorDetail", rowMap);
 				rowMap["quantityUnit"] = unit;
@@ -1271,8 +1271,8 @@ under the License.
 	    });
 
 	    $("#allClear").on("click", function() {
-			inputInit("vendorNPoInfo");
-			inputInit("lotCommonInfo");
+			editPoInputInit("vendorNPoInfo");
+			editPoInputInit("lotCommonInfo");
 
 			$("#referenceForm").children().remove();
 			$("#lotColoList tbody").children().remove();
@@ -1285,10 +1285,16 @@ under the License.
         	format: '(xxx) xxx-xxxx',
 	    });
         $("#downPayment").on("change", function() {
-//         	var val = $(this).val();
-//         	val = val.replace(/,/gi, "")
-        	$(this).val(Number($(this).val()).format(2));
+        	$(this).val($(this).val().format(2));
         });
+		$('#vendorEmail').on("change", function() {
+			var returnTF = $(this).emailFormat();
+			if(!returnTF) {
+				alert("Invalid Format");
+				$(this).focus();
+				return;
+			}
+	    });
 	});
 </script>
 
