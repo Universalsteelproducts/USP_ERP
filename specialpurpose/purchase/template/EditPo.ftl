@@ -58,9 +58,9 @@ under the License.
 	 			for(var i=0 ; tableSize > i ; i++) {
 	 				var gridSteelType = tableObj.rows(i).data().pluck("steelType")[0];
 	 				var gridLotNo = tableObj.rows(i).data().pluck("lotNo")[0];
-	 				var gridOrderQuantity = parseFloat(tableObj.rows(i).data().pluck("orderQuantity")[0]);
-	 				var gridUnitQuantity = parseFloat(tableObj.rows(i).data().pluck("unitQuantity")[0]);
-	 				var gridUnitPrice = parseFloat(tableObj.rows(i).data().pluck("unitPrice")[0]);
+	 				var gridOrderQuantity = tableObj.rows(i).data().pluck("orderQuantity")[0] >= 0 ? tableObj.rows(i).data().pluck("orderQuantity")[0] : 0;
+	 				var gridUnitQuantity = tableObj.rows(i).data().pluck("unitQuantity")[0] >= 0 ? tableObj.rows(i).data().pluck("unitQuantity")[0] : 0;
+	 				var gridUnitPrice = tableObj.rows(i).data().pluck("unitPrice")[0] >= 0 ? tableObj.rows(i).data().pluck("unitPrice")[0] : 0;
 
 	 				if(i == 0) {
 	 					totalQuantityUnit = tableObj.rows(i).data().pluck("quantityUnit")[0];
@@ -76,7 +76,6 @@ under the License.
 	 				} else {
 	 					totalQuantity += gridOrderQuantity;
 	 				}
-
 	 				totalPrice += gridUnitPrice;
 				}
 	 		}
@@ -537,7 +536,7 @@ under the License.
 	            	"data" : "orderQuantity",
 	                "render": function ( data, type, row ) {
 	                	if(data != null && data != "") {
-	                		data =  Number(checkNull(data)).format();
+	                		data =  checkNull(data).format();
 	                	} else {
 	                		data =  "";
 	                	}
@@ -580,7 +579,7 @@ under the License.
 	            	"data" : "unitQuantity",
 	                "render": function ( data, type, row ) {
 	                	if(data != null && data != "") {
-	                		data =  Number(checkNull(data)).format();
+	                		data =  checkNull(data).format();
 	                	} else {
 	                		data =  "";
 	                	}
@@ -616,7 +615,7 @@ under the License.
 	            	"data" : "unitPrice",
 	                "render": function ( data, type, row ) {
 	                	if(data != null && data != "") {
-	                		data =  Number(checkNull(data)).format(2);
+	                		data =  checkNull(data).format(2);
 	                	} else {
 	                		data =  "";
 	                	}
@@ -652,7 +651,7 @@ under the License.
 	            	"data" : "commissionUnitPrice",
 	                "render": function ( data, type, row ) {
 	                	if(data != null && data != "") {
-	                		data =  Number(checkNull(data)).format(2);
+	                		data =  checkNull(data).format(2);
 	                	} else {
 	                		data =  "";
 	                	}
@@ -846,12 +845,61 @@ under the License.
 		$("#lotColoList").on("change", ":input,textarea,select,check", function() {
 // 			var colIdx = poListTable.cell( $(this).parent() ).index().column;
 // 			var rowIdx = poListTable.cell( $(this).parent() ).index().row;
-			poListTable.cell( $(this).parent() ).data($(this).val()).draw();
+
+			var val;
+			var valType = typeof $(this).val();
+			var type = typeof poListTable.cell( $(this).parent() ).data();
+			if(type == "number") {
+				if(valType == "string") {
+					val = Number($(this).val().replace(/\,/g, ""));
+				} else {
+					val = Number($(this).val());
+				}
+			} else {
+				val = $(this).val();
+			}
+			poListTable.cell( $(this).parent() ).data(val).draw();
+		});
+
+		// column value update
+		$("#lotColoList").on("keyup", ":input", function() {
+			var valType = $(this).attr("id");
+			if(valType == "unitQuantity" || valType == "orderQuantity") {
+				$(this).objectFormat({format : "int"});
+				var colIdx = poListTable.cell( $(this).parent() ).index().column;
+			}
 		});
 
 	    /***************************************************************************
 	     ******************			InputBox Control			********************
 	     ***************************************************************************/
+		$('#vendorFax').usPhoneFormat({
+			format: '(xxx) xxx-xxxx',
+		});
+		$('#vendorTel').usPhoneFormat({
+			format: '(xxx) xxx-xxxx',
+		});
+		$("#downPayment").on("change", function() {
+			$(this).val($(this).val().format(2));
+		});
+		$('#vendorEmail').on("change", function() {
+			var returnTF = $(this).emailFormat();
+			if(!returnTF) {
+				alert("Invalid Format");
+				$(this).focus();
+				return;
+			}
+		});
+		$("#lotCommonInfo #orderQuantity,#lotCommonInfo #unitPrice,#lotCommonInfo #commissionUnitPrice,"
+				+"#lotCommonInfo #unitQuantity").on("keyup", function() {
+			var returnTF = $(this).objectFormat({format : "float"});
+		});
+		$("#lotCommonInfo #orderQuantity,#lotCommonInfo #unitQuantity").on("change", function() {
+			$(this).val($(this).val().format());
+		});
+		$("#lotCommonInfo #unitPrice,#lotCommonInfo #commissionUnitPrice").on("change", function() {
+			$(this).val($(this).val().format(2));
+		});
 
 	    /***************************************************************************
 	     ******************			SelectBox Control			********************
@@ -1276,24 +1324,6 @@ under the License.
 
 			$("#referenceForm").children().remove();
 			$("#lotColoList tbody").children().remove();
-	    });
-
-	    $('#vendorFax').usPhoneFormat({
-	        format: '(xxx) xxx-xxxx',
-	    });
-        $('#vendorTel').usPhoneFormat({
-        	format: '(xxx) xxx-xxxx',
-	    });
-        $("#downPayment").on("change", function() {
-        	$(this).val($(this).val().format(2));
-        });
-		$('#vendorEmail').on("change", function() {
-			var returnTF = $(this).emailFormat();
-			if(!returnTF) {
-				alert("Invalid Format");
-				$(this).focus();
-				return;
-			}
 	    });
 	});
 </script>

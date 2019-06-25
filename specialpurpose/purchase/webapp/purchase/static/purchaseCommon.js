@@ -39,7 +39,8 @@ $.fn.emailFormat = function (options) {
  */
 $.fn.objectFormat = function (options) {
 	var params = $.extend({
-        format: 'int'
+        format: 'int',
+        fixLeng : 0
     }, options);
 
 	var filter, rep, reg;
@@ -62,10 +63,12 @@ $.fn.objectFormat = function (options) {
 	}
 
 	if(filter != null && filter != "") {
-		if(filter.test($(this).val())) {
+		if(filter.test($(this).val().replace(/\,/g, ""))) {
 			return true;
 		} else {
+			alert("Invalid Format");
 			$(this).val($(this).val().replace(reg, rep));
+			$(this).focus();
 			return false;
 		}
 	}
@@ -88,7 +91,7 @@ String.prototype.format = function(n, x) {
 };
 
 var checkNull = function(str) {
-	if(str == null) {
+	if(str == null || str == undefined || str == "undefined" || str == "") {
 		return "";
 	} else {
 		return str;
