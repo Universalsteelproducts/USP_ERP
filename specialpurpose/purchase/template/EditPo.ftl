@@ -1257,6 +1257,7 @@ under the License.
 									var orderQuantity = parseFloat(data["orderQuantity"]);
 									if(orderQuantity > 0) {
 										data[key] = orderQuantity / 2;
+										newDataMap[key] = data[key];
 									}
 								}
 							} else {
