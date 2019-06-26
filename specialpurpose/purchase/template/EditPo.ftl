@@ -1536,7 +1536,7 @@ under the License.
 					</td>
 					<td width="1%">&nbsp;</td>
 					<td width="35%">
-						<input type="text" name="totalQuantity" id="totalQuantity" value="${totalQuantity?default('0')}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
+						<input type="text" name="totalQuantity" id="totalQuantity" value="${totalQuantity!}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
 						<select name="quantityUnit" id="quantityUnit" disabled="disabled">
 							<option value=""></option>
 						<#if codeList??>
@@ -1553,7 +1553,7 @@ under the License.
 					</td>
 					<td width="1%">&nbsp;</td>
 					<td width="35%">
-						<input type="text" name="totalPoAmount" id="totalPoAmount" value="${totalPrice?default('0')}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
+						<input type="text" name="totalPoAmount" id="totalPoAmount" value="${totalPrice!}" style="text-align:right;background-color:#EEEEEE;" readonly="readonly" />
 						<select name="priceUnit" id="priceUnit" disabled="disabled">
 							<option value=""></option>
 						<#if codeList??>
