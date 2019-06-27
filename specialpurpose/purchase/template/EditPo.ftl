@@ -1487,7 +1487,8 @@ under the License.
 					</td>
 					<td width="1%">&nbsp;</td>
 					<td width="35%" colspan="4">
-						<input type="text" name="poNo" id="poNo" size="25" maxlength="255" value="${poNo!}" style="background-color:#EEEEEE;" readonly="readonly" />
+						<input type="text" name="poNo" id="poNo" size="25" maxlength="255" value="${poNo!}" />
+<!-- 												<input type="text" name="poNo" id="poNo" size="25" maxlength="255" value="${poNo!}" style="background-color:#EEEEEE;" readonly="readonly" /> -->
 					<#if crudMode == "R">
 						<input type="hidden" name="poStatus" id="poStatus" value="PE" />
 					<#else>
