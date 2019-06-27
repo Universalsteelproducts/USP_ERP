@@ -135,3 +135,129 @@ var inputInit = function(id) {
 		}
 	});
 };
+
+var makeArrayData = function(reqData) {
+	var reqArray = new Array();
+	for(var i=0 ; reqData.length > i ; i++) {
+		var reqMap = new Object();
+		var map = reqData[i];
+		for(var key in map) {
+			if(key != "undefined") {
+				reqMap[key] = $.trim(map[key]);
+			}
+		}
+		reqArray.push(reqMap);
+	}
+
+	return reqArray;
+};
+
+var totalPriceNQuantity = function(tableObj, totalQuantityId, totalPriceId) {
+		var tableSize = tableObj.rows().data().length;
+		var totalQuantity = 0;
+		var totalPrice = 0;
+		var groupUnitQuantity = 0;
+		var lotNo = $("#lotCommonInfo #lotNo").val();
+		var steelType = $("#lotCommonInfo #steelType").val();
+
+		var totalQuantityUnit = "";
+		var totalPriceUnit = "";
+
+		if(tableSize > 0) {
+			for(var i=0 ; tableSize > i ; i++) {
+				var gridSteelType = tableObj.rows(i).data().pluck("steelType")[0];
+				var gridLotNo = tableObj.rows(i).data().pluck("lotNo")[0];
+//				var gridOrderQuantity = Number(tableObj.rows(i).data().pluck("orderQuantity")[0] >= 0 ? tableObj.rows(i).data().pluck("orderQuantity")[0] : 0);
+				var gridUnitQuantity = Number(tableObj.rows(i).data().pluck("unitQuantity")[0] >= 0 ? tableObj.rows(i).data().pluck("unitQuantity")[0] : 0);
+				var gridUnitPrice = parseFloat(tableObj.rows(i).data().pluck("unitPrice")[0] >= 0 ? tableObj.rows(i).data().pluck("unitPrice")[0] : 0);
+
+				if(i == 0) {
+					totalQuantityUnit = tableObj.rows(i).data().pluck("quantityUnit")[0];
+					totalPriceUnit = tableObj.rows(i).data().pluck("priceUnit")[0];
+				}
+
+//				if(gridSteelType == "PPGL" || gridSteelType == "PPGI") {
+					totalQuantity += gridUnitQuantity;
+
+//					if(lotNo == gridLotNo) {
+//						groupUnitQuantity += gridUnitQuantity;
+//					}
+
+					totalPrice += (gridUnitQuantity*gridUnitPrice);
+//				} else {
+//					totalQuantity += gridOrderQuantity;
+//					totalPrice += (gridOrderQuantity*gridUnitPrice);
+//				}
+		}
+		}
+
+		$("#" + totalQuantityId).val(totalQuantity.format());
+		$("#" + totalPriceId).val(totalPrice.format(2));
+		$("#vendorNPoInfo #quantityUnit").val(totalQuantityUnit);
+		$("#vendorNPoInfo #priceUnit").val(totalPriceUnit);
+
+//		if(steelType == "PPGL" || steelType == "PPGI") {
+//			$("#colspanTag #orderQuantity").val(groupUnitQuantity);
+//		}
+	};
+
+var addRow = function(id, rowMap) {
+	var tagTmp = "";
+	$("#" + id + " :input").each(function() {
+		if($(this).attr("name") != "commissionUnitPriceUnit" && $(this).attr("name") != "coilDesc") {
+			if($(this).prop("type") == "checkbox") {
+				if($(this).is(":checked")) {
+					rowMap[$(this).attr("name")] = "Y";
+				} else {
+					rowMap[$(this).attr("name")] = "N";
+				}
+			} else {
+				rowMap[$(this).attr("name")] = $(this).val();
+			}
+		}
+	});
+
+	rowMap["referenceSeq"] = "";
+	var referenceNo = $("#vendorNPoInfo #poNo").val() + $("#lotCommonInfo #lotNo").val() + "00";
+	rowMap["referenceNo"] = referenceNo;
+	rowMap["ppglNo"] = "";
+	rowMap["partialYN"] = "N";
+	rowMap["partialNo"] = "00";
+	rowMap["poStatus"] = "PE";
+
+	var steelType = rowMap["steelType"];
+//		if(steelType == "PPGL" || steelType == "PPGI") {
+//			rowMap["orderQuantity"] = "0";
+//		}
+
+	return rowMap;
+};
+
+// 체크박스 전체 선택
+$("#allCheck").on("click", function(){
+      if($("#allCheck").is(":checked")){
+          $("input[name='selectedItem']").prop("checked", true);
+      }else{
+          $("input[name='selectedItem']").prop("checked", false);
+      }
+});
+
+// 개별 체크박스 선택 시 전체 선택 체크 OR 체크해제
+$("input:checkbox[name='selectedItem']").on("click", function() {
+	var checkCnt = $("#lotColoList #selectedItem").size() - 1;
+	var nonChkCnt = 0;
+
+	if(checkCnt > 0) {
+		for(var i=0 ; checkCnt > i ; i++) {
+			if(!$("#lotColoList #selectedItem").eq(i).prop("checked")) {
+				nonChkCnt++;
+			}
+		}
+
+		if(nonChkCnt > 0) {
+			$("input[name='allCheck']").prop("checked", false);
+		} else {
+			$("input[name='allCheck']").prop("checked", true);
+		}
+	}
+});

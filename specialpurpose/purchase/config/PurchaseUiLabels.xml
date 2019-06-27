@@ -118,6 +118,9 @@
     <property key="unitPrice">
         <value xml:lang="en">Unit Price</value>
     </property>
+    <property key="totalPrice">
+        <value xml:lang="en">Total Price</value>
+    </property>
     <property key="priceUnit">
         <value xml:lang="en">Price Unite</value>
     </property>

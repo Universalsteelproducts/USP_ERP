@@ -28,7 +28,7 @@ totalPrice = BigDecimal.ZERO
 totalQuantityUnit = ""
 totalPriceUnit = ""
 codeList = []
-codeList = from("Code").queryList()
+codeList = from("Code").orderBy("codeGroup", "sort").queryList()
 
 poNo = parameters.poNo
 crudMode = "CR"

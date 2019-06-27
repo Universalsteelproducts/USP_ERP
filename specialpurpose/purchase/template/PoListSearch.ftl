@@ -33,7 +33,7 @@ under the License.
 	        scrollX : true,
 	        fixedHeader : true,
 	        fixedColumns : {
-	            leftColumns: 5
+	            leftColumns: 3
 	        },
 			order: [[1, 'desc']],
 	        ajax : {
@@ -80,16 +80,23 @@ under the License.
 	        		"data" : "lotNo",
 	        		"render": function ( data, type, row ) {
 	                    return "<b>LOT" + data + "</b>";
-	                }
+	                },
+	                "width" : "60px"
 	        	},
 	        	{
-	        		"data" : "etd",
-	  				"width" : "70px"
-	  			},
-	        	{
-	  				"data" : "eta",
-	  				"width" : "70px"
-	  			},
+	        		"data" : "referenceNo",
+	        		"render": function ( data, type, row ) {
+	                    return "<b>" + data + "</b>";
+	                }
+	        	},
+// 	        	{
+// 	        		"data" : "etd",
+// 	  				"width" : "70px"
+// 	  			},
+// 	        	{
+// 	  				"data" : "eta",
+// 	  				"width" : "70px"
+// 	  			},
 	        	{
 	  				"data" : "vessel",
 	  				"width" : "150px"
@@ -259,12 +266,13 @@ under the License.
 	        	{
 	        		"data" : "unitPrice",
 	        		"render" : function ( data, type, row ) {
+	        			var newData = "";
 	        			if(data != null && data != "") {
-	                		data =  "$ " + Number(data).format(2);
+	        				newData =  "$ " + Number(data).format(2);
 	                	} else {
-	                		data =  "";
+	                		newData =  "";
 	                	}
-	        			return data;
+	        			return newData;
 	                },
 	                "className" : "dt-right",
 	  				"width" : "100px"
@@ -362,7 +370,10 @@ under the License.
 	                },
 	  				"width" : "140px"
 	        	},
-	        	{ "data" : "lastUpdateUserId" },
+	        	{
+	        		"data" : "lastUpdateUserId",
+	  				"width" : "100px"
+	        	},
 	        	{
 	        		"data" : "lastUpdatedStamp",
 	        		"render" : function ( data, type, row ) {
@@ -383,10 +394,6 @@ under the License.
 	        	},
 	        	{
 	        		"data" : "referenceSeq",
-	        		"visible": false,
-	        	},
-	        	{
-	        		"data" : "referenceNo",
 	        		"visible": false,
 	        	},
 	        	{
@@ -641,8 +648,9 @@ under the License.
 					<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.etd}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.eta}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.referenceNo}</th>
+<!-- 					<th style="vertical-align: middle;">${uiLabelMap.etd}</th> -->
+<!-- 					<th style="vertical-align: middle;">${uiLabelMap.eta}</th> -->
 					<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.port}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
@@ -675,8 +683,9 @@ under the License.
 					<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.etd}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.eta}</th>
+					<th style="vertical-align: middle;">${uiLabelMap.referenceNo}</th>
+<!-- 					<th style="vertical-align: middle;">${uiLabelMap.etd}</th> -->
+<!-- 					<th style="vertical-align: middle;">${uiLabelMap.eta}</th> -->
 					<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.port}</th>
 					<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>

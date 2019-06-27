@@ -240,8 +240,9 @@ public class PurchaseServices {
 	        		GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
 	    		    JSONArray data = new JSONArray(reqData);//jsonarray 형태로
 
+	    		    int resultInt = 0;
 	    		    if(data.length() > 0) {
-	    		    	long seqNum = EntityQuery.use(delegator).from("Reference").queryCount();
+	    		    	long seqNum = EntityQuery.use(delegator).select("referenceSeq").from("Reference").orderBy("referenceSeq DESC").queryFirst().getLong("referenceSeq");
 	    		    	long ppglNo = 0L;
 	        			for(int i=0 ; data.length() > i ; i++) {
 	        				Map<String, Object> referenceMap = new HashMap<String, Object>();
@@ -253,13 +254,19 @@ public class PurchaseServices {
 	                	        String key = keysItr.next();
 	                	        Object value = new Object();
 	                	        if(jsonobj.getString(key) != null && !"".equals(jsonobj.getString(key))) {
-		                	        if("orderQuantity".equals(key) || "unitQuantity".equals(key)
-		                	        		|| "unitPrice".equals(key) || "commissionUnitPrice".equals(key)
-		                	        		|| "unitCost".equals(key) || "civAmount".equals(key)
+	                	        	if("unitQuantity".equals(key)) {
+	                	        		String str = jsonobj.getString(key);
+	                	        		long lStr = Long.valueOf(str.replaceAll(",", ""));
+	                	        		value = BigDecimal.valueOf(lStr);
+	                	        	} else if("unitCost".equals(key) || "civAmount".equals(key)
 		                	        		|| "loadedQty".equals(key) || "weight".equals(key)
 		                	        		|| "coilQuantity".equals(key)) {
 		                	        	long str = jsonobj.getLong(key);
 		                	        	value = BigDecimal.valueOf(str);
+		                	        } else if("unitPrice".equals(key) || "commissionUnitPrice".equals(key)) {
+		                	        	String str = jsonobj.getString(key);
+		                	        	double dbl = Double.valueOf(str.replaceAll(",", ""));
+		                	        	value = BigDecimal.valueOf(dbl);
 		                	        } else if("etd".equals(key) || "eta".equals(key) || "blDate".equals(key)) {
 		                	        	value = (Timestamp) jsonobj.get(key);
 		                	        } else {
@@ -271,31 +278,37 @@ public class PurchaseServices {
 	                	        }
 	                	    }
 
-	                	    if("C".equals(crudMode)) {
-		                		seqNum = seqNum + 1;
-		                		Map<String, Long> sequenceNum = UtilMisc.toMap("referenceSeq", seqNum);
-		                		referenceMap.putAll(sequenceNum);
-		                		if(ppglNo == 0L) {
-		                			ppglNo = EntityQuery.use(delegator).from("Reference")
-		                					.where("lotNo", referenceMap.get("lotNo"), "poNo", referenceMap.get("poNo"), "referenceNo", referenceMap.get("referenceNo")).queryCount();
-		                		}
-		                		ppglNo = ppglNo + 1;
-		                		Map<String, Long> ppglNumVal = UtilMisc.toMap("ppglNo", ppglNo);
-		                		referenceMap.putAll(ppglNumVal);
-		                		referenceMap.put("createUserId", userLoginId);
-		                		referenceMap.put("createdStamp", UtilDateTime.nowTimestamp());
-		                		referenceMap.put("createdTxStamp", UtilDateTime.nowTimestamp());
-	                		} else {
-	                			referenceMap.put("referenceSeq", jsonobj.getLong("referenceSeq"));
-	                			referenceMap.put("ppglNo", jsonobj.getLong("ppglNo"));
-
-	                			GenericValue referenceInfo = EntityQuery.use(delegator)
+	                	    if(jsonobj.isNull("referenceSeq") || "".equals(jsonobj.get("referenceSeq"))) {
+	                	    	seqNum = seqNum + 1;
+	                	    	Map<String, Long> sequenceNum = UtilMisc.toMap("referenceSeq", seqNum);
+		                	    referenceMap.putAll(sequenceNum);
+	                	    } else {
+	                	    	referenceMap.put("referenceSeq", jsonobj.getLong("referenceSeq"));
+	                	    	GenericValue referenceInfo = EntityQuery.use(delegator)
 		            		               .from("Reference")
-		            		               .where("referenceSeq", jsonobj.getLong("referenceSeq"))
+		            		               .where("referenceSeq", referenceMap.get("referenceSeq"))
 		            		               .queryOne();
 	                			referenceMap.put("createUserId", referenceInfo.getString("createUserId"));
 		                		referenceMap.put("createdStamp", referenceInfo.getTimestamp("createdStamp"));
 		                		referenceMap.put("createdTxStamp", referenceInfo.getTimestamp("createdTxStamp"));
+	                	    }
+
+	                	    if(jsonobj.isNull("ppglNo") || "".equals(jsonobj.get("ppglNo"))) {
+	                	    	if(ppglNo == 0L) {
+		                	    	ppglNo = EntityQuery.use(delegator).select("ppglNo").from("Reference")
+		                	    			.where("lotNo", referenceMap.get("lotNo"), "poNo", referenceMap.get("poNo"), "referenceNo", referenceMap.get("referenceNo")).orderBy("ppglNo DESC").queryFirst().getLong("ppglNo");
+		                	    }
+		                	    ppglNo = ppglNo + 1;
+		                	    Map<String, Long> ppglNumVal = UtilMisc.toMap("ppglNo", ppglNo);
+		                	    referenceMap.putAll(ppglNumVal);
+	                	    } else {
+	                	    	referenceMap.put("ppglNo", jsonobj.getLong("ppglNo"));
+	                	    }
+
+	                	    if("C".equals(crudMode)) {
+		                		referenceMap.put("createUserId", userLoginId);
+		                		referenceMap.put("createdStamp", UtilDateTime.nowTimestamp());
+		                		referenceMap.put("createdTxStamp", UtilDateTime.nowTimestamp());
 	                		}
 
 	                		referenceMap.put("lastUpdateUserId", userLoginId);
@@ -305,14 +318,20 @@ public class PurchaseServices {
 	    	                createNUpdateReferenceInfo.setNonPKFields(referenceMap);
 	    	                createNUpdateReferenceInfo = delegator.createOrStore(createNUpdateReferenceInfo);
 
-	    	                resultMap.putAll(createNUpdatePoInfo);
+	    	                resultMap.putAll(createNUpdateReferenceInfo);
 	    	                resultList.add(resultMap);
 
 	    	                createNUpdateReferenceInfo.clear();
+	    	                resultInt++;
 	        			}
 	    		    }
 
 	                createNUpdatePoInfo.clear();
+	                if(resultInt > 0) {
+	    		    	result.put("successStr", "success");
+	    		    } else {
+	    		    	result.put("successStr", "fail");
+	    		    }
 	        	} else if("D".equals(crudMode)) {
 	        		GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
 	    		    JSONArray data = new JSONArray(reqData);//jsonarray 형태로
@@ -424,152 +443,6 @@ public class PurchaseServices {
     	Delegator delegator = dctx.getDelegator();
     	Locale locale = (Locale) context.get("locale");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-
-        String crudMode = context.get("crudMode") == null ? "" : (String) context.get("crudMode");
-    	String searchPoNo = context.get("searchPoNo") == null ? "" : (String) context.get("searchPoNo");
-    	Timestamp searchOrderFromDate = (Timestamp) context.get("searchOrderFromDate");
-    	Timestamp searchOrderToDate = UtilDateTime.getDayEnd((Timestamp) context.get("searchOrderToDate"));
-        String searchVendorId = context.get("searchVendorId") == null ? "" : (String) context.get("searchVendorId");
-        String searchCustomerId = context.get("searchCustomerId") == null ? "" : (String) context.get("searchCustomerId");
-        String searchPort = context.get("searchPort") == null ? "" : (String) context.get("searchPort");
-        String searchGrade = context.get("searchGrade") == null ? "" : (String) context.get("searchGrade");
-        String searchCoatingWeight = context.get("searchCoatingWeight") == null ? "" : (String) context.get("searchCoatingWeight");
-        String searchSurfaceCoilType = context.get("searchSurfaceCoilType") == null ? "" : (String) context.get("searchSurfaceCoilType");
-        String searchGauge = context.get("searchGauge") == null ? "" : (String) context.get("searchGauge");
-        String searchWidth = context.get("searchWidth") == null ? "" : (String) context.get("searchWidth");
-        String draw = "";
-
-        List<Map<String, Object>> resultList = new LinkedList<Map<String,Object>>();
-        if (userLogin != null) {
-        	String userLoginId = (String) userLogin.get("userLoginId");
-
-	        try {
-	        	if("R".equals(crudMode)) {
-		        	List<EntityCondition> poConditionList = UtilMisc.<EntityCondition>toList(
-		                    EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, searchOrderFromDate),
-		                    EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, searchOrderToDate));
-
-		        	if(!"".equals(searchPoNo)) {
-		        		poConditionList.add(EntityCondition.makeCondition("poNo", EntityOperator.IN, searchPoNo));
-		        	}
-		        	if(!"".equals(searchVendorId)) {
-		        		poConditionList.add(EntityCondition.makeCondition("vendorId", EntityOperator.EQUALS, searchVendorId));
-		        	}
-
-		            EntityCondition poListCondition = EntityCondition.makeCondition(poConditionList, EntityOperator.AND);
-
-		        	List<GenericValue> poMasterList = EntityQuery.use(delegator)
-				               .from("PoMaster")
-				               .where(poListCondition)
-				               .queryList();
-
-		        	Map<String, Object> conditionMap = new HashMap<String, Object>();
-					if(!"".equals(searchCustomerId)) {
-						conditionMap.put("customerId", searchCustomerId);
-					}
-					if(!"".equals(searchPort)) {
-						conditionMap.put("port", searchPort);
-					}
-					if(!"".equals(searchGrade)) {
-						conditionMap.put("grade", searchGrade);
-					}
-					if(!"".equals(searchCoatingWeight)) {
-						conditionMap.put("coatingWeight", searchCoatingWeight);
-					}
-					if(!"".equals(searchSurfaceCoilType)) {
-						conditionMap.put("surfaceCoilType", searchSurfaceCoilType);
-					}
-					if(!"".equals(searchGauge)) {
-						conditionMap.put("gauge", searchGauge);
-					}
-					if(!"".equals(searchWidth)) {
-						conditionMap.put("width", searchWidth);
-					}
-
-		        	for(GenericValue poMasterInfo : poMasterList) {
-		        		List<GenericValue> referenceList = poMasterInfo.getRelated("Reference", conditionMap, null, false);
-		        		if(referenceList.size() > 0) {
-			        		for(GenericValue referenceInfo : referenceList) {
-			        			Map<String, Object> resultMap = new HashMap<String, Object>();
-			            		resultMap.putAll(poMasterInfo);
-			            		resultMap.putAll(referenceInfo);
-			            		resultList.add(resultMap);
-			        		}
-		        		}
-		        	}
-//	        	} else if("U".equals(crudMode) || "C".equals(crudMode)) {
-	        	} else {
-	        		draw = context.get("draw") == null ? "" : (String) context.get("draw");
-	        		String reqData = (String) context.get("reqData");
-	        		JSONArray data = new JSONArray(reqData);//jsonarray 형태로
-	                Map<String, Object> resultMap = new HashMap<String, Object>();
-
-	                GenericValue createNUpdatePoInfo = delegator.makeValue("PoMaster");
-	                GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
-
-	                if(data.length() > 0) {
-	                	for(int i=0 ; data.length() > i ; i++) {
-	                		JSONObject jsonobj = data.getJSONObject(i);
-	                		Map<String, Object> map = new HashMap<String, Object>();
-
-	                	    Iterator<String> keysItr = jsonobj.keys();
-	                	    while(keysItr.hasNext()) {
-	                	        String key = keysItr.next();
-	                	        Object value = new Object();
-	                	        if(jsonobj.getString(key) != null && !"".equals(jsonobj.getString(key))) {
-		                	        if("orderQuantity".equals(key) || "unitQuantity".equals(key)
-		                	        		|| "unitPrice".equals(key) || "commissionUnitPrice".equals(key)
-		                	        		|| "downPayment".equals(key) || "referenceSeq".equals(key)
-		                	        		|| "ppglNo".equals(key)) {
-		                	        	long str = jsonobj.getLong(key);
-		                	        	value = BigDecimal.valueOf(str);
-		                	        } else {
-		                	        	value = jsonobj.getString(key);
-		                	        }
-		                	        map.put(key, value);
-	                	        } else if("".equals(jsonobj.getString(key))){
-	                	        	map.put(key, null);
-	                	        }
-	                	    }
-	                	    Debug.logInfo("********123213213123*********************************** , " + map.toString(), null);
-	                		createNUpdatePoInfo.setPKFields(map);
-	    	                createNUpdatePoInfo.setNonPKFields(map);
-	    	                Debug.logInfo("******************************************* , " + createNUpdatePoInfo.toString(), null);
-	    	                createNUpdateReferenceInfo.setPKFields(map);
-	    	                createNUpdateReferenceInfo.setNonPKFields(map);
-	                	    Debug.logInfo("******************************************* , " + createNUpdateReferenceInfo.toString(), null);
-
-	    	                if("C".equals(crudMode)) {
-	    	                	createNUpdatePoInfo.set("createUserId", userLoginId);
-	    	                	createNUpdateReferenceInfo.set("createUserId", userLoginId);
-	    	                } else if("U".equals(crudMode)) {
-	    	                	createNUpdatePoInfo.set("lastUpdateUserId", userLoginId);
-	    	                	createNUpdateReferenceInfo.set("lastUpdateUserId", userLoginId);
-	    	                }
-
-	    	                createNUpdatePoInfo = delegator.createOrStore(createNUpdatePoInfo);
-	    	                createNUpdateReferenceInfo = delegator.createOrStore(createNUpdateReferenceInfo);
-	    	                Debug.logInfo("3in createNUpdatePoInfo," + createNUpdatePoInfo.toString(), null);
-	    	                Debug.logInfo("4in createNUpdatePoInfo," + createNUpdateReferenceInfo.toString(), null);
-
-	    	                resultMap.putAll(createNUpdatePoInfo);
-	    	                resultMap.putAll(createNUpdateReferenceInfo);
-	    	                resultList.add(resultMap);
-
-	    	                createNUpdatePoInfo.clear();
-	    	                createNUpdateReferenceInfo.clear();
-	                	}
-	                }
-	        	}
-	        } catch (GenericEntityException e){
-	            Debug.logError(e, "Cannot CRUDPoList ", module);
-	        }
-        }
-        result.put("data", resultList);
-        result.put("draw", draw);
-        result.put("recordsTotal", resultList.size());
-        result.put("recordsFiltered", resultList.size());
 
         return result;
     }

@@ -25,7 +25,7 @@ under the License.
 	jQuery(document).ready(function(){
 		$("#poList").DataTable({
 			//dom: "Bfrtip",
-			dom: "flrtpB",
+			dom: "flrtp",
 			"scrollY": true,
 	        "scrollX": true,
 // 	        "pageLength": 25,
@@ -33,8 +33,28 @@ under the License.
 // 	        fixedColumns: {
 // 	            leftColumns: 5
 // 	        },
-	        orderFixed: [[1, 'asc']],
-	        rowGroup: {
+	        order: [[1, 'asc']],
+// 	        rowGroup: {
+// 	            startRender: null,
+// 	            endRender: function ( rows, group ) {
+// 	                var sumUnitPrice = rows
+// 	                    .data()
+// 	                    .pluck(18)
+// 	                    .reduce( function (a, b) {
+// 	                    	a = (a == null || a == "") ? 0 : a;
+// 	                    	b = (b == null || b == "") ? 0 : b;
+// 	                        return parseFloat(a) + parseFloat(b);
+// 	                    }, 0);
+// 	                sumUnitPrice = $.fn.dataTable.render.number(',', '.', 2, '$').display( sumUnitPrice );
+
+// 	                return $('<tr/>')
+// 	                    .append( '<td colspan="18">Sub Total for ['+group+']</td>' )
+// 	                    .append( '<td class="dt-body-right">'+sumUnitPrice+'</td>' )
+// 	                    .append( '<td colspan="8"></td>' );
+// 	            },
+// 	            dataSrc: 1
+// 	        },
+			rowGroup: {
 	            dataSrc: 1
 	        },
 	        "columnDefs": [
@@ -42,7 +62,8 @@ under the License.
 	                "render": function ( data, type, row ) {
 	                    return "LOT" + data;
 	                },
-	                "targets": 2
+	                "targets": 2,
+	                "width" : "60px"
 	            },
 	            {
 	                "render": function ( data, type, row ) {
@@ -55,12 +76,13 @@ under the License.
 	            	"width": "100px",
 	            	"targets": 18,
 	            	"render" : function ( data, type, row ) {
+	            		var newData = "";
 	        			if(data != null && data != "") {
-	                		data =  "$ " + Number(data).format(2);
+	        				newData =  "$ " + Number(data).format(2);
 	                	} else {
-	                		data =  "";
+	                		newData =  "";
 	                	}
-	        			return data;
+	        			return newData;
 	                },
 	                "className" : "dt-right"
 	            },
@@ -297,7 +319,7 @@ under the License.
 				${lotInfo.paintCoatingThickness!}
 			</td>
 			<td>
-				${lotInfo.lastUpdateDate!}
+				${lotInfo.lastUpdatedStamp!?string("yyyy-MM-dd")}
 			</td>
 		</tr>
 		</#list>

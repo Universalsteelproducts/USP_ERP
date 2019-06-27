@@ -63,7 +63,7 @@
 		<field name="customerId" type="id-long"></field>
 		<field name="customerName" type="id-long"></field>
 		<field name="otherDetail" type="description"></field>
-		<field name="orderQuantity" type="fixed-point"></field>
+<!-- 		<field name="orderQuantity" type="fixed-point"></field> -->
 		<field name="unitQuantity" type="fixed-point"></field>
 		<field name="quantityUnit" type="id-long"></field>
 		<field name="unitPrice" type="currency-amount"></field>
