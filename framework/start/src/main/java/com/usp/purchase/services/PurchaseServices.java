@@ -295,8 +295,13 @@ public class PurchaseServices {
 
 	                	    if(jsonobj.isNull("ppglNo") || "".equals(jsonobj.get("ppglNo"))) {
 	                	    	if(ppglNo == 0L) {
-		                	    	ppglNo = EntityQuery.use(delegator).select("ppglNo").from("Reference")
-		                	    			.where("lotNo", referenceMap.get("lotNo"), "poNo", referenceMap.get("poNo"), "referenceNo", referenceMap.get("referenceNo")).orderBy("ppglNo DESC").queryFirst().getLong("ppglNo");
+	                	    		GenericValue ppglNoInfo = EntityQuery.use(delegator).select("ppglNo").from("Reference")
+		                	    			.where("lotNo", referenceMap.get("lotNo"), "poNo", referenceMap.get("poNo"), "referenceNo", referenceMap.get("referenceNo")).orderBy("ppglNo DESC").queryFirst();
+	                	    		if(ppglNoInfo != null) {
+	                	    			ppglNo = ppglNoInfo.getLong("ppglNo");
+	                	    		} else {
+	                	    			ppglNo = 0;
+	                	    		}
 		                	    }
 		                	    ppglNo = ppglNo + 1;
 		                	    Map<String, Long> ppglNumVal = UtilMisc.toMap("ppglNo", ppglNo);
