@@ -376,6 +376,9 @@
     <property key="patial">
         <value xml:lang="en">Partial</value>
     </property>
+    <property key="duplicate">
+        <value xml:lang="en">Duplicate</value>
+    </property>
 
     <property key="blDoc">
         <value xml:lang="en">B/L Document</value>

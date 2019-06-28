@@ -27,7 +27,7 @@ under the License.
 		 ******************			Common Control				********************
 		 ***************************************************************************/
 		var poListTable = $("#poList").DataTable({
-			dom : "lBfrtip",
+			dom : "Blfrtip",
 			processing : true,
 			scrollY : true,
 	        scrollX : true,
@@ -383,12 +383,13 @@ under the License.
 						return y + "-" + m + "-" + d;
 	        		}
 	        	},
-	        	{
-	        		"data" : "",
-	        		"render": function ( data, type, row ) {
-	        			return "<a href='<@ofbizUrl>EditPo?poNo=" + row.poNo + "&crudMode=CL</@ofbizUrl>' class='buttontext'>CLONE</a>";
-	                }
-	        	},
+// 	        	{
+// 	        		"data" : "",
+// 	        		"render": function ( data, type, row ) {
+// 	        			return "<a href='<@ofbizUrl>EditPo?poNo=" + row.poNo + "&crudMode=CL</@ofbizUrl>' class='buttontext'>CLONE</a>";
+// 	                },
+// 	                "orderable" : false
+// 	        	},
 	        	{
 	        		"data" : "referenceSeq",
 	        		"visible": false,
@@ -397,9 +398,6 @@ under the License.
 	        		"data" : "ppglNo",
 	        		"visible": false,
 	        	}
-	        ],
-	        buttons: [
-	            'excel'
 	        ]
 		});
 
@@ -679,7 +677,7 @@ under the License.
 				<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
 				<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
 				<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
-				<th style="vertical-align: middle;"></th>
+<!-- 				<th style="vertical-align: middle;"></th> -->
 			</tr>
 		</thead>
 		<tbody>
@@ -715,7 +713,7 @@ under the License.
 				<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
 				<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
 				<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
-				<th style="vertical-align: middle;"></th>
+<!-- 				<th style="vertical-align: middle;"></th> -->
 			</tr>
 		</tfoot>
 	</table>

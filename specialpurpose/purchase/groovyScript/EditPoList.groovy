@@ -17,26 +17,23 @@
  * under the License.
  */
 import org.apache.ofbiz.base.util.UtilDateTime
+import org.apache.ofbiz.entity.GenericValue
+import java.text.SimpleDateFormat
 
 poCommonInfo = [:]
 poInfo = [:]
 vendorInfo = [:]
 lotInfoList = []
 lotList = []
-totalQuantity = BigDecimal.ZERO
-totalPrice = BigDecimal.ZERO
-totalQuantityUnit = ""
-totalPriceUnit = ""
 codeList = []
 codeList = from("Code").orderBy("codeGroup", "sort").queryList()
 
 poNo = parameters.poNo
+newPoNo = ""
 crudMode = "CR"
 nowTs = UtilDateTime.nowTimestamp()
 poCommonInfo.put("orderDate", nowTs)
 if(poNo) {
-	crudMode = "UR"
-	nowTs = ""
 	poCommonInfo = [:]
 	poInfo = from("PoMaster").where("poNo", poNo).queryOne()
 	vendorId = poInfo.get("vendorId").trim();
@@ -44,33 +41,18 @@ if(poNo) {
 	poCommonInfo.putAll(poInfo)
 	poCommonInfo.putAll(vendorInfo)
 
-	lotList = select("lotNo").from("Reference").where("poNo", poNo).distinct().queryList()
-
-/*
-	lotInfoList = from("Reference").where("poNo", poNo).queryList()
-	if(lotInfoList.size() > 0) {
-		lotInfoList.each { lotInfo ->
-	    	if(lotInfo.steelType == "PPGI" || lotInfo.steelType == "PPGL") {
-	    		totalQuantity += lotInfo.unitQuantity == null ? 0 : lotInfo.unitQuantity
-	    	} else {
-	    		totalQuantity += lotInfo.orderQuantity == null ? 0 : lotInfo.orderQuantity
-	    	}
-	    	totalPrice += lotInfo.unitPrice == null ? 0 : lotInfo.unitPrice
-		}
-
-		totalQuantityUnit = lotInfoList[0].quantityUnit
-		totalPriceUnit = lotInfoList[0].priceUnit
+	if(context.crudMode != null && context.crudMode != "") {
+		crudMode = context.crudMode
+		poCommonInfo.put("orderDate", nowTs)
+		poCommonInfo.put("poStatus", "PE")
+	} else {
+		crudMode = "UR"
 	}
-	lotInfo = delegator.getNextSeqId("referenceSeq")
-*/
+
+	lotList = select("lotNo").from("Reference").where("poNo", poNo).distinct().queryList()
 }
 
 context.poCommonInfo = poCommonInfo
 context.codeList = codeList
 context.crudMode =  crudMode
 context.lotList =  lotList
-/*context.lotInfoList = lotInfoList
-context.totalQuantity = totalQuantity
-context.totalPrice = totalPrice
-context.totalQuantityUnit = totalQuantityUnit
-context.totalPriceUnit = totalPriceUnit*/

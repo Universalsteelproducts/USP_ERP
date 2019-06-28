@@ -22,12 +22,8 @@ poNReference = [:]
 
 poList = []
 referenceList = []
+codeList = from("Code").orderBy("codeGroup", "sort").queryList()
 
-newCodeList = []
-newCodeMap = [:]
-codeList = from("Code").queryList()
-
-//poList = from("PoMaster").where("poStatus", "PE").queryList()
 poList = from("PoMaster").queryList()
 poList.each { poInfo ->
 	poNReference.putAll(poInfo)
@@ -44,13 +40,3 @@ poList.each { poInfo ->
 
 context.poNReferenceList = poNReferenceList
 context.codeList = codeList
-context.newCodeList = [["22":"22", "33":"33"],["22":"232", "33":"333"]]
-
-/*
-context.lotInfoList = lotInfoList
-context.updateMode =  updateMode
-context.totalQuantity = totalQuantity
-context.totalPrice = totalPrice
-context.totalQuantityUnit = totalQuantityUnit
-context.totalPriceUnit = totalPriceUnit
-*/

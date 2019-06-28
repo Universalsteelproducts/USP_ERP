@@ -91,6 +91,7 @@ public class PurchaseServices {
         	String userLoginId = (String) userLogin.get("userLoginId");
 
 	        try {
+	        	// PO Management List 화면 읽기
 	        	if("R".equals(crudMode)) {
 		        	List<EntityCondition> poConditionList = UtilMisc.<EntityCondition>toList(
 		                    EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, searchOrderFromDate),
@@ -134,7 +135,7 @@ public class PurchaseServices {
 					}
 
 		        	for(GenericValue poMasterInfo : poMasterList) {
-		        		List<GenericValue> referenceList = poMasterInfo.getRelated("Reference", conditionMap, null, false);
+		        		List<GenericValue> referenceList = poMasterInfo.getRelated("Reference", conditionMap, UtilMisc.toList("poNo","lotNo"), false);
 		        		if(referenceList.size() > 0) {
 			        		for(GenericValue referenceInfo : referenceList) {
 			        			Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -144,6 +145,7 @@ public class PurchaseServices {
 			        		}
 		        		}
 		        	}
+	        	// PO Management List 화면에서 poStatus값 update
 	        	} else if("SU".equals(crudMode)) {
 	        		String reqData = (String) context.get("reqData");
 	        		JSONArray data = new JSONArray(reqData);//jsonarray 형태로
@@ -161,7 +163,6 @@ public class PurchaseServices {
     	                	createNUpdatePoInfo.set("lastUpdatedStamp", UtilDateTime.nowTimestamp());
     	                	createNUpdatePoInfo.set("lastUpdatedTxStamp", UtilDateTime.nowTimestamp());
 	    	                createNUpdatePoInfo = delegator.createOrStore(createNUpdatePoInfo);
-	    	                Debug.logInfo("3in createNUpdatePoInfo," + createNUpdatePoInfo.toString(), null);
 
 	    	                Map<String, Object> conditionMap = new HashMap<String, Object>();
 	    	                conditionMap.put("poNo", jsonobj.getString("poNo"));
@@ -210,6 +211,8 @@ public class PurchaseServices {
         List<Map<String, Object>> resultList = new LinkedList<Map<String,Object>>();
         if (userLogin != null) {
 	        try {
+	        	// PO Management List 화면에서 PONO로 edit화면 open시
+	        	// onload할때 그리드 리스트 호출
 	        	if("UR".equals(crudMode)) {
 		        	GenericValue poMasterInfo = EntityQuery.use(delegator)
 				               .from("PoMaster")
@@ -227,6 +230,32 @@ public class PurchaseServices {
 		            		resultList.add(resultMap);
 		        		}
 	        		}
+	        	// 기존 PO 복제 onload 시 사용
+	        	} else if("CL".equals(crudMode)) {
+		        	GenericValue poMasterInfo = EntityQuery.use(delegator)
+				               .from("PoMaster")
+				               .where("poNo", poNo)
+				               .queryOne();
+
+		        	Map<String, Object> conditionMap = new HashMap<String, Object>();
+					conditionMap.put("poNo", poNo);
+	        		List<GenericValue> referenceList = poMasterInfo.getRelated("Reference", conditionMap, null, false);
+	        		if(referenceList.size() > 0) {
+		        		for(GenericValue referenceInfo : referenceList) {
+		        			Map<String, Object> resultMap = new HashMap<String, Object>();
+		            		resultMap.putAll(poMasterInfo);
+		            		resultMap.putAll(referenceInfo);
+		            		resultList.add(resultMap);
+		        		}
+	        		}
+	        	// PO번호 입력 시 중복체크
+	        	} else if("DP".equals(crudMode)) {
+		        	GenericValue poMasterInfo = EntityQuery.use(delegator)
+				               .from("PoMaster")
+				               .where("poNo", poNo)
+				               .queryOne();
+            		resultList.add(poMasterInfo);
+	        	// PO create 및 update 시 호출
 	        	} else if("C".equals(crudMode) || "U".equals(crudMode)) {
 	        		Map<String, Object> resultMap = new HashMap<String, Object>();
 	        		GenericValue createNUpdatePoInfo = delegator.makeValue("PoMaster");
@@ -242,7 +271,7 @@ public class PurchaseServices {
 
 	    		    int resultInt = 0;
 	    		    if(data.length() > 0) {
-	    		    	long seqNum = EntityQuery.use(delegator).select("referenceSeq").from("Reference").orderBy("referenceSeq DESC").queryFirst().getLong("referenceSeq");
+	    		    	long seqNum = 0L;
 	    		    	long ppglNo = 0L;
 	        			for(int i=0 ; data.length() > i ; i++) {
 	        				Map<String, Object> referenceMap = new HashMap<String, Object>();
@@ -279,6 +308,15 @@ public class PurchaseServices {
 	                	    }
 
 	                	    if(jsonobj.isNull("referenceSeq") || "".equals(jsonobj.get("referenceSeq"))) {
+	                	    	if(seqNum == 0L) {
+	                	    		GenericValue seqNumInfo = EntityQuery.use(delegator).select("referenceSeq").from("Reference").orderBy("referenceSeq DESC").queryFirst();
+	                	    		if(seqNumInfo != null) {
+	                	    			seqNum = seqNumInfo.getLong("referenceSeq");
+	                	    		} else {
+	                	    			seqNum = 0;
+	                	    		}
+		                	    }
+
 	                	    	seqNum = seqNum + 1;
 	                	    	Map<String, Long> sequenceNum = UtilMisc.toMap("referenceSeq", seqNum);
 		                	    referenceMap.putAll(sequenceNum);
@@ -337,6 +375,7 @@ public class PurchaseServices {
 	    		    } else {
 	    		    	result.put("successStr", "fail");
 	    		    }
+	            // PO Reference 삭제 시 호출
 	        	} else if("D".equals(crudMode)) {
 	        		GenericValue createNUpdateReferenceInfo = delegator.makeValue("Reference");
 	    		    JSONArray data = new JSONArray(reqData);//jsonarray 형태로
@@ -378,7 +417,14 @@ public class PurchaseServices {
 		               .where("vendorId", context.get("vendorId"))
 		               .queryOne();
 
-        	result.put("vendorInfo", vendorInfo);
+        	if(vendorInfo == null) {
+        		vendorInfo = new HashMap<String, Object>();
+        		result.put("vendorInfo", vendorInfo);
+        		result.put("resultState", "fail");
+        	} else {
+        		result.put("vendorInfo", vendorInfo);
+        		result.put("resultState", "success");
+        	}
 
         } catch (GenericEntityException e){
             Debug.logError(e, "Cannot lookup Vendor ", module);
@@ -399,88 +445,17 @@ public class PurchaseServices {
 		               .from("Customer")
 		               .where("customerId", context.get("customerId"))
 		               .queryOne();
-
-        	result.put("customerInfo", customerInfo);
+        	if(customerInfo == null) {
+        		customerInfo = new HashMap<String, Object>();
+        		result.put("customerInfo", customerInfo);
+        		result.put("resultState", "fail");
+        	} else {
+        		result.put("customerInfo", customerInfo);
+        		result.put("resultState", "success");
+        	}
 
         } catch (GenericEntityException e){
             Debug.logError(e, "Cannot lookup Customer ", module);
-        }
-
-        return result;
-    }
-
-    public static Map<String, Object> createPOList(HttpServletRequest request, HttpServletResponse response) {
-    	Map<String, Object> result = ServiceUtil.returnSuccess();
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
-
-        Map<String, Object> vendorInfo = UtilGenerics.checkMap(request.getParameter("vendorInfo"));
-        Map<String, Object> poInfo = UtilGenerics.checkMap(request.getParameter("poInfo"));
-        List<GenericValue> lotInfo = UtilGenerics.checkList(request.getParameter("lotInfo"));
-
-        Debug.logInfo("in createPOList111, " + lotInfo.size(), null);
-
-        Debug.logInfo("in createPOList222, " + vendorInfo.toString(), null);
-        Debug.logInfo("in createPOList222, " + poInfo.toString(), null);
-        Debug.logInfo("in createPOList222, " + lotInfo.toString(), null);
-
-        return result;
-    }
-
-    public static Map<String, Object> createNUpdateVendorNPoInfo(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        Delegator delegator = dctx.getDelegator();
-        try {
-            GenericValue createVendorNPoInfo = delegator.makeValue("PoMaster");
-            createVendorNPoInfo.setPKFields(context);
-            createVendorNPoInfo.setNonPKFields(context);
-            createVendorNPoInfo = delegator.createOrStore(createVendorNPoInfo);
-            result.put("result", createVendorNPoInfo);
-		    Debug.logInfo("in createVendorNPoInfo, " + createVendorNPoInfo.toString(), null);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in creating record in OfbizDemo entity ........" +module);
-        }
-
-        return result;
-    }
-
-    public static Map<String, Object> cancelPo(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	Delegator delegator = dctx.getDelegator();
-    	Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-
-        return result;
-    }
-
-    public static Map<String, Object> createNUpdateReferenceInfo(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        Delegator delegator = dctx.getDelegator();
-        try {
-        	String updateMode = (String)context.get("updateMode");
-        	Debug.logInfo("******************************************* , " + updateMode, null);
-
-            GenericValue createReferenceInfo = delegator.makeValue("Reference");
-            createReferenceInfo.setPKFields(context);
-            createReferenceInfo.setNonPKFields(context);
-            Debug.logInfo("******************************************* , " + updateMode, null);
-            if("C".equals(updateMode)) {
-            	long seqNum = EntityQuery.use(delegator).from("Reference").queryCount();
-            	long nextSeqNum = seqNum + 1;
-            	Map<String, Long> sequenceNum = UtilMisc.toMap("referenceSeq", nextSeqNum);
-            	createReferenceInfo.setFields(sequenceNum);
-
-            	long ppglNum = EntityQuery.use(delegator).from("Reference")
-            			.where("lotNo", createReferenceInfo.get("lotNo"), "poNo", createReferenceInfo.get("poNo"), "referenceNo", createReferenceInfo.get("referenceNo")).queryCount();
-            	long nextPpglNum = ppglNum + 1;
-            	Map<String, Long> ppglNumVal = UtilMisc.toMap("ppglNo", nextPpglNum);
-            	createReferenceInfo.setFields(ppglNumVal);
-            }
-
-            createReferenceInfo = delegator.createOrStore(createReferenceInfo);
-            result.put("result", createReferenceInfo);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in creating record in OfbizDemo entity ........" +module);
         }
 
         return result;

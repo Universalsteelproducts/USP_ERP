@@ -233,6 +233,17 @@ var addRow = function(id, rowMap) {
 	return rowMap;
 };
 
+var generatePoNo = function() {
+	var nowDate = new Date();
+	var year = nowDate.getFullYear().toString().substr(-2);;
+	var month = (1 + nowDate.getMonth());
+	month = month >= 10 ? month : '0' + month;
+	var day = nowDate.getDate();
+	day = day >= 10 ? day : '0' + day;
+
+	return (year + month + day + $("#vendorInitials").val());
+};
+
 // 체크박스 전체 선택
 $("#allCheck").on("click", function(){
       if($("#allCheck").is(":checked")){
