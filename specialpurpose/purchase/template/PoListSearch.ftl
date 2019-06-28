@@ -35,7 +35,10 @@ under the License.
 	        fixedColumns : {
 	            leftColumns: 3
 	        },
-			order: [[1, 'desc']],
+			order: [
+				[1, 'desc'],
+				[2, 'asc']
+			],
 	        ajax : {
 	        	"type"		: "POST",
 	            "url"		: '<@ofbizUrl>RUPoList</@ofbizUrl>',
