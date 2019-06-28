@@ -39,7 +39,7 @@ under the License.
 	            endRender: function ( rows, group ) {
 	                var sumUnitPrice = rows
 	                    .data()
-	                    .pluck(21)
+	                    .pluck(22)
 	                    .reduce( function (a, b) {
 	                    	a = (a == null || a == "") ? 0 : a;
 	                    	b = (b == null || b == "") ? 0 : b;
@@ -48,7 +48,7 @@ under the License.
 	                sumUnitPrice = $.fn.dataTable.render.number(',', '.', 2, '$').display( sumUnitPrice );
 
 	                return $('<tr/>')
-	                    .append( '<td colspan="21">Sub Total for ['+group+']</td>' )
+	                    .append( '<td colspan="22">Sub Total for ['+group+']</td>' )
 	                    .append( '<td class="dt-body-right">'+sumUnitPrice+'</td>' )
 	                    .append( '<td colspan="4"></td>' );
 	            },
@@ -93,7 +93,7 @@ under the License.
         			<#if codeList??>
 						<#list codeList as codeInfo>
 							<#if codeInfo.codeGroup == "COIL_MAX_WEIGHT">
-							if("${codeInfo.code}" == $.trim(row[17])) {
+							if("${codeInfo.code}" == $.trim(row[18])) {
 								data = "${codeInfo.codeName!}";
 							}
 							</#if>
@@ -104,12 +104,12 @@ under the License.
 	  				"width" : "110px"
 	        	},
 	        	{
-	        		"targets": 24,
+	        		"targets": 25,
 	        		"render": function ( data, type, row ) {
         			<#if codeList??>
 						<#list codeList as codeInfo>
 							<#if codeInfo.codeGroup == "PAINT_COATING_THICKNESS">
-							if("${codeInfo.code}" == $.trim(row[24])) {
+							if("${codeInfo.code}" == $.trim(row[25])) {
 								data = "${codeInfo.codeName!}";
 							}
 							</#if>
@@ -119,13 +119,12 @@ under the License.
 	                },
 	  				"width" : "250px"
 	        	},
-	            { "width": "100px", "targets": [0,9,10,13,14,15,19] },
-	            { "width": "200px", "targets": 16 },
-	            { "width": "200px", "targets": 18 },
-	            { "width": "150px", "targets": [22,23,25] },
+	            { "width": "100px", "targets": [0,9,10,13,14,15,16,20] },
+	            { "width": "200px", "targets": 19 },
+	            { "width": "150px", "targets": [23,24,26] },
 	            {
 	            	"width": "100px",
-	            	"targets": 21,
+	            	"targets": 22,
 	            	"render" : function ( data, type, row ) {
 	            		var newData = "";
 	        			if(data != null && data != "") {
@@ -166,7 +165,7 @@ under the License.
 			<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
-<!-- 			<th style="vertical-align: middle;">${uiLabelMap.paintType}</th> -->
+ 			<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
@@ -311,17 +310,17 @@ under the License.
         			</#list>
         		</#if>
 			</td>
-<!-- 			<td> -->
-<!-- 				<#if codeList??> -->
-<!-- 					<#list codeList as codeInfo> -->
-<!-- 						<#if codeInfo.codeGroup == "PAINT_TYPE"> -->
-<!--          					<#if codeInfo.code == lotInfo.paintType! > -->
-<!--          						${codeInfo.codeName!} -->
-<!--          					</#if> -->
-<!--          				</#if> -->
-<!--         			</#list> -->
-<!--         		</#if> -->
-<!-- 			</td> -->
+ 			<td>
+ 				<#if codeList??>
+ 					<#list codeList as codeInfo>
+ 						<#if codeInfo.codeGroup == "PAINT_TYPE">
+          					<#if codeInfo.code == lotInfo.paintType! >
+          						${codeInfo.codeName!}
+          					</#if>
+          				</#if>
+         			</#list>
+         		</#if>
+ 			</td>
 			<td>
 				<#if codeList??>
 					<#list codeList as codeInfo>
