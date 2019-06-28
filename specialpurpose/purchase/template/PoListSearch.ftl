@@ -37,7 +37,8 @@ under the License.
 	        },
 			order: [
 				[1, 'desc'],
-				[2, 'asc']
+				[2, 'asc'],
+				[3, 'asc']
 			],
 	        ajax : {
 	        	"type"		: "POST",
