@@ -87,7 +87,24 @@ under the License.
 	                "targets": 7,
 	                "width": "100px"
 	            },
-	            { "width": "100px", "targets": [0,9,10,13,14,15,17,19] },
+	            {
+	            	"targets": 17,
+	        		"render": function ( data, type, row ) {
+	        			console.log(row);
+        			<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "COIL_MAX_WEIGHT">
+							if("${codeInfo.code}" == $.trim(row[17])) {
+								data = "${codeInfo.codeName!}";
+							}
+							</#if>
+						</#list>
+					</#if>
+            			return data;
+	                },
+	  				"width" : "110px"
+	        	},
+	            { "width": "100px", "targets": [0,9,10,13,14,15,19] },
 	            { "width": "200px", "targets": 16 },
 	            { "width": "200px", "targets": 18 },
 	            { "width": "150px", "targets": [22,23,24,25] },
@@ -293,7 +310,7 @@ under the License.
 			<td>
 				<#if codeList??>
 					<#list codeList as codeInfo>
-						<#if codeInfo.codeGroup == "COIL_MAXWEIGHT">
+						<#if codeInfo.codeGroup == "COIL_MAX_WEIGHT">
          					<#if codeInfo.code == lotInfo.coilMaxWeight! >
          						${codeInfo.codeName!}
          					</#if>
