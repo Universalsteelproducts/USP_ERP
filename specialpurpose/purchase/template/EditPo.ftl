@@ -1394,7 +1394,6 @@ under the License.
 				Issue Date : ${poCommonInfo.createdStamp!?string("yyyy-MM-dd")},
 				Last Updated Date : ${poCommonInfo.lastUpdatedStamp!?string("yyyy-MM-dd")}
 			</label>
-			<input id="duplicate" type="button" value="${uiLabelMap.duplicate}" class="buttontext"/>
 		<#else>
 			<input id="allClear" type="button" value="${uiLabelMap.allClear}" class="buttontext"/>
 		</#if>
@@ -2219,6 +2218,7 @@ under the License.
 		<input id="submitBtn" type="button" value="${uiLabelMap.submit}" class="buttontext"/>
 	<#else>
 		<input id="submitBtn" type="button" value="${uiLabelMap.update}" class="buttontext"/>
+		<input id="duplicate" type="button" value="${uiLabelMap.duplicate}" class="buttontext"/>
 		<input id="cancelBtn" type="button" value="${uiLabelMap.cancel}" class="buttontext"/>
     </#if>
 	</ul>
