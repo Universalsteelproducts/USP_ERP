@@ -34,29 +34,29 @@ under the License.
 // 	            leftColumns: 5
 // 	        },
 	        order: [[1, 'asc']],
-// 	        rowGroup: {
-// 	            startRender: null,
-// 	            endRender: function ( rows, group ) {
-// 	                var sumUnitPrice = rows
-// 	                    .data()
-// 	                    .pluck(18)
-// 	                    .reduce( function (a, b) {
-// 	                    	a = (a == null || a == "") ? 0 : a;
-// 	                    	b = (b == null || b == "") ? 0 : b;
-// 	                        return parseFloat(a) + parseFloat(b);
-// 	                    }, 0);
-// 	                sumUnitPrice = $.fn.dataTable.render.number(',', '.', 2, '$').display( sumUnitPrice );
+	        rowGroup: {
+	            startRender: null,
+	            endRender: function ( rows, group ) {
+	                var sumUnitPrice = rows
+	                    .data()
+	                    .pluck(21)
+	                    .reduce( function (a, b) {
+	                    	a = (a == null || a == "") ? 0 : a;
+	                    	b = (b == null || b == "") ? 0 : b;
+	                        return parseFloat(a) + parseFloat(b);
+	                    }, 0);
+	                sumUnitPrice = $.fn.dataTable.render.number(',', '.', 2, '$').display( sumUnitPrice );
 
-// 	                return $('<tr/>')
-// 	                    .append( '<td colspan="18">Sub Total for ['+group+']</td>' )
-// 	                    .append( '<td class="dt-body-right">'+sumUnitPrice+'</td>' )
-// 	                    .append( '<td colspan="8"></td>' );
-// 	            },
-// 	            dataSrc: 1
-// 	        },
-			rowGroup: {
+	                return $('<tr/>')
+	                    .append( '<td colspan="21">Sub Total for ['+group+']</td>' )
+	                    .append( '<td class="dt-body-right">'+sumUnitPrice+'</td>' )
+	                    .append( '<td colspan="4"></td>' );
+	            },
 	            dataSrc: 1
 	        },
+// 			rowGroup: {
+// 	            dataSrc: 1
+// 	        },
 	        "columnDefs": [
 	            {
 	                "render": function ( data, type, row ) {
@@ -71,10 +71,29 @@ under the License.
 	                },
 	                "targets": 1
 	            },
-	            { "width": "100px", "targets": [0,7,9,10,13,14,16,19,21,23] },
+	            {
+	            	"render": function ( data, type, row ) {
+					<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "STEEL_TYPE">
+							if("${codeInfo.code}" == $.trim(row[7])) {
+								data = "${codeInfo.codeName!}";
+							}
+							</#if>
+						</#list>
+					</#if>
+						return data;
+					},
+	                "targets": 7,
+	                "width": "100px"
+	            },
+	            { "width": "100px", "targets": [0,9,10,13,14,15,17,19] },
+	            { "width": "200px", "targets": 16 },
+	            { "width": "200px", "targets": 18 },
+	            { "width": "150px", "targets": [22,23,24,25] },
 	            {
 	            	"width": "100px",
-	            	"targets": 18,
+	            	"targets": 21,
 	            	"render" : function ( data, type, row ) {
 	            		var newData = "";
 	        			if(data != null && data != "") {
@@ -85,11 +104,7 @@ under the License.
 	        			return newData;
 	                },
 	                "className" : "dt-right"
-	            },
-	            { "width": "150px", "targets": [24,25,26] },
-	            { "width": "200px", "targets": 15 },
-	            { "width": "200px", "targets": 20 },
-	            { "width": "200px", "targets": 22 }
+	            }
 	        ],
 	        buttons: [
 	            'excel'
@@ -116,17 +131,17 @@ under the License.
 			<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.width}</th>
+			<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
+			<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
+			<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
+<!-- 			<th style="vertical-align: middle;">${uiLabelMap.paintType}</th> -->
 			<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
-			<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
-			<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
-			<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
-			<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
 			<th style="vertical-align: middle;">${uiLabelMap.lastUpdateDate}</th>
@@ -168,8 +183,8 @@ under the License.
 			<td>
 				<#if codeList??>
 					<#list codeList as codeInfo>
-						<#if codeInfo.codeGroup == "COIL_DESCRIPTION">
-         					<#if codeInfo.code == lotInfo.coilDescription! >
+						<#if codeInfo.codeGroup == "STEEL_TYPE">
+         					<#if codeInfo.code == lotInfo.steelType! >
          						${codeInfo.codeName!}
          					</#if>
          				</#if>
@@ -234,6 +249,50 @@ under the License.
 			<td>
 				<#if codeList??>
 					<#list codeList as codeInfo>
+						<#if codeInfo.codeGroup == "PAINT_BRAND">
+         					<#if codeInfo.code == lotInfo.paintBrand! >
+         						${codeInfo.codeName!}
+         					</#if>
+         				</#if>
+        			</#list>
+        		</#if>
+			</td>
+			<td>
+				<#if codeList??>
+					<#list codeList as codeInfo>
+						<#if codeInfo.codeGroup == "PAINT_CODE">
+         					<#if codeInfo.code == lotInfo.paintCode! >
+         						${codeInfo.codeName!}
+         					</#if>
+         				</#if>
+        			</#list>
+        		</#if>
+			</td>
+			<td>
+				<#if codeList??>
+					<#list codeList as codeInfo>
+						<#if codeInfo.codeGroup == "PAINT_COLOR">
+         					<#if codeInfo.code == lotInfo.paintColor! >
+         						${codeInfo.codeName!}
+         					</#if>
+         				</#if>
+        			</#list>
+        		</#if>
+			</td>
+<!-- 			<td> -->
+<!-- 				<#if codeList??> -->
+<!-- 					<#list codeList as codeInfo> -->
+<!-- 						<#if codeInfo.codeGroup == "PAINT_TYPE"> -->
+<!--          					<#if codeInfo.code == lotInfo.paintType! > -->
+<!--          						${codeInfo.codeName!} -->
+<!--          					</#if> -->
+<!--          				</#if> -->
+<!--         			</#list> -->
+<!--         		</#if> -->
+<!-- 			</td> -->
+			<td>
+				<#if codeList??>
+					<#list codeList as codeInfo>
 						<#if codeInfo.codeGroup == "COIL_MAXWEIGHT">
          					<#if codeInfo.code == lotInfo.coilMaxWeight! >
          						${codeInfo.codeName!}
@@ -266,52 +325,9 @@ under the License.
 				${lotInfo.unitPrice!}
 			</td>
 			<td>
-				<#if codeList??>
-					<#list codeList as codeInfo>
-						<#if codeInfo.codeGroup == "PAINT_CODE">
-         					<#if codeInfo.code == lotInfo.paintCode! >
-         						${codeInfo.codeName!}
-         					</#if>
-         				</#if>
-        			</#list>
-        		</#if>
-			</td>
-			<td>
-				<#if codeList??>
-					<#list codeList as codeInfo>
-						<#if codeInfo.codeGroup == "PAINT_COLOR">
-         					<#if codeInfo.code == lotInfo.paintColor! >
-         						${codeInfo.codeName!}
-         					</#if>
-         				</#if>
-        			</#list>
-        		</#if>
-			</td>
-			<td>
-				<#if codeList??>
-					<#list codeList as codeInfo>
-						<#if codeInfo.codeGroup == "PAINT_TYPE">
-         					<#if codeInfo.code == lotInfo.paintType! >
-         						${codeInfo.codeName!}
-         					</#if>
-         				</#if>
-        			</#list>
-        		</#if>
-			</td>
-			<td>
 				${lotInfo.priceTerm!}
 			</td>
-			<td>
-				<#if codeList??>
-					<#list codeList as codeInfo>
-						<#if codeInfo.codeGroup == "PAINT_BRAND">
-         					<#if codeInfo.code == lotInfo.paintBrand! >
-         						${codeInfo.codeName!}
-         					</#if>
-         				</#if>
-        			</#list>
-        		</#if>
-			</td>
+
 			<td>
 				${lotInfo.mtcVerificationStatus!}
 			</td>

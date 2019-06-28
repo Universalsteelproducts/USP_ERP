@@ -45,8 +45,8 @@ under the License.
 	            	d.searchPoNo = $("#searchPoNo").val();
 	            	d.searchOrderFromDate = $("#searchOrderFromDate").val();
 	            	d.searchOrderToDate = $("#searchOrderToDate").val();
-	            	d.searchVendorId = $("#searchVendorId").val();
-	            	d.searchCustomerId = $("#searchCustomerId").val();
+	            	d.searchVendorId = $("input[name=searchVendorId]").val();
+	            	d.searchCustomerId = $("input[name=searchCustomerId]").val();
 	            	d.searchPort = $("#searchPort").val();
 	            	d.searchGrade = $("#searchGrade").val();
 	            	d.searchCoatingWeight = $("#searchCoatingWeight").val();
@@ -192,6 +192,61 @@ under the License.
 	                }
 	        	},
 	        	{
+	        		"data" : "paintBrand",
+	        		"render": function ( data, type, row ) {
+	        			var returnStr = "";
+       				<#if codeList??>
+    					<#list codeList as codeInfo>
+    						<#if codeInfo.codeGroup == "PAINT_BRAND">
+             					if("${codeInfo.code}" == $.trim(data)) {
+             						returnStr = "${codeInfo.codeName!}";
+             					}
+             				</#if>
+            			</#list>
+            		</#if>
+            			return returnStr;
+	                },
+	  				"width" : "100px"
+	        	},
+	        	{
+	        		"data" : "paintCode",
+	  				"width" : "100px"
+	        	},
+	        	{
+	        		"data" : "paintColor",
+	        		"width": "200px",
+	        		"render": function ( data, type, row ) {
+	        			var returnStr = "";
+       				<#if codeList??>
+    					<#list codeList as codeInfo>
+    						<#if codeInfo.codeGroup == "PAINT_COLOR">
+             					if("${codeInfo.code}" == $.trim(data)) {
+             						returnStr = "${codeInfo.codeName!}";
+             					}
+             				</#if>
+            			</#list>
+            		</#if>
+            			return returnStr;
+	                }
+	        	},
+	        	{
+	        		"data" : "paintType",
+	        		"render": function ( data, type, row ) {
+	        			var returnStr = "";
+       				<#if codeList??>
+    					<#list codeList as codeInfo>
+    						<#if codeInfo.codeGroup == "PAINT_TYPE">
+             					if("${codeInfo.code}" == $.trim(data)) {
+             						returnStr = "${codeInfo.codeName!}";
+             					}
+             				</#if>
+            			</#list>
+            		</#if>
+            			return returnStr;
+	                },
+	  				"width" : "100px"
+	        	},
+	        	{
 	        		"data" : "coilMaxWeight",
 	        		"render": function ( data, type, row ) {
 	        			var returnStr = "";
@@ -210,19 +265,6 @@ under the License.
 	        	},
 	        	{
 	        		"data" : "innerDiameter",
-	        		"render": function ( data, type, row ) {
-	        			var returnStr = "";
-       				<#if codeList??>
-    					<#list codeList as codeInfo>
-    						<#if codeInfo.codeGroup == "INNER_DIAMETER">
-             					if("${codeInfo.code}" == $.trim(data)) {
-             						returnStr = "${codeInfo.codeName!}";
-             					}
-             				</#if>
-            			</#list>
-            		</#if>
-            			return returnStr;
-	                },
 	  				"width" : "100px"
 	        	},
 	        	{
@@ -278,63 +320,8 @@ under the License.
 	  				"width" : "100px"
 	        	},
 	        	{
-	        		"data" : "paintCode",
-	  				"width" : "100px"
-	        	},
-	        	{
-	        		"data" : "paintColor",
-	        		"width": "200px",
-	        		"render": function ( data, type, row ) {
-	        			var returnStr = "";
-       				<#if codeList??>
-    					<#list codeList as codeInfo>
-    						<#if codeInfo.codeGroup == "PAINT_COLOR">
-             					if("${codeInfo.code}" == $.trim(data)) {
-             						returnStr = "${codeInfo.codeName!}";
-             					}
-             				</#if>
-            			</#list>
-            		</#if>
-            			return returnStr;
-	                }
-	        	},
-	        	{
-	        		"data" : "paintType",
-	        		"render": function ( data, type, row ) {
-	        			var returnStr = "";
-       				<#if codeList??>
-    					<#list codeList as codeInfo>
-    						<#if codeInfo.codeGroup == "PAINT_TYPE">
-             					if("${codeInfo.code}" == $.trim(data)) {
-             						returnStr = "${codeInfo.codeName!}";
-             					}
-             				</#if>
-            			</#list>
-            		</#if>
-            			return returnStr;
-	                },
-	  				"width" : "100px"
-	        	},
-	        	{
 	        		"data" : "priceTerm",
 	        		"width": "200px"
-	        	},
-	        	{
-	        		"data" : "paintBrand",
-	        		"render": function ( data, type, row ) {
-	        			var returnStr = "";
-       				<#if codeList??>
-    					<#list codeList as codeInfo>
-    						<#if codeInfo.codeGroup == "PAINT_BRAND">
-             					if("${codeInfo.code}" == $.trim(data)) {
-             						returnStr = "${codeInfo.codeName!}";
-             					}
-             				</#if>
-            			</#list>
-            		</#if>
-            			return returnStr;
-	                },
-	  				"width" : "100px"
 	        	},
 	        	{
 	        		"data" : "mtcDocFileYN",
@@ -368,7 +355,7 @@ under the License.
             		</#if>
             			return returnStr;
 	                },
-	  				"width" : "140px"
+	  				"width" : "250px"
 	        	},
 	        	{
 	        		"data" : "lastUpdateUserId",
@@ -393,6 +380,12 @@ under the License.
 	        		}
 	        	},
 	        	{
+	        		"data" : "",
+	        		"render": function ( data, type, row ) {
+	        			return "<a href='<@ofbizUrl>EditPo?poNo=" + row.poNo + "&crudMode=CL</@ofbizUrl>' class='buttontext'>CLONE</a>";
+	                }
+	        	},
+	        	{
 	        		"data" : "referenceSeq",
 	        		"visible": false,
 	        	},
@@ -406,6 +399,15 @@ under the License.
 	        ]
 		});
 
+// 		$('#poList tbody').on( 'dblclick', 'tr', function () {
+// 			if ( $(this).hasClass('selected') ) {
+// 	            $(this).removeClass('selected');
+// 	        }
+// 	        else {
+// 	        	poListTable.$('tr.selected').removeClass('selected');
+// 	            $(this).addClass('selected');
+// 	        }
+// 	    } );
 		/***************************************************************************
 		 ******************			Table change Event			********************
 		 ***************************************************************************/
@@ -482,7 +484,7 @@ under the License.
 	</a>
 </div>
 
-<form name="searchForm" id="searchForm">
+<form name="searchForm" id="searchForm" method="post">
 	<input type="hidden" name="noConditionFind" value="Y"/>
 	<input type="hidden" name="crudMode" id="crudMode" value="R"/>
 	<input type="hidden" name="data" id="data" value=""/>
@@ -529,7 +531,7 @@ under the License.
 					<td width="2%">&nbsp;</td>
 					<td width="35%">
 						<!-- set_multivalues -->
-						<@htmlTemplate.lookupField value="" formName="searchForm" name="customerId" id="customerId" fieldFormName="LookupVendor" position="center" />
+						<@htmlTemplate.lookupField value="" formName="searchForm" name="searchCustomerId" id="searchCustomerId" fieldFormName="LookupCustomer" position="center" />
 					</td>
 				</tr>
 				<tr>
@@ -639,78 +641,78 @@ under the License.
 	</div>
 </form>
 
-<form>
-	<!-- Search Result -->
-	<div class="screenlet">
-		<table id="poList" class="hover cell-border stripe">
-			<thead>
-				<tr>
-					<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.referenceNo}</th>
+<!-- Search Result -->
+<div class="screenlet">
+	<table id="poList" class="hover cell-border stripe">
+		<thead>
+			<tr>
+				<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.referenceNo}</th>
 <!-- 					<th style="vertical-align: middle;">${uiLabelMap.etd}</th> -->
 <!-- 					<th style="vertical-align: middle;">${uiLabelMap.eta}</th> -->
-					<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.port}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.grade}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.coatingWeight}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.width}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-			<tfoot>
-				<tr>
-					<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.referenceNo}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.port}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.grade}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.coatingWeight}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.width}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
+				<th style="vertical-align: middle;"></th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+		<tfoot>
+			<tr>
+				<th style="vertical-align: middle;">${uiLabelMap.poStatus}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.poNo}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.lotNo}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.referenceNo}</th>
 <!-- 					<th style="vertical-align: middle;">${uiLabelMap.etd}</th> -->
 <!-- 					<th style="vertical-align: middle;">${uiLabelMap.eta}</th> -->
-					<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.port}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.grade}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.coatingWeight}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.width}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
-					<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
-				</tr>
-			</tfoot>
-		</table>
-	</div>
-</form>
+				<th style="vertical-align: middle;">${uiLabelMap.vessel}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.port}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.steelType}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.grade}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.coatingWeight}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.surfaceCoilType}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.gauge}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.width}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintBrand}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintCode}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintColor}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintType}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.coilMaxWeight}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.innerDiameter}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.packaging}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.businessClass}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.customerId}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.unitPrice}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.priceTerm}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.mtcVerificationStatus}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.paintCoatingThickness}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.lastUpdateUserId}</th>
+				<th style="vertical-align: middle;">${uiLabelMap.lastUpdatedStamp}</th>
+				<th style="vertical-align: middle;"></th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
