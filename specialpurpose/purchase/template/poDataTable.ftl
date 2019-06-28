@@ -90,7 +90,6 @@ under the License.
 	            {
 	            	"targets": 17,
 	        		"render": function ( data, type, row ) {
-	        			console.log(row);
         			<#if codeList??>
 						<#list codeList as codeInfo>
 							<#if codeInfo.codeGroup == "COIL_MAX_WEIGHT">
@@ -104,10 +103,26 @@ under the License.
 	                },
 	  				"width" : "110px"
 	        	},
+	        	{
+	        		"targets": 24,
+	        		"render": function ( data, type, row ) {
+        			<#if codeList??>
+						<#list codeList as codeInfo>
+							<#if codeInfo.codeGroup == "PAINT_COATING_THICKNESS">
+							if("${codeInfo.code}" == $.trim(row[24])) {
+								data = "${codeInfo.codeName!}";
+							}
+							</#if>
+						</#list>
+					</#if>
+            			return data;
+	                },
+	  				"width" : "250px"
+	        	},
 	            { "width": "100px", "targets": [0,9,10,13,14,15,19] },
 	            { "width": "200px", "targets": 16 },
 	            { "width": "200px", "targets": 18 },
-	            { "width": "150px", "targets": [22,23,24,25] },
+	            { "width": "150px", "targets": [22,23,25] },
 	            {
 	            	"width": "100px",
 	            	"targets": 21,
