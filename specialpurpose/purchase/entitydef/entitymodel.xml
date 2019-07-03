@@ -91,7 +91,7 @@
 
 		<field name="ciDocFileYN" type="indicator"></field>
 		<field name="ciDocFilePath" type="description"></field>
-		<field name="contactNo" type="id-long"></field>
+		<field name="contractNo" type="id-long"></field>
 		<field name="unitCost" type="currency-amount"></field>
 		<field name="civAmount" type="currency-amount"></field>
 

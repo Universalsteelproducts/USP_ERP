@@ -148,10 +148,10 @@
     <property key="paintCoatingThickness">
         <value xml:lang="en">Paint Coating Thickness</value>
     </property>
-    <property key="lcPaymentYn">
-        <value xml:lang="en">L/C?</value>
+    <property key="lcPayment">
+        <value xml:lang="en">L/C</value>
     </property>
-    <property key="blDocFileYN">
+    <property key="blDocFile">
         <value xml:lang="en">B/L Doc File</value>
     </property>
     <property key="blNo">
